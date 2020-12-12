@@ -22,3 +22,48 @@ Route::get('/', function () {
 Route::get('admin', function(){
 	return view('admin');
 });
+
+Route::post('vab-mock-server/login',function(){
+    return response()->json([
+        'code'=>200,
+        'msg'=>'success',
+        'data'=>[
+            'accessToken'=>'admin'
+        ]
+    ]);
+});
+
+
+Route::post('vab-mock-server/userInfo',function(){
+    return response()->json([
+        'code'=>200,
+        'msg'=>'success',
+        'data'=>[
+            'avatar' => 'https://i.gtimg.cn/club/item/face/img/8/15918_100.gif',
+            'permissions'=>['admin'],
+            'username'=>'admin',
+        ]
+    ]);
+});
+
+
+Route::post('login',function(){
+    return response()->json([
+        'code'=>200,
+        'msg'=>'success',
+        'data'=>[
+            'accessToken'=>'admin'
+        ]
+    ]);
+});
+
+Route::post('user/info',function(){
+    return response()->json([
+        'code'=>200,
+        'msg'=>'success',
+        'data'=>[
+            'permissions'=>['admin'],
+            'userName'=>'admin',
+        ]
+    ]);
+});
