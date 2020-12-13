@@ -17,12 +17,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-//后台管理路由
-Route::get('admin', function(){
-	return view('admin');
-});
-
 Route::post('vab-mock-server/login',function(){
     return response()->json([
         'code'=>200,

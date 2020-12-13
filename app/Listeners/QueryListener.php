@@ -18,6 +18,10 @@ class QueryListener
     {
         $this->log = new Logger('mysql');
 
+        // 创建mysql文件夹
+        $dir_path = dirname(dirname(__DIR__)) . '/storage/logs/' . $this->log->getName();
+        if (!is_dir($dir_path)) mkdir($dir_path, 0755);
+
         $log_path  = storage_path('logs/' . $this->log->getName() . '/' . date('Y-m-d') . '.log');
         if (!file_exists($log_path)) {
             fopen($log_path, "w");
