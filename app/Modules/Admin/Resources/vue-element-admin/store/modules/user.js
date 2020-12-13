@@ -33,11 +33,14 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
-        resolve()
+      login({ admin_name: username.trim(), password: password }).then(response => {
+        const { data } = response;
+
+          console.log(data);
+
+        commit('SET_TOKEN', data.access_token);
+        setToken(data.access_token);
+        resolve();
       }).catch(error => {
         reject(error)
       })
@@ -47,6 +50,7 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
+        console.log(state);
       getInfo(state.token).then(response => {
         const { data } = response
 

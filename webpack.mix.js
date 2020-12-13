@@ -19,12 +19,12 @@ mix.js('resources/js/app.js', 'public/' + vue_path)
     ]);
 
 
-mix.js('resources/' + vue_path + '/main.js', 'public/' + vue_path)
+mix.js('app/Modules/Admin/resources/' + vue_path + '/main.js', 'public/' + vue_path);
 
 mix.webpackConfig({
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'resources/' + vue_path),
+    resolve: {
+        alias: {
+            '@': path.resolve(__dirname, 'app/Modules/Admin/resources/' + vue_path),
+        },
     },
-  },
-})
+});
