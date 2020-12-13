@@ -37,6 +37,16 @@ class AuthService extends Service
         return $this->respondWithToken($token);
     }
 
+    public function me()
+    {
+        if (!$admin = Auth::guard($this->guard)->user()){
+            throw new AuthException('认证失败！');
+        }
+        $admin->admin_head = asset($admin->admin_head);
+        $admin['roles'] = ['admin'];
+        return $admin;
+    }
+
     /**
      * Refresh a token.
      * 刷新token，如果开启黑名单，以前的token便会失效。
@@ -59,8 +69,8 @@ class AuthService extends Service
     {
         return [
             'access_token' => $token,
-            'token_type'   => 'admin',
-            'expires_in'   => Auth::guard($this->guard)->factory()->getTTL() * 60
+            'token_type'   => 'Bearer',
+            'expires_time'   => time() + Auth::guard($this->guard)->factory()->getTTL() * 60
         ];
     }
 }

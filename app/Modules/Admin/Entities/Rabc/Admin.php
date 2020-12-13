@@ -7,6 +7,10 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class Admin extends Authenticatable implements JWTSubject
 {
+    protected $primaryKey = 'admin_id';
+
+    protected $hidden = ['password'];
+
     public function getAdminByName(string $admin_name)
     {
         return $this->where('admin_name', $admin_name)->first();

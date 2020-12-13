@@ -21,5 +21,6 @@ Route::prefix('admin')->group(function() {
 
     Route::prefix('auth')->group(function() {
         Route::any('login', 'AuthController@login');
+        Route::any('me', 'AuthController@me');
     });
 });

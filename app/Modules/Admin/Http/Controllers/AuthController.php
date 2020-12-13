@@ -4,9 +4,6 @@ namespace App\Modules\Admin\Http\Controllers;
 
 use App\Modules\Admin\Http\Requests\LoginRequest;
 use App\Modules\Admin\Services\AuthService;
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 
 class AuthController extends AdminController
 {
@@ -27,7 +24,11 @@ class AuthController extends AdminController
 
     public function me()
     {
+        if (\request()->getMethod() == 'OPTIONS'){
+            return $this->successJson();
+        }
 
+        return $this->successJson($this->service->me());
     }
 
     public function logout()
