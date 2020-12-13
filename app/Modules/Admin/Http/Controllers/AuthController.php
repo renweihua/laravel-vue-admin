@@ -12,6 +12,14 @@ class AuthController extends AdminController
         $this->service = $authService;
     }
 
+    /**
+     * 登录流程
+     *
+     * @param LoginRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \App\Exceptions\AuthException
+     * @throws \App\Exceptions\InvalidRequestException
+     */
     public function login(LoginRequest $request)
     {
         $data = $request->validated();
@@ -22,6 +30,12 @@ class AuthController extends AdminController
         return $this->successJson($token);
     }
 
+    /**
+     * 获取登录管理员信息
+     *
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \App\Exceptions\AuthException
+     */
     public function me()
     {
         if (\request()->getMethod() == 'OPTIONS'){
@@ -31,8 +45,13 @@ class AuthController extends AdminController
         return $this->successJson($this->service->me());
     }
 
+    /**
+     * 退出登录
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function logout()
     {
-
+        return $this->successJson($this->service->logout());
     }
 }

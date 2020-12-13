@@ -18,9 +18,9 @@ Route::prefix('admin')->group(function() {
         return view('admin');
     });
 
-
     Route::prefix('auth')->group(function() {
         Route::any('login', 'AuthController@login');
         Route::any('me', 'AuthController@me');
+        Route::any('logout', 'AuthController@logout');
     });
 });

@@ -37,6 +37,12 @@ class AuthService extends Service
         return $this->respondWithToken($token);
     }
 
+    /**
+     * 登录管理员信息获取
+     *
+     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     * @throws AuthException
+     */
     public function me()
     {
         if (!$admin = Auth::guard($this->guard)->user()){
@@ -45,6 +51,17 @@ class AuthService extends Service
         $admin->admin_head = asset($admin->admin_head);
         $admin['roles'] = ['admin'];
         return $admin;
+    }
+
+    /**
+     * 退出登录
+     *
+     * @return bool
+     */
+    public function logout()
+    {
+        Auth::guard($this->guard)->logout();
+        return true;
     }
 
     /**
