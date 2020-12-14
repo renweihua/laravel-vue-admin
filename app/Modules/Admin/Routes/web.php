@@ -23,4 +23,8 @@ Route::prefix('admin')->group(function() {
         Route::any('me', 'AuthController@me');
         Route::any('logout', 'AuthController@logout');
     });
+
+    Route::prefix('banners')->group(function() {
+        Route::any('/', 'System\BannerController@index');
+    });
 });
