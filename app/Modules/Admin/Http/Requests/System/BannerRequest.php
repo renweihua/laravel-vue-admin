@@ -3,9 +3,9 @@
 namespace App\Modules\Admin\Http\Requests\System;
 
 use App\Modules\Admin\Entities\System\Banner;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Modules\Admin\Http\Requests\BaseRequest;
 
-class BannerRequest extends FormRequest
+class BannerRequest extends BaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -37,13 +37,11 @@ class BannerRequest extends FormRequest
         ];
     }
 
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
+    public function messages()
     {
-        return true;
+        return [
+            'banner_title.required' => '请输入Banner标题！',
+            'banner_cover.required'   => '请上传Banner封面！',
+        ];
     }
 }
