@@ -20,4 +20,15 @@ class BaseService extends Service
             'data' => $lists->items(),
         ];
     }
+
+    public function create(array $params)
+    {
+        return $this->model->create($params);
+    }
+
+    public function update(array $params)
+    {
+        $primaryKey = $this->model->getKeyName();
+        return $this->model->where($primaryKey, $params[$primaryKey])->update($params);
+    }
 }

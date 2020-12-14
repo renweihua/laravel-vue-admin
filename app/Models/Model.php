@@ -28,6 +28,13 @@ class Model extends EloquentModel
      */
     public $timestamps = true;
 
+    /**
+     * 模型日期的存储格式：录入时，创建与更新的时间为：时间戳
+     *
+     * @var string
+     */
+    protected $dateFormat = 'U';
+
     const CREATED_AT = 'created_time';
     const UPDATED_AT = 'updated_time';
 
@@ -55,6 +62,18 @@ class Model extends EloquentModel
     {
         return $this->delete_field;
     }
+
+    /**
+     * 不可批量赋值的属性
+     *
+     * @var array
+     */
+    protected $guarded = [];
+
+
+
+
+
 
 
     /**

@@ -2,8 +2,10 @@
 
 namespace App\Modules\Admin\Http\Controllers;
 
+use App\Modules\Admin\Http\Requests\BaseRequest;
 use App\Traits\Json;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -23,12 +25,39 @@ class BaseController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the specified resource.
+     * @param int $id
      * @return Renderable
      */
-    public function create()
+    public function show($id)
     {
-        return view('admin::create');
+        return $this->successJson();
+    }
+
+    public function createService($request)
+    {
+        if ($request instanceof FormRequest){
+            $request->validated();
+        }
+
+        if ($this->service->create($request->all())){
+            return $this->successJson([], $this->service->getError());
+        }else{
+            return $this->errorJson($this->service->getError());
+        }
+    }
+
+    public function updateService($request)
+    {
+        if ($request instanceof FormRequest){
+            $request->validated();
+        }
+
+        if ($this->service->update($request->all())){
+            return $this->successJson([], $this->service->getError());
+        }else{
+            return $this->errorJson($this->service->getError());
+        }
     }
 
     /**
@@ -36,20 +65,11 @@ class BaseController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(BaseRequest $request)
     {
         //
     }
 
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
-    {
-        return view('admin::show');
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -59,17 +79,6 @@ class BaseController extends Controller
     public function edit($id)
     {
         return view('admin::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
-    {
-        //
     }
 
     /**
