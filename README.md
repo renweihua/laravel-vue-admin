@@ -8,11 +8,13 @@ Gitee 是 OSCHINA 推出的基于 Git 的代码托管平台（同时支持 SVN�
 #### 软件架构
 软件架构说明
 
+文档地址：https://docs.apipost.cn/view/680a60d8e13e4745
+
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
+1.  生成 APP_KEY：php artisan key:generate
+2.  JWT的key：php artisan jwt:secret
 3.  xxxx
 
 #### 使用说明
