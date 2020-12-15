@@ -2,17 +2,10 @@
 
 namespace App\Modules\Admin\Entities\System;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Model;
 
 class Version extends Model
 {
-    use HasFactory;
-
-    protected $fillable = [];
-    
-    protected static function newFactory()
-    {
-        return \App\Modules\Admin\Database\factories\System/VersionFactory::new();
-    }
+    protected $primaryKey = 'version_id';
+    protected $is_delete = 0;
 }

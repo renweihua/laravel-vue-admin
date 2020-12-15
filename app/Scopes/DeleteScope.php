@@ -11,10 +11,10 @@ class DeleteScope implements Scope
     protected $is_delete = 1; //是否开启删除（1.开启删除，就是直接删除；）
     protected $delete_field = 'is_delete'; //删除字段
 
-    public function __construct(int $is_delete = 1, string $delete_field = 'is_delete')
+    public function __construct(\App\Models\Model $model)
     {
-        $this->delete = $is_delete;
-        $this->delete_field = $delete_field;
+        $this->is_delete = $model->getIsDelete();
+        $this->delete_field = $model->getDeleteField();
     }
 
     /**

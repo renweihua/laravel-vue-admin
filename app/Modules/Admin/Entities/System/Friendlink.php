@@ -2,17 +2,10 @@
 
 namespace App\Modules\Admin\Entities\System;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Model;
 
 class Friendlink extends Model
 {
-    use HasFactory;
-
-    protected $fillable = [];
-    
-    protected static function newFactory()
-    {
-        return \App\Modules\Admin\Database\factories\System/FriendlinkFactory::new();
-    }
+    protected $primaryKey = 'link_id';
+    protected $is_delete = 0;
 }

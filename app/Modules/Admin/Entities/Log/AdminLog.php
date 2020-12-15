@@ -2,17 +2,8 @@
 
 namespace App\Modules\Admin\Entities\Log;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\MonthModel;
 
-class AdminLog extends Model
+class AdminLog extends MonthModel
 {
-    use HasFactory;
-
-    protected $fillable = [];
-    
-    protected static function newFactory()
-    {
-        return \App\Modules\Admin\Database\factories\Log/AdminLogFactory::new();
-    }
 }

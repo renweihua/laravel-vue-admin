@@ -7,7 +7,6 @@ use App\Traits\Error;
 use App\Traits\Instance;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
-use function Symfony\Component\String\s;
 
 class Model extends EloquentModel
 {
@@ -30,7 +29,7 @@ class Model extends EloquentModel
     public $timestamps = true;
 
     /**
-     * 模型日期的存储格式
+     * 模型日期的存储格式：录入时，创建与更新的时间为：时间戳
      *
      * @var string
      */
@@ -39,28 +38,43 @@ class Model extends EloquentModel
     const CREATED_AT = 'created_time';
     const UPDATED_AT = 'updated_time';
 
-//    /**
-//     * 模型的数据库连接名
-//     *
-//     * @var string
-//     */
-//    protected $connection = 'mysql';
+    public function getCreatedTimeAttribute()
+    {
+        return $this->attributes[self::CREATED_AT];
+    }
 
+    public function getUpdatedTimeAttribute()
+    {
+        return $this->attributes[self::UPDATED_AT];
+    }
 
     /**
      * 自定义的软删除
      */
-    protected $is_delete = 1; //是否开启删除（1.开启删除，就是直接删除；）
+    protected $is_delete = 1; //是否开启删除（1.开启删除，就是直接删除；0.假删除）
     protected $delete_field = 'is_delete'; //删除字段
 
     public function getIsDelete()
     {
         return $this->is_delete;
     }
+
     public function getDeleteField()
     {
         return $this->delete_field;
     }
+
+    /**
+     * 不可批量赋值的属性
+     *
+     * @var array
+     */
+    protected $guarded = [];
+
+
+
+
+
 
 
     /**
@@ -72,8 +86,12 @@ class Model extends EloquentModel
      */
     protected static function booted()
     {
-        $self = self::getInstance();
         // 假删除的作用域
-        static::addGlobalScope(new DeleteScope($self->getIsDelete(), $self->getDeleteField()));
+        static::addGlobalScope(new DeleteScope(new static));
+    }
+
+    public static function firstByWhere($where)
+    {
+        return self::where($where)->first();
     }
 }

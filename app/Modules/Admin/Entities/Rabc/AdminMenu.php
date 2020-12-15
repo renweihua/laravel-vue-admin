@@ -2,17 +2,10 @@
 
 namespace App\Modules\Admin\Entities\Rabc;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Model;
 
 class AdminMenu extends Model
 {
-    use HasFactory;
-
-    protected $fillable = [];
-    
-    protected static function newFactory()
-    {
-        return \App\Modules\Admin\Database\factories\Rabc/AdminMenuFactory::new();
-    }
+    protected $primaryKey = 'menu_id';
+    protected $is_delete = 0;
 }
