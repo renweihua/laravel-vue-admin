@@ -5,7 +5,6 @@ namespace App\Modules\Admin\Http\Controllers\System;
 use App\Modules\Admin\Http\Controllers\BaseController;
 use App\Modules\Admin\Http\Requests\System\BannerRequest;
 use App\Modules\Admin\Services\BannerService;
-use Illuminate\Http\Request;
 
 class BannerController extends BaseController
 {
@@ -14,13 +13,13 @@ class BannerController extends BaseController
         $this->service = $bannerService;
     }
 
-    public function create(BannerRequest $bannerRequest)
+    public function create(BannerRequest $request)
     {
-        return $this->createService($bannerRequest);
+        return $this->createService($request);
     }
 
-    public function update(BannerRequest $bannerRequest)
+    public function update(BannerRequest $request)
     {
-        return $this->updateService($bannerRequest);
+        return $this->updateService($request);
     }
 }
