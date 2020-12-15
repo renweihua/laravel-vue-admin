@@ -14,22 +14,14 @@ class BannerRequest extends BaseRequest
      */
     public function rules()
     {
+        $primarykey = Banner::getInstance()->getKeyName();
+        $validate_id = ',' . request()->input($primarykey, 0) . ',' .  $primarykey;
+
         return [
             'banner_title' => [
                 'required',
                 'max:256',
-                function ($attribute, $value, $fail)
-                {
-                    $where[] = [$attribute, '=', $value];
-                    if (request()->route()->getActionMethod() != 'create') {
-                        $primarykey = Banner::getInstance()->getKeyName();
-                        $where[]      = [$primarykey, '<>', request()->input($primarykey)];
-                    }
-                    if ($admin = Banner::firstByWhere($where)) {
-                        $fail('该Banner标题已存在！');
-                        return;
-                    }
-                },
+                'unique:banners,banner_title' . $validate_id
             ],
             'banner_cover' => [
                 'required',
