@@ -60,6 +60,15 @@ class BaseController extends Controller
         }
     }
 
+    public function delete(Request $request)
+    {
+        if ($this->service->delete($request->all())){
+            return $this->successJson([], $this->service->getError());
+        }else{
+            return $this->errorJson($this->service->getError());
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      * @param Request $request

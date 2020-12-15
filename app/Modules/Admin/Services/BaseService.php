@@ -31,4 +31,14 @@ class BaseService extends Service
         $primaryKey = $this->model->getKeyName();
         return $this->model->where($primaryKey, $params[$primaryKey])->update($params);
     }
+
+    public function delete(array $params)
+    {
+        $primaryKey = $this->model->getKeyName();
+        if ($this->model->getIsDelete() == 0){
+            return $this->model->where($primaryKey, $params[$primaryKey])->update([$this->model->getDeleteField() => 1]);
+        }else{
+            return $this->model->where($primaryKey, $params[$primaryKey])->delete();
+        }
+    }
 }

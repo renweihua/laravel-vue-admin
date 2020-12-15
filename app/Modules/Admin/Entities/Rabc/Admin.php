@@ -2,11 +2,14 @@
 
 namespace App\Modules\Admin\Entities\Rabc;
 
+use App\Traits\Instance;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class Admin extends Authenticatable implements JWTSubject
 {
+    use Instance;
+
     protected $primaryKey = 'admin_id';
 
     protected $hidden = ['password'];

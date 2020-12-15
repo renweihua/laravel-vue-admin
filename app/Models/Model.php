@@ -58,6 +58,7 @@ class Model extends EloquentModel
     {
         return $this->is_delete;
     }
+
     public function getDeleteField()
     {
         return $this->delete_field;

@@ -28,5 +28,6 @@ Route::prefix('admin')->group(function() {
         Route::any('/', 'System\BannerController@index');
         Route::any('/create', 'System\BannerController@create');
         Route::any('/update', 'System\BannerController@update');
+        Route::any('/delete', 'System\BannerController@delete');
     });
 });
