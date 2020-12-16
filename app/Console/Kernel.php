@@ -36,6 +36,17 @@ class Kernel extends ConsoleKernel
     {
         $this->load(__DIR__.'/Commands');
 
+        /**
+         * 自动加载多模块的自定义命令行
+         */
+        $modules_path = config('modules.paths.modules');
+        if ($dirs = get_dir_files($modules_path)){
+            foreach ($dirs as $dir){
+                if (is_dir($console_path = $modules_path . '/' . $dir . '/Console'))
+                    $this->load($console_path = $modules_path . '/' . $dir . '/Console');
+            }
+        }
+
         require base_path('routes/console.php');
     }
 }
