@@ -2,9 +2,7 @@
 
 namespace App\Modules\Admin\Http\Requests\Rabc;
 
-use App\Modules\Admin\Entities\Rabc\Admin;
 use App\Modules\Admin\Entities\Rabc\AdminMenu;
-use App\Modules\Admin\Entities\Rabc\AdminRole;
 use App\Modules\Admin\Http\Requests\BaseRequest;
 
 class AdminMenuRequest extends BaseRequest
@@ -16,14 +14,15 @@ class AdminMenuRequest extends BaseRequest
      */
     public function rules()
     {
-        $primarykey = AdminMenu::getInstance()->getKeyName();
-        $validate_id = ',' . request()->input($primarykey, 0) . ',' . $primarykey;
+        $instance = AdminMenu::getInstance();
+        $primarykey = $instance->getKeyName();
+        $validate_id = ',' . request()->input($primarykey, 0) . ',' .  $primarykey;
 
         return [
             'menu_name' => [
                 'required',
                 'max:256',
-                'unique:admin_menus,menu_name' . $validate_id
+                'unique:' . $instance->getTable() . ',menu_name' . $validate_id
             ],
             'is_check' => [
                 'required',

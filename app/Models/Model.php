@@ -3,14 +3,15 @@
 namespace App\Models;
 
 use App\Scopes\DeleteScope;
-use App\Traits\Error;
 use App\Traits\Instance;
+use App\Traits\MysqlTable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
+use Illuminate\Support\Facades\Schema;
 
 class Model extends EloquentModel
 {
-    use Error;
+    use MysqlTable;
     use Instance;
     use HasFactory;
 
@@ -93,5 +94,33 @@ class Model extends EloquentModel
     public static function firstByWhere($where)
     {
         return self::where($where)->first();
+    }
+
+    public function detail(int $id, string $filed = '*', bool $lock = false, array $with = [], array $withCount = [])
+    {
+        return $this->field($filed)
+            ->lock($lock)
+            ->with($with)
+            ->withCount($withCount)
+            ->find($id);
+    }
+
+    /**
+     * 过滤移除非当前表的字段参数
+     *
+     * @param  array  $params
+     *
+     * @return array
+     */
+    public function setFilterFields(array $params) : array
+    {
+        $fields = Schema::getColumnListing($this->getTable());
+        foreach ($params as $key => $param) {
+            if ( !in_array($key, $fields) ) unset($params[$key]);
+        }
+        // 同时过滤时间戳字段【时间戳只允许自动更改，不允许手动设置】
+        if ( $this->timestamps === true && isset($params[self::CREATED_AT]) ) unset($params[self::CREATED_AT]);
+        if ( $this->timestamps === true && isset($params[self::UPDATED_AT]) ) unset($params[self::UPDATED_AT]);
+        return $params;
     }
 }

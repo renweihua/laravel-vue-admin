@@ -2,7 +2,6 @@
 
 namespace App\Modules\Admin\Http\Requests\System;
 
-use App\Modules\Admin\Entities\System\Banner;
 use App\Modules\Admin\Entities\System\Friendlink;
 use App\Modules\Admin\Http\Requests\BaseRequest;
 
@@ -15,14 +14,15 @@ class FriendlinkRequest extends BaseRequest
      */
     public function rules()
     {
-        $primarykey = Friendlink::getInstance()->getKeyName();
+        $instance = Friendlink::getInstance();
+        $primarykey = $instance->getKeyName();
         $validate_id = ',' . request()->input($primarykey, 0) . ',' .  $primarykey;
 
         return [
             'link_name' => [
                 'required',
                 'max:256',
-                'unique:friendlinks,link_name' . $validate_id
+                'unique:' . $instance->getTable() . ',link_name' . $validate_id
             ],
             'link_url' => [
                 'url',

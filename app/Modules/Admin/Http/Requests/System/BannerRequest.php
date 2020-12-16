@@ -14,14 +14,15 @@ class BannerRequest extends BaseRequest
      */
     public function rules()
     {
-        $primarykey = Banner::getInstance()->getKeyName();
+        $instance = Banner::getInstance();
+        $primarykey = $instance->getKeyName();
         $validate_id = ',' . request()->input($primarykey, 0) . ',' .  $primarykey;
 
         return [
             'banner_title' => [
                 'required',
                 'max:256',
-                'unique:banners,banner_title' . $validate_id
+                'unique:' . $instance->getTable() . ',banner_title' . $validate_id
             ],
             'banner_cover' => [
                 'required',

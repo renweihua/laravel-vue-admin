@@ -2,7 +2,6 @@
 
 namespace App\Modules\Admin\Http\Requests\System;
 
-use App\Modules\Admin\Entities\System\Banner;
 use App\Modules\Admin\Entities\System\Config;
 use App\Modules\Admin\Http\Requests\BaseRequest;
 
@@ -15,7 +14,8 @@ class ConfigRequest extends BaseRequest
      */
     public function rules()
     {
-        $primarykey = Config::getInstance()->getKeyName();
+        $instance = Config::getInstance();
+        $primarykey = $instance->getKeyName();
         $validate_id = ',' . request()->input($primarykey, 0) . ',' .  $primarykey;
 
         return [
@@ -26,7 +26,7 @@ class ConfigRequest extends BaseRequest
             'config_name' => [
                 'required',
                 'max:256',
-                'unique:configs,config_name' . $validate_id
+                'unique:' . $instance->getTable() . ',config_name' . $validate_id
             ]
         ];
     }

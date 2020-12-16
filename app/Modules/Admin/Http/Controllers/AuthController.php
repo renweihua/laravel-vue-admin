@@ -2,10 +2,11 @@
 
 namespace App\Modules\Admin\Http\Controllers;
 
+use App\Modules\Admin\Entities\Rabc\AdminMenu;
 use App\Modules\Admin\Http\Requests\LoginRequest;
 use App\Modules\Admin\Services\AuthService;
 
-class AuthController extends AdminController
+class AuthController extends BaseController
 {
     public function __construct(AuthService $authService)
     {
@@ -53,5 +54,11 @@ class AuthController extends AdminController
     public function logout()
     {
         return $this->successJson($this->service->logout());
+    }
+
+    public function getRabcList()
+    {
+        // 临时测试数据
+        return $this->successJson(list_to_tree(AdminMenu::getAllMenus()->toArray()));
     }
 }

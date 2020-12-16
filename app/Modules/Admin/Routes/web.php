@@ -11,6 +11,10 @@
 |
 */
 
+use Illuminate\Support\Facades\Route;
+use App\Modules\Admin\Http\Middleware\CheckAuth;
+use App\Modules\Admin\Http\Middleware\AdminLog;
+
 Route::prefix('admin')->group(function() {
 //    Route::get('/', 'AdminController@index');
     //后台管理路由
@@ -20,77 +24,84 @@ Route::prefix('admin')->group(function() {
 
     Route::prefix('auth')->group(function() {
         Route::any('login', 'AuthController@login');
-        Route::any('me', 'AuthController@me');
-        Route::any('logout', 'AuthController@logout');
+        Route::any('me', 'AuthController@me')->middleware(CheckAuth::class);
+        Route::any('logout', 'AuthController@logout')->middleware(CheckAuth::class);
+        Route::any('getRabcList', 'AuthController@getRabcList')->middleware(CheckAuth::class);
     });
 
-    Route::prefix('banners')->group(function() {
-        Route::any('/', 'System\BannerController@index');
-        Route::any('/create', 'System\BannerController@create');
-        Route::any('/update', 'System\BannerController@update');
-        Route::any('/delete', 'System\BannerController@delete');
-    });
+    Route::middleware([CheckAuth::class, AdminLog::class])->group(function () {
 
-    Route::prefix('configs')->group(function() {
-        Route::any('/', 'System\ConfigController@index');
-        Route::any('/create', 'System\ConfigController@create');
-        Route::any('/update', 'System\ConfigController@update');
-        Route::any('/delete', 'System\ConfigController@delete');
-    });
+        // 首页
+        Route::post('indexs', 'IndexController@index');
 
-    Route::prefix('friendlinks')->group(function() {
-        Route::any('/', 'System\FriendlinkController@index');
-        Route::any('/create', 'System\FriendlinkController@create');
-        Route::any('/update', 'System\FriendlinkController@update');
-        Route::any('/delete', 'System\FriendlinkController@delete');
-    });
+        // 文件上传
+        Route::post('upload_file', 'UploadController@file');
 
-    Route::prefix('protocols')->group(function() {
-        Route::any('/', 'System\ProtocolController@index');
-        Route::any('/create', 'System\ProtocolController@create');
-        Route::any('/update', 'System\ProtocolController@update');
-        Route::any('/delete', 'System\ProtocolController@delete');
-    });
+        Route::prefix('banners')->group(function() {
+            Route::any('/', 'System\BannerController@index');
+            Route::any('/create', 'System\BannerController@create');
+            Route::any('/create', 'System\BannerController@create');
+            Route::any('/update', 'System\BannerController@update');
+            Route::any('/delete', 'System\BannerController@delete');
+        });
 
-    Route::prefix('versions')->group(function() {
-        Route::any('/', 'System\VersionController@index');
-        Route::any('/create', 'System\VersionController@create');
-        Route::any('/update', 'System\VersionController@update');
-        Route::any('/delete', 'System\VersionController@delete');
-    });
+        Route::prefix('configs')->group(function() {
+            Route::any('/', 'System\ConfigController@index');
+            Route::any('/create', 'System\ConfigController@create');
+            Route::any('/update', 'System\ConfigController@update');
+            Route::any('/delete', 'System\ConfigController@delete');
+        });
 
-    Route::prefix('admins')->group(function() {
-        Route::any('/', 'Rabc\AdminController@index');
-        Route::any('/create', 'Rabc\AdminController@create');
-        Route::any('/update', 'Rabc\AdminController@update');
-        Route::any('/delete', 'Rabc\AdminController@delete');
-    });
+        Route::prefix('friendlinks')->group(function() {
+            Route::any('/', 'System\FriendlinkController@index');
+            Route::any('/create', 'System\FriendlinkController@create');
+            Route::any('/update', 'System\FriendlinkController@update');
+            Route::any('/delete', 'System\FriendlinkController@delete');
+        });
 
-    Route::prefix('roles')->group(function() {
-        Route::any('/', 'Rabc\AdminRoleController@index');
-        Route::any('/create', 'Rabc\AdminRoleController@create');
-        Route::any('/update', 'Rabc\AdminRoleController@update');
-        Route::any('/delete', 'Rabc\AdminRoleController@delete');
-    });
+        Route::prefix('protocols')->group(function() {
+            Route::any('/', 'System\ProtocolController@index');
+            Route::any('/create', 'System\ProtocolController@create');
+            Route::any('/update', 'System\ProtocolController@update');
+            Route::any('/delete', 'System\ProtocolController@delete');
+        });
 
-    Route::prefix('menus')->group(function() {
-        Route::any('/', 'Rabc\AdminMenuController@index');
-        Route::any('/create', 'Rabc\AdminMenuController@create');
-        Route::any('/update', 'Rabc\AdminMenuController@update');
-        Route::any('/delete', 'Rabc\AdminMenuController@delete');
-    });
+        Route::prefix('versions')->group(function() {
+            Route::any('/', 'System\VersionController@index');
+            Route::any('/create', 'System\VersionController@create');
+            Route::any('/update', 'System\VersionController@update');
+            Route::any('/delete', 'System\VersionController@delete');
+        });
 
-    Route::prefix('adminlogs')->group(function() {
-        Route::any('/', 'Log\AdminLogController@index');
-        Route::any('/create', 'System\AdminLogController@create');
-        Route::any('/update', 'System\AdminLogController@update');
-        Route::any('/delete', 'System\AdminLogController@delete');
-    });
+        Route::prefix('admins')->group(function() {
+            Route::any('/', 'Rabc\AdminController@index');
+            Route::any('/create', 'Rabc\AdminController@create');
+            Route::any('/update', 'Rabc\AdminController@update');
+            Route::any('/delete', 'Rabc\AdminController@delete');
+        });
 
-    Route::prefix('adminloginlogs')->group(function() {
-        Route::any('/', 'Log\AdminLoginLogController@index');
-        Route::any('/create', 'System\AdminLoginLogController@create');
-        Route::any('/update', 'System\AdminLoginLogController@update');
-        Route::any('/delete', 'System\AdminLoginLogController@delete');
+        Route::prefix('roles')->group(function() {
+            Route::any('/', 'Rabc\AdminRoleController@index');
+            Route::any('/create', 'Rabc\AdminRoleController@create');
+            Route::any('/update', 'Rabc\AdminRoleController@update');
+            Route::any('/delete', 'Rabc\AdminRoleController@delete');
+        });
+
+        Route::prefix('menus')->group(function() {
+            Route::any('/', 'Rabc\AdminMenuController@index');
+            Route::any('/create', 'Rabc\AdminMenuController@create');
+            Route::any('/update', 'Rabc\AdminMenuController@update');
+            Route::any('/delete', 'Rabc\AdminMenuController@delete');
+        });
+
+        Route::prefix('adminlogs')->group(function() {
+            Route::any('/', 'Log\AdminLogController@index');
+            Route::any('/delete', 'System\AdminLogController@delete');
+        });
+
+        Route::prefix('adminloginlogs')->group(function() {
+            Route::any('/', 'Log\AdminLoginLogController@index');
+            Route::any('/delete', 'System\AdminLoginLogController@delete');
+        });
     });
 });
