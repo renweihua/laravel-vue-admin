@@ -3,14 +3,15 @@
 namespace App\Models;
 
 use App\Scopes\DeleteScope;
-use App\Traits\Error;
 use App\Traits\Instance;
+use App\Traits\MysqlTable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
+use Illuminate\Support\Facades\Schema;
 
 class Model extends EloquentModel
 {
-    use Error;
+    use MysqlTable;
     use Instance;
     use HasFactory;
 
