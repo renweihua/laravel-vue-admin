@@ -14,14 +14,15 @@ class AdminRequest extends BaseRequest
      */
     public function rules()
     {
-        $primarykey = Admin::getInstance()->getKeyName();
-        $validate_id = ',' . request()->input($primarykey, 0) . ',' . $primarykey;
+        $instance = Admin::getInstance();
+        $primarykey = $instance->getKeyName();
+        $validate_id = ',' . request()->input($primarykey, 0) . ',' .  $primarykey;
 
         return [
             'admin_name' => [
                 'required',
                 'max:256',
-                'unique:admins,admin_name' . $validate_id
+                'unique:' . $instance->getTable() . ',admin_name' . $validate_id
             ],
             'admin_email' => [
                 'required',

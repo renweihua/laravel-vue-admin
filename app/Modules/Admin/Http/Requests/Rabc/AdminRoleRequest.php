@@ -2,7 +2,6 @@
 
 namespace App\Modules\Admin\Http\Requests\Rabc;
 
-use App\Modules\Admin\Entities\Rabc\Admin;
 use App\Modules\Admin\Entities\Rabc\AdminRole;
 use App\Modules\Admin\Http\Requests\BaseRequest;
 
@@ -15,14 +14,15 @@ class AdminRoleRequest extends BaseRequest
      */
     public function rules()
     {
-        $primarykey = AdminRole::getInstance()->getKeyName();
-        $validate_id = ',' . request()->input($primarykey, 0) . ',' . $primarykey;
+        $instance = AdminRole::getInstance();
+        $primarykey = $instance->getKeyName();
+        $validate_id = ',' . request()->input($primarykey, 0) . ',' .  $primarykey;
 
         return [
             'role_name' => [
                 'required',
                 'max:256',
-                'unique:admin_roles,role_name' . $validate_id
+                'unique:' . $instance->getTable() . ',role_name' . $validate_id
             ],
             'is_check' => [
                 'required',
