@@ -21,17 +21,18 @@ class BaseController extends Controller
      */
     public function index(Request $request)
     {
+        if (!isset($this->service)){
+            return $this->successJson([], '请先设置Service或者重写方法！');
+        }
         return $this->successJson($this->service->lists($request->all()));
     }
 
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
+    public function detail($id = 0)
     {
-        return $this->successJson();
+        if (!isset($this->service)){
+            return $this->successJson([], '请先设置Service或者重写方法！');
+        }
+        return $this->successJson(empty($id) ? [] : $this->service->detail($id));
     }
 
     public function createService($request)
@@ -40,6 +41,9 @@ class BaseController extends Controller
             $request->validated();
         }
 
+        if (!isset($this->service)){
+            return $this->successJson([], '请先设置Service或者重写方法！');
+        }
         if ($this->service->create($request->all())){
             return $this->successJson([], $this->service->getError());
         }else{
@@ -53,6 +57,9 @@ class BaseController extends Controller
             $request->validated();
         }
 
+        if (!isset($this->service)){
+            return $this->successJson([], '请先设置Service或者重写方法！');
+        }
         if ($this->service->update($request->all())){
             return $this->successJson([], $this->service->getError());
         }else{
@@ -62,6 +69,9 @@ class BaseController extends Controller
 
     public function delete(Request $request)
     {
+        if (!isset($this->service)){
+            return $this->successJson([], '请先设置Service或者重写方法！');
+        }
         if ($this->service->delete($request->all())){
             return $this->successJson([], $this->service->getError());
         }else{
@@ -69,34 +79,16 @@ class BaseController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
-    public function store(BaseRequest $request)
+    public function changeFiledStatus(Request $request)
     {
-        //
-    }
+        if (!isset($this->service)){
+            return $this->successJson([], '请先设置Service或者重写方法！');
+        }
 
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('admin::edit');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
-    {
-        //
+        if ($this->service->changeFiledStatus($request->all())){
+            return $this->successJson([], $this->service->getError());
+        }else{
+            return $this->errorJson($this->service->getError());
+        }
     }
 }
