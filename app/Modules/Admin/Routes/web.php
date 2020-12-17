@@ -74,20 +74,20 @@ Route::prefix('admin')->group(function() {
         });
 
         Route::prefix('admins')->group(function() {
-            Route::any('/', 'Rabc\AdminController@index');
-            Route::any('/create', 'Rabc\AdminController@create');
-            Route::any('/update', 'Rabc\AdminController@update');
-            Route::any('/delete', 'Rabc\AdminController@delete');
+            Route::get('/', 'Rabc\AdminController@index');
+            Route::post('/', 'Rabc\AdminController@create');
+            Route::put('/', 'Rabc\AdminController@update');
+            Route::delete('/', 'Rabc\AdminController@delete');
         });
 
-        Route::prefix('roles')->group(function() {
-            Route::any('/', 'Rabc\AdminRoleController@index');
-            Route::any('/create', 'Rabc\AdminRoleController@create');
-            Route::any('/update', 'Rabc\AdminRoleController@update');
-            Route::any('/delete', 'Rabc\AdminRoleController@delete');
+        Route::prefix('admin_roles')->group(function() {
+            Route::get('/', 'Rabc\AdminRoleController@index');
+            Route::post('/', 'Rabc\AdminRoleController@create');
+            Route::put('/', 'Rabc\AdminRoleController@update');
+            Route::delete('/', 'Rabc\AdminRoleController@delete');
         });
 
-        Route::prefix('menus')->group(function() {
+        Route::prefix('admin_menus')->group(function() {
             Route::any('/', 'Rabc\AdminMenuController@index');
             Route::any('/create', 'Rabc\AdminMenuController@create');
             Route::any('/update', 'Rabc\AdminMenuController@update');

@@ -8,6 +8,7 @@ use App\Services\Service;
 class BaseService extends Service
 {
     protected $model;
+    protected $with = [];
 
     public function lists(array $params): array
     {
@@ -15,7 +16,7 @@ class BaseService extends Service
         if ($this->model instanceof MonthModel){
             $this->model = $this->model->setMonthTable(request()->input('search_month', ''));
         }
-        $lists = $this->model->orderBy($this->model->getKeyName(), 'DESC')->paginate($this->getLimit($params['limit'] ?? 10));
+        $lists = $this->model->with($this->with)->orderBy($this->model->getKeyName(), 'DESC')->paginate($this->getLimit($params['limit'] ?? 10));
 
         return [
             'current_page' => $lists->currentPage(),
@@ -39,7 +40,11 @@ class BaseService extends Service
     public function update(array $params)
     {
         $primaryKey = $this->model->getKeyName();
-        return $this->model->where($primaryKey, $params[$primaryKey])->update($this->model->setFilterFields($params));
+        $detail = $this->model->find($params[$primaryKey]);
+        foreach ($this->model->setFilterFields($params) as $field => $value){
+            $detail->$field = $value ?? '';
+        }
+        return $detail->save();
     }
 
     public function delete(array $params)

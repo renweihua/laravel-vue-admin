@@ -9,5 +9,6 @@ class AdminService extends BaseService
     public function __construct(Admin $admin)
     {
         $this->model = $admin;
+        $this->with = ['adminInfo'];
     }
 }
