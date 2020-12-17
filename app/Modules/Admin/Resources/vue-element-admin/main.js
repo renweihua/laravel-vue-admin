@@ -10,8 +10,10 @@ import './styles/element-variables.scss'
 import '@/styles/index.scss' // global css
 
 import App from './App'
-import store from './store'
-import router from './router'
+
+import store from '@/store';
+
+import router from '@/router';
 
 import i18n from './lang' // internationalization
 import './icons' // icon

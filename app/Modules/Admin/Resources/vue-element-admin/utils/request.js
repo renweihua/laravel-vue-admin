@@ -8,13 +8,13 @@ import {
 	getToken
 } from '@/utils/auth';
 
-console.log(process.env);
-console.log(process.env.NODE);
-console.log(process.env.NODE_ENV);
-console.log(process.env.NODE_VUE_APP_BASE_API);
+
+
 
 process.env.VUE_APP_BASE_API = 'http://laravel-admin.cnpscy.com/admin';
-console.log(process.env.NODE_VUE_APP_BASE_API);
+
+
+
 
 // create an axios instance
 const service = axios.create({
@@ -36,7 +36,7 @@ service.interceptors.request.use(
 			// let each request carry token
 			// ['X-Token'] is a custom headers key
 			// please modify it according to the actual situation
-            config.headers['Authorization'] = getToken();
+			config.headers['Authorization'] = 'Bearer ' + getToken();
 		}
 
 		if (config.headers['Content-Type'] === 'application/x-www-form-urlencoded;charset=UTF-8') {

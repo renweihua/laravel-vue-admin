@@ -1,4 +1,13 @@
-import { asyncRoutes, constantRoutes } from '@/router'
+import {
+	asyncRoutes,
+	constantRoutes
+} from '@/router';
+
+import {
+	getMenus
+} from '@/api/login';
+
+import Layout from '@/layout';
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -31,7 +40,46 @@ export function filterAsyncRoutes(routes, roles) {
     }
   })
 
-  return res
+	return res
+}
+
+/**
+ * 后台查询的菜单数据拼装成路由格式的数据
+ * @param routes
+ */
+export function generaMenu(routes, data) {
+
+	console.log('generaMenu');
+	data.forEach(item => {
+		// 隐藏的菜单栏目，不在路由中展示
+		if(item.is_hidden == 1) return;
+		
+		const menu = {
+			path: item.vue_path,
+			// () => loadView(item.vue_component)
+			component: item.vue_component === 'Layout' ? Layout : (resolve) => require([`@/views${item.vue_component}`], resolve),
+			// component: item.vue_component === 'Layout' ? Layout : (resolve) => require([`@/views/${item.vue_component}`], resolve),
+			// hidden: true,
+			children: [],
+			// name: 'menu_' + item.menu_id,
+		};
+		if(item.vue_path != '/') menu.meta = {
+			icon: item.vue_icon,
+			title: item.menu_name,
+			id: item.menu_id
+		};
+		// 是否跳转
+		if(item.vue_redirect) menu.redirect = item.vue_redirect;
+		// 子菜单
+		if (item._child) {
+			generaMenu(menu.children, item._child)
+		}
+		
+		console.log(menu);
+
+		routes.push(menu);
+	});
+	// console.log(import('@/views/default/articles/index'));
 }
 
 const state = {
@@ -48,16 +96,26 @@ const mutations = {
 
 const actions = {
   generateRoutes({ commit }, roles) {
-    return new Promise(resolve => {
-      let accessedRoutes
-      if (roles.includes('admin')) {
-        accessedRoutes = asyncRoutes || []
-      } else {
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-      }
-      commit('SET_ROUTES', accessedRoutes)
-      resolve(accessedRoutes)
-    })
+		return new Promise(resolve => {
+			getMenus(state.token).then((response) => {
+				const {
+					data
+				} = response;
+				
+				console.log(data);
+				
+				var pushRouter = [];
+				generaMenu(pushRouter, data);
+				// console.log('---pushRouter---');
+				// console.log(pushRouter);
+				// console.log('---pushRouter---');
+				commit('SET_ROUTES', pushRouter);
+				resolve(pushRouter);
+			}).catch(error => {
+				console.log(error);
+				resolve([]);
+			});
+		});
   }
 }
 
