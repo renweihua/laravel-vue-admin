@@ -13,7 +13,7 @@ class AdminMenuService extends BaseService
 
     /**
      * 菜单列表
-     * 
+     *
      * @param array $params
      * @return array
      */
