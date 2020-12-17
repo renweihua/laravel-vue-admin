@@ -3,20 +3,34 @@
 namespace App\Modules\Admin\Entities\Rabc;
 
 use App\Traits\Instance;
+use App\Traits\MysqlTable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class Admin extends Authenticatable implements JWTSubject
 {
     use Instance;
+    use MysqlTable;
 
     protected $primaryKey = 'admin_id';
+
+    /**
+     * 是否主动维护时间戳
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 
     protected $hidden = ['password'];
 
     public function getAdminByName(string $admin_name)
     {
         return $this->where('admin_name', $admin_name)->first();
+    }
+
+    public function setPasswordAttribute($key)
+    {
+        if (empty($key)) unset($this->attributes['password']);
     }
 
     /**
@@ -35,5 +49,10 @@ class Admin extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return ['role' => 'admin'];
+    }
+
+    public function adminInfo()
+    {
+        return $this->hasOne(AdminInfo::class, $this->primaryKey, $this->primaryKey);
     }
 }
