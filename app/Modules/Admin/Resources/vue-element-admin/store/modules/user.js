@@ -1,31 +1,52 @@
-import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
-import router, { resetRouter } from '@/router'
+import {
+    login,
+    logout,
+    getInfo,
+    getMenus
+} from '@/api/login';
+
+import {
+    getToken,
+    setToken,
+    removeToken
+} from '@/utils/auth';
+
+import router, {
+    resetRouter
+} from '@/router';
+
+import {
+    Message
+} from 'element-ui';
 
 const state = {
-  token: getToken(),
-  name: '',
-  avatar: '',
-  introduction: '',
-  roles: []
+    token: getToken(),
+    name: '',
+    avatar: '',
+    introduction: '',
+    roles: [],
+    menus: []
 }
 
 const mutations = {
-  SET_TOKEN: (state, token) => {
-    state.token = token
-  },
-  SET_INTRODUCTION: (state, introduction) => {
-    state.introduction = introduction
-  },
-  SET_NAME: (state, name) => {
-    state.name = name
-  },
-  SET_AVATAR: (state, avatar) => {
-    state.avatar = avatar
-  },
-  SET_ROLES: (state, roles) => {
-    state.roles = roles
-  }
+    SET_TOKEN: (state, token) => {
+        state.token = token
+    },
+    SET_INTRODUCTION: (state, introduction) => {
+        state.introduction = introduction
+    },
+    SET_NAME: (state, name) => {
+        state.name = name
+    },
+    SET_AVATAR: (state, avatar) => {
+        state.avatar = avatar
+    },
+    SET_ROLES: (state, roles) => {
+        state.roles = roles
+    },
+    SET_MENUS: (state, menus) => {
+        state.menus = menus
+    }
 }
 
 const actions = {
@@ -35,11 +56,16 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({ admin_name: username.trim(), password: password }).then(response => {
         const { data } = response;
-
-          console.log(data);
+                Message({
+                    message: response.msg,
+                    type: 'success',
+                    duration: 1500
+                });
 
         commit('SET_TOKEN', data.access_token);
         setToken(data.access_token);
+
+                console.log('登录完成 - login - end');
         resolve();
       }).catch(error => {
         reject(error)
@@ -49,16 +75,22 @@ const actions = {
 
   // get user info
   getInfo({ commit, state }) {
+
+        console.log('获取基本信息 - getInfo');
     return new Promise((resolve, reject) => {
-        console.log(state);
       getInfo(state.token).then(response => {
         const { data } = response
 
         if (!data) {
           reject('Verification failed, please Login again.')
         }
+        
+        const { roles, admin_name, admin_head } = data
 
-        const { roles, name, avatar, introduction } = data
+
+        // 强行定义：路由权限后端做了处理，前端如何没有权限就不会展示菜单栏目 === vue的路由
+         roles.push('admin');
+         roles.push('editor');
 
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
@@ -66,9 +98,9 @@ const actions = {
         }
 
         commit('SET_ROLES', roles)
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        commit('SET_INTRODUCTION', introduction)
+        commit('SET_NAME', admin_name)
+        commit('SET_AVATAR', admin_head)
+        commit('SET_INTRODUCTION', admin_name)
         resolve(data)
       }).catch(error => {
         reject(error)
