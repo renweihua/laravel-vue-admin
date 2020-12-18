@@ -78,6 +78,7 @@ Route::prefix('admin')->group(function() {
             Route::post('/', 'Rabc\AdminController@create');
             Route::put('/', 'Rabc\AdminController@update');
             Route::delete('/', 'Rabc\AdminController@delete');
+            Route::get('/getSelectLists', 'Rabc\AdminController@getSelectLists');
         });
 
         Route::prefix('admin_roles')->group(function() {
@@ -85,6 +86,7 @@ Route::prefix('admin')->group(function() {
             Route::post('/', 'Rabc\AdminRoleController@create');
             Route::put('/', 'Rabc\AdminRoleController@update');
             Route::delete('/', 'Rabc\AdminRoleController@delete');
+            Route::get('/getSelectLists', 'Rabc\AdminRoleController@getSelectLists');
         });
 
         Route::prefix('admin_menus')->group(function() {
@@ -92,6 +94,7 @@ Route::prefix('admin')->group(function() {
             Route::any('/create', 'Rabc\AdminMenuController@create');
             Route::any('/update', 'Rabc\AdminMenuController@update');
             Route::any('/delete', 'Rabc\AdminMenuController@delete');
+            Route::get('/getSelectLists', 'Rabc\AdminMenuController@getSelectLists');
         });
 
         Route::prefix('adminlogs')->group(function() {

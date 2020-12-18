@@ -23,4 +23,9 @@ class AdminMenuService extends BaseService
 
         return list_to_tree($lists->toArray());
     }
+
+    public function getSelectLists($request)
+    {
+        return $this->model->getSelectLists();
+    }
 }
