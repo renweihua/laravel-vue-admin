@@ -30,7 +30,7 @@ class AdminRequest extends BaseRequest
                 'email',
             ],
             'password' => [
-                'confirmed',
+//                'confirmed',
             ],
             'password_confirmation' => [
 

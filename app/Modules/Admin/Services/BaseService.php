@@ -56,7 +56,7 @@ class BaseService extends Service
      */
     public function create(array $params)
     {
-        return $this->model->create($this->model->setFilterFields($params));
+        return $this->detail = $this->model->create($this->model->setFilterFields($params));
     }
 
     /**
