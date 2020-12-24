@@ -9,6 +9,7 @@ class BaseService extends Service
 {
     protected $model;
     protected $with = [];
+    protected $detail;
 
     /**
      * 列表分页数据
@@ -68,11 +69,11 @@ class BaseService extends Service
     public function update(array $params)
     {
         $primaryKey = $this->model->getKeyName();
-        $detail = $this->model->find($params[$primaryKey]);
+        $this->detail = $this->model->find($params[$primaryKey]);
         foreach ($this->model->setFilterFields($params) as $field => $value){
-            $detail->$field = $value ?? '';
+            $this->detail->$field = $value ?? '';
         }
-        return $detail->save();
+        return $this->detail->save();
     }
 
     /**
