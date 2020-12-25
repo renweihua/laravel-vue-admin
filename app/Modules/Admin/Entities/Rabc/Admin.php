@@ -5,6 +5,7 @@ namespace App\Modules\Admin\Entities\Rabc;
 use App\Traits\Instance;
 use App\Traits\MysqlTable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class Admin extends Authenticatable implements JWTSubject
@@ -38,6 +39,7 @@ class Admin extends Authenticatable implements JWTSubject
     public function setPasswordAttribute($key)
     {
         if (empty($key)) unset($this->attributes['password']);
+        else $this->attributes['password'] = hash_encryption($key);
     }
 
     /**
@@ -96,5 +98,18 @@ class Admin extends Authenticatable implements JWTSubject
     public function deleteRole($roles)
     {
         return $this->roles()->detach($roles);
+    }
+
+    public function getAdminHeadAttribute($key)
+    {
+        if (empty($key)) return $key;
+        return Storage::url($key);
+    }
+
+    public function setAdminHeadAttribute($key)
+    {
+        if (!empty($key)) {
+            $this->attributes['admin_head'] = str_replace(Storage::url('/'), '', $key);
+        }
     }
 }
