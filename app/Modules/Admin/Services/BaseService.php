@@ -8,14 +8,23 @@ use App\Services\Service;
 class BaseService extends Service
 {
     protected $model;
+    protected $with = [];
+    protected $detail;
 
+    /**
+     * 列表分页数据
+     *
+     * @param  array  $params
+     *
+     * @return array
+     */
     public function lists(array $params): array
     {
         // 如果是按月分表的模型，设置按月份查询的月份表
         if ($this->model instanceof MonthModel){
             $this->model = $this->model->setMonthTable(request()->input('search_month', ''));
         }
-        $lists = $this->model->orderBy($this->model->getKeyName(), 'DESC')->paginate($this->getLimit($params['limit'] ?? 10));
+        $lists = $this->model->with($this->with)->orderBy($this->model->getKeyName(), 'DESC')->paginate($this->getLimit($params['limit'] ?? 10));
 
         return [
             'current_page' => $lists->currentPage(),
@@ -26,22 +35,53 @@ class BaseService extends Service
         ];
     }
 
+    /**
+     * 详情
+     *
+     * @param $id
+     *
+     * @return mixed
+     */
     public function detail($id)
     {
         return $this->model->detail($id);
     }
 
+    /**
+     * 新增数据
+     *
+     * @param  array  $params
+     *
+     * @return mixed
+     */
     public function create(array $params)
     {
-        return $this->model->create($this->model->setFilterFields($params));
+        return $this->detail = $this->model->create($this->model->setFilterFields($params));
     }
 
+    /**
+     * 更新数据
+     *
+     * @param  array  $params
+     *
+     * @return mixed
+     */
     public function update(array $params)
     {
         $primaryKey = $this->model->getKeyName();
-        return $this->model->where($primaryKey, $params[$primaryKey])->update($this->model->setFilterFields($params));
+        $this->detail = $this->model->find($params[$primaryKey]);
+        foreach ($this->model->setFilterFields($params) as $field => $value){
+            $this->detail->$field = $value ?? '';
+        }
+        return $this->detail->save();
     }
 
+    /**
+     * 删除：单个或匹配删除
+     * @param  array  $params
+     *
+     * @return bool
+     */
     public function delete(array $params)
     {
         $primaryKey = $this->model->getKeyName();
@@ -68,6 +108,12 @@ class BaseService extends Service
         }
     }
 
+    /**
+     * 指定字段变动
+     * @param  array  $params
+     *
+     * @return bool
+     */
     public function changeFiledStatus(array $params)
     {
         $primaryKey = $this->model->getKeyName();
@@ -82,5 +128,17 @@ class BaseService extends Service
             $this->setError('设置失败！');
             return false;
         }
+    }
+
+    /**
+     * 下拉列表
+     *
+     * @param $request
+     *
+     * @return mixed
+     */
+    public function getSelectLists($request)
+    {
+        return $this->model->orderBy($this->model->getKeyName(), 'ASC')->limit(100)->get();
     }
 }

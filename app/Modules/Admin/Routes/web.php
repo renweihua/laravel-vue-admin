@@ -38,70 +38,72 @@ Route::prefix('admin')->group(function() {
         Route::post('upload_file', 'UploadController@file');
 
         Route::prefix('banners')->group(function() {
-            Route::any('/', 'System\BannerController@index');
-            Route::any('/create', 'System\BannerController@create');
-            Route::any('/create', 'System\BannerController@create');
-            Route::any('/update', 'System\BannerController@update');
-            Route::any('/delete', 'System\BannerController@delete');
+            Route::get('/', 'System\BannerController@index');
+            Route::post('/', 'System\BannerController@create');
+            Route::put('/', 'System\BannerController@update');
+            Route::delete('/', 'System\BannerController@delete');
         });
 
         Route::prefix('configs')->group(function() {
-            Route::any('/', 'System\ConfigController@index');
-            Route::any('/create', 'System\ConfigController@create');
-            Route::any('/update', 'System\ConfigController@update');
-            Route::any('/delete', 'System\ConfigController@delete');
+            Route::get('/', 'System\ConfigController@index');
+            Route::post('/', 'System\ConfigController@create');
+            Route::put('/', 'System\ConfigController@update');
+            Route::delete('/', 'System\ConfigController@delete');
         });
 
         Route::prefix('friendlinks')->group(function() {
-            Route::any('/', 'System\FriendlinkController@index');
-            Route::any('/create', 'System\FriendlinkController@create');
-            Route::any('/update', 'System\FriendlinkController@update');
-            Route::any('/delete', 'System\FriendlinkController@delete');
+            Route::get('/', 'System\FriendlinkController@index');
+            Route::post('/', 'System\FriendlinkController@create');
+            Route::put('/', 'System\FriendlinkController@update');
+            Route::delete('/', 'System\FriendlinkController@delete');
         });
 
         Route::prefix('protocols')->group(function() {
-            Route::any('/', 'System\ProtocolController@index');
-            Route::any('/create', 'System\ProtocolController@create');
-            Route::any('/update', 'System\ProtocolController@update');
-            Route::any('/delete', 'System\ProtocolController@delete');
+            Route::get('/', 'System\ProtocolController@index');
+            Route::post('/', 'System\ProtocolController@create');
+            Route::put('/', 'System\ProtocolController@update');
+            Route::delete('/', 'System\ProtocolController@delete');
         });
 
         Route::prefix('versions')->group(function() {
-            Route::any('/', 'System\VersionController@index');
-            Route::any('/create', 'System\VersionController@create');
-            Route::any('/update', 'System\VersionController@update');
-            Route::any('/delete', 'System\VersionController@delete');
+            Route::get('/', 'System\VersionController@index');
+            Route::post('/', 'System\VersionController@create');
+            Route::put('/', 'System\VersionController@update');
+            Route::delete('/', 'System\VersionController@delete');
         });
 
         Route::prefix('admins')->group(function() {
-            Route::any('/', 'Rabc\AdminController@index');
-            Route::any('/create', 'Rabc\AdminController@create');
-            Route::any('/update', 'Rabc\AdminController@update');
-            Route::any('/delete', 'Rabc\AdminController@delete');
+            Route::get('/', 'Rabc\AdminController@index');
+            Route::post('/', 'Rabc\AdminController@create');
+            Route::put('/', 'Rabc\AdminController@update');
+            Route::delete('/', 'Rabc\AdminController@delete');
+            Route::get('/getSelectLists', 'Rabc\AdminController@getSelectLists');
         });
 
-        Route::prefix('roles')->group(function() {
-            Route::any('/', 'Rabc\AdminRoleController@index');
-            Route::any('/create', 'Rabc\AdminRoleController@create');
-            Route::any('/update', 'Rabc\AdminRoleController@update');
-            Route::any('/delete', 'Rabc\AdminRoleController@delete');
+        Route::prefix('admin_roles')->group(function() {
+            Route::get('/', 'Rabc\AdminRoleController@index');
+            Route::post('/', 'Rabc\AdminRoleController@create');
+            Route::put('/', 'Rabc\AdminRoleController@update');
+            Route::delete('/', 'Rabc\AdminRoleController@delete');
+            Route::get('/getSelectLists', 'Rabc\AdminRoleController@getSelectLists');
         });
 
-        Route::prefix('menus')->group(function() {
-            Route::any('/', 'Rabc\AdminMenuController@index');
-            Route::any('/create', 'Rabc\AdminMenuController@create');
-            Route::any('/update', 'Rabc\AdminMenuController@update');
-            Route::any('/delete', 'Rabc\AdminMenuController@delete');
+        Route::prefix('admin_menus')->group(function() {
+            Route::get('/', 'Rabc\AdminMenuController@index');
+            Route::post('/', 'Rabc\AdminMenuController@create');
+            Route::put('/', 'Rabc\AdminMenuController@update');
+            Route::delete('/', 'Rabc\AdminMenuController@delete');
+            Route::get('/getSelectLists', 'Rabc\AdminMenuController@getSelectLists');
         });
 
         Route::prefix('adminlogs')->group(function() {
-            Route::any('/', 'Log\AdminLogController@index');
-            Route::any('/delete', 'System\AdminLogController@delete');
+            Route::get('/', 'Log\AdminLogController@index');
+            Route::delete('/', 'System\AdminLogController@delete');
         });
 
         Route::prefix('adminloginlogs')->group(function() {
-            Route::any('/', 'Log\AdminLoginLogController@index');
-            Route::any('/delete', 'System\AdminLoginLogController@delete');
+            Route::get('/', 'Log\AdminLoginLogController@index');
+            Route::delete('/', 'System\AdminLoginLogController@delete');
         });
     });
 });

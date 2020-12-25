@@ -2,9 +2,7 @@
 
 namespace App\Modules\Admin\Http\Controllers;
 
-use App\Modules\Admin\Http\Requests\BaseRequest;
 use App\Traits\Json;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -16,8 +14,11 @@ class BaseController extends Controller
     protected $service;
 
     /**
-     * Display a listing of the resource.
-     * @return Renderable
+     * 列表页
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
     {
@@ -27,6 +28,13 @@ class BaseController extends Controller
         return $this->successJson($this->service->lists($request->all()));
     }
 
+    /**
+     * 详情
+     *
+     * @param  int  $id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function detail($id = 0)
     {
         if (!isset($this->service)){
@@ -35,6 +43,13 @@ class BaseController extends Controller
         return $this->successJson(empty($id) ? [] : $this->service->detail($id));
     }
 
+    /**
+     * 新增流程
+     *
+     * @param $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function createService($request)
     {
         if ($request instanceof FormRequest){
@@ -51,6 +66,13 @@ class BaseController extends Controller
         }
     }
 
+    /**
+     * 更新流程
+     *
+     * @param $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateService($request)
     {
         if ($request instanceof FormRequest){
@@ -67,6 +89,13 @@ class BaseController extends Controller
         }
     }
 
+    /**
+     * 删除
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function delete(Request $request)
     {
         if (!isset($this->service)){
@@ -79,6 +108,13 @@ class BaseController extends Controller
         }
     }
 
+    /**
+     * 指定字段变更操作
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function changeFiledStatus(Request $request)
     {
         if (!isset($this->service)){
@@ -90,5 +126,18 @@ class BaseController extends Controller
         }else{
             return $this->errorJson($this->service->getError());
         }
+    }
+
+    /**
+     * 下拉筛选列表（可搜索）
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getSelectLists(Request $request)
+    {
+        $lists = $this->service->getSelectLists($request);
+        return $this->successJson($lists);
     }
 }
