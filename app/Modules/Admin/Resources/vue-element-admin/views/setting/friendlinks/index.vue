@@ -64,9 +64,9 @@
                     label="站点名称"
                     align="center"
             />
-            <el-table-column align="center" prop="link_img" label="站点图标">
+            <el-table-column align="center" prop="link_cover" label="站点图标">
                 <template slot-scope="{row}">
-                    <img v-if="row.cover" width="50px" height="50px" :src="row.cover.file_path"/>
+                    <img v-if="row.link_cover" width="100px" height="100px" :src="row.link_cover"/>
                 </template>
             </el-table-column>
             <el-table-column
@@ -195,7 +195,7 @@
                     const filterVal = [
                         'link_id',
                         'link_name',
-                        'link_img',
+                        'link_cover',
                         'link_url',
                         'created_time',
                         'is_check'
@@ -219,7 +219,7 @@
                             case 'is_check':
                                 return this.checkFilter(v[j]);
                                 break;
-                            case 'link_img':
+                            case 'link_cover':
                                 console.log(v.cover);
                                 return v.cover.file_path;
                                 break;

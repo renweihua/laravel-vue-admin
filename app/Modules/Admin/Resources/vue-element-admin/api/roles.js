@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function getMenusSelect() {
+export function getRolesSelect() {
     return request({
-        url: '/admin_menus/getSelectLists',
+        url: '/admin_roles/getSelectLists',
         method: 'get'
     })
 }

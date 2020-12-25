@@ -9,6 +9,10 @@ import {
 } from '@/utils/auth';
 
 
+//
+// console.log(process);
+// console.log(process.env);
+// console.log(process.env.VUE_APP_BASE_API);
 
 
 process.env.VUE_APP_BASE_API = 'http://laravel-admin.cnpscy.com/admin';
@@ -97,6 +101,8 @@ service.interceptors.response.use(
 	},
 	error => {
 		console.log('err' + error) // for debug
+        console.log(error) // for debug
+        console.log(error.response) // for debug
 		Message({
 			message: error.msg,
 			type: 'error',

@@ -226,7 +226,6 @@
             // 获取菜单列表
             async getMenusSelect() {
                 const res = await getMenusSelect();
-                this.serviceMenus = res.data;
                 this.menus = res.data;
             },
             // 获取角色列表

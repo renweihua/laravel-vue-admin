@@ -64,9 +64,9 @@
                     label="Banner标题"
                     align="center"
             />
-            <el-table-column align="center" prop="link_img" label="封面">
+            <el-table-column align="center" prop="banner_cover" label="封面">
                 <template slot-scope="{row}">
-                    <img v-if="row.cover" width="50px" height="50px" :src="row.cover.file_path"/>
+                    <img v-if="row.banner_cover" width="100px" height="100px" :src="row.banner_cover"/>
                 </template>
             </el-table-column>
             <el-table-column

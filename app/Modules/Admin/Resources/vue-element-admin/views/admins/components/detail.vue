@@ -56,18 +56,23 @@
                     </span>
             </el-form-item>
             <el-form-item label="授权角色" prop="role_id">
-                <el-radio-group>
-                    <el-radio :label="1" :checked="form.role_id == 1 ? 'checked' : ''">角色1</el-radio>
-                    <el-radio :label="2" :checked="form.role_id == 2 ? 'checked' : ''">角色2</el-radio>
+                <el-radio-group v-for="(role, index) in roles" :key="index">
+                    <el-checkbox @change="selectRoles(index, role.role_id)"
+                                 :label="role.role_id"
+                                 :checked="form.role_ids.indexOf(role.role_id) == -1 ? 'checked' : ''"
+                    >{{ role.role_name }} --- {{form.role_ids.indexOf(role.role_id)}}</el-checkbox>1
                 </el-radio-group>
-                <select name="public-choice" v-model ="roleSelected" style="width: 200px;" autocomplete="off" @change ="changeRole($event)">
-          <option value="" >请选择</option>
-          <option :value="role.id"  v-for="role in roleList"  >
-            {{ role.role_name }}
-          </option>
-        </select>
-            </el-form-item>
 
+
+
+
+                <select name="public-choice" style="width: 200px;" autocomplete="off" @change="changeRole($event)">
+                  <option value="" >请选择</option>
+                  <option v-for="role in roles" :value="role.role_id">
+                    {{ role.role_name }}
+                  </option>
+                </select>
+            </el-form-item>
             <el-form-item label="是否启用" prop="is_check">
                 <el-radio-group v-model="form.is_check">
                     <el-radio :label="0" :checked="form.is_check == 0 ? 'checked' : ''">禁用</el-radio>
@@ -86,6 +91,7 @@
     import {create, update} from '@/api/admins';
     import {getUploadUrl} from '@/api/common';
     import {validEmail} from '@/utils/validate';
+    import {getRolesSelect} from '@/api/roles';
 
     import myUpload from '@/components/Uploads/image/index';
     import PanThumb from '@/components/PanThumb';
@@ -113,7 +119,8 @@
                     admin_head: '',
                     password: '',
                     role_id: '',
-                    is_check: 0
+                    is_check: 0,
+                    role_ids: [],
                 },
                 rules: {
                     admin_name: [
@@ -139,19 +146,41 @@
                 title: '',
                 dialogFormVisible: false,
 
+                // 角色列表
+                roles: [],
+
                 // 图片上传
                 show: false,
                 size: 2.1,
 
                 // 图片上传
                 upload_url: '',
-                image_url: ''
+                image_url: '',
             }
         },
         created() {
-            this.upload_url = getUploadUrl()
+            this.upload_url = getUploadUrl();
+            // 获取菜单列表
+            this.getRolesSelect();
         },
         methods: {
+            // 获取菜单列表
+            async getRolesSelect() {
+                const res = await getRolesSelect();
+                this.roles = res.data;
+            },
+            // 管理员授权角色
+            selectRoles(index, role_id){
+                console.log('selectRoles');
+                console.log(role_id);
+                console.log(this.form.role_ids);
+                console.log(this.form.role_ids.indexOf(role_id));
+                if (this.form.role_ids.indexOf(role_id) == -1){
+                    this.form.role_ids.push(role_id);
+                }else{
+                    this.form.role_ids.splice(index, 1);
+                }
+            },
             toggleShow() {
                 this.show = !this.show
             },
@@ -159,11 +188,10 @@
                 console.log('-------- crop success --------', imgDataUrl, field)
             },
             // 上传成功回调
-            cropUploadSuccess(jsonData, field) {
-                var file = jsonData.data;
-                console.log(file);
-                this.image_url = file.file_path;
-                this.form.admin_head = file.file_id;
+            cropUploadSuccess(result, field) {
+                console.log(result);
+                this.image_url = result.path_url;
+                this.form.admin_head = result.data;
             },
             // 上传失败回调
             cropUploadFail(status, field) {
@@ -171,7 +199,6 @@
                 console.log('上传失败状态' + status);
                 console.log('field: ' + field)
             },
-
             showEdit(row) {
                 const detail = Object.assign({}, row);
                 if (!detail) {
@@ -179,6 +206,11 @@
                 } else {
                     this.title = '编辑';
                     this.form = Object.assign(this.form, detail);
+                    if (detail.roles){
+                        for (const key in detail.roles) {
+                            this.form.role_ids.push(detail.roles[key].role_id);
+                        }
+                    }
                     // 设置展示的图标
                     this.image_url = this.form.cover ? this.form.cover.file_path : '';
                 }

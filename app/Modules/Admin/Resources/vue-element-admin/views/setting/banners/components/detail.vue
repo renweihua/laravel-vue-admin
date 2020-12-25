@@ -126,11 +126,10 @@
                 console.log('-------- crop success --------', imgDataUrl, field)
             },
             // 上传成功回调
-            cropUploadSuccess(jsonData, field) {
-                var file = jsonData.data;
-                console.log(file);
-                this.image_url = file.file_path;
-                this.form.banner_cover = file.file_id;
+            cropUploadSuccess(result, field) {
+                console.log(result);
+                this.image_url = result.path_url;
+                this.form.banner_cover = result.data;
             },
             // 上传失败回调
             cropUploadFail(status, field) {
@@ -138,7 +137,6 @@
                 console.log('上传失败状态' + status);
                 console.log('field: ' + field)
             },
-
             showEdit(row) {
                 const detail = Object.assign({}, row);
                 if (!detail) {
@@ -147,7 +145,7 @@
                     this.title = '编辑';
                     this.form = Object.assign(this.form, detail);
                     // 设置展示的图标
-                    this.image_url = this.form.cover ? this.form.cover.file_path : '';
+                    this.image_url = this.form.banner_cover;
                 }
                 console.log(this.form);
                 this.dialogFormVisible = true

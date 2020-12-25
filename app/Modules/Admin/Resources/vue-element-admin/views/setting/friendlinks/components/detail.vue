@@ -9,7 +9,7 @@
             <el-form-item label="站点名称" prop="link_name">
                 <el-input v-model.trim="form.link_name" autocomplete="off"/>
             </el-form-item>
-            <el-form-item label="站点图标" prop="link_img">
+            <el-form-item label="站点图标" prop="link_cover">
                 <pan-thumb :image="image_url"/>
 
                 <el-button
@@ -83,7 +83,7 @@
             return {
                 form: {
                     link_name: '',
-                    link_img: '',
+                    link_cover: '',
                     link_url: '',
                     link_sort: 0,
                     is_check: 0
@@ -126,11 +126,10 @@
                 console.log('-------- crop success --------', imgDataUrl, field)
             },
             // 上传成功回调
-            cropUploadSuccess(jsonData, field) {
-                var file = jsonData.data;
-                console.log(file);
-                this.image_url = file.file_path;
-                this.form.link_img = file.file_id;
+            cropUploadSuccess(result, field) {
+                console.log(result);
+                this.image_url = result.path_url;
+                this.form.link_cover = result.data;
             },
             // 上传失败回调
             cropUploadFail(status, field) {
@@ -147,7 +146,7 @@
                     this.title = '编辑';
                     this.form = Object.assign(this.form, detail);
                     // 设置展示的图标
-                    this.image_url = this.form.cover ? this.form.cover.file_path : '';
+                    this.image_url = this.form.link_cover;
                 }
                 console.log(this.form);
                 this.dialogFormVisible = true

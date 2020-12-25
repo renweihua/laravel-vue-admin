@@ -53,11 +53,11 @@ export function generaMenu(routes, data) {
 	data.forEach(item => {
 		// 隐藏的菜单栏目，不在路由中展示
 		if(item.is_hidden == 1) return;
-		
+
 		const menu = {
 			path: item.vue_path,
 			// () => loadView(item.vue_component)
-			component: item.vue_component === 'Layout' ? Layout : (resolve) => require([`@/views${item.vue_component}`], resolve),
+			component: (item.vue_component === 'Layout' || item.vue_component == '') ? Layout : (resolve) => require([`@/views/${item.vue_component}`], resolve),
 			// component: item.vue_component === 'Layout' ? Layout : (resolve) => require([`@/views/${item.vue_component}`], resolve),
 			// hidden: true,
 			children: [],
@@ -68,15 +68,16 @@ export function generaMenu(routes, data) {
 			title: item.menu_name,
 			id: item.menu_id
 		};
+		// 首页
+        if(item.vue_path == 'dashboard') menu.meta.affix = true;
 		// 是否跳转
 		if(item.vue_redirect) menu.redirect = item.vue_redirect;
 		// 子菜单
 		if (item._child) {
 			generaMenu(menu.children, item._child)
 		}
-		
-		console.log(menu);
 
+		console.log(menu);
 		routes.push(menu);
 	});
 	// console.log(import('@/views/default/articles/index'));
@@ -101,9 +102,9 @@ const actions = {
 				const {
 					data
 				} = response;
-				
+
 				console.log(data);
-				
+
 				var pushRouter = [];
 				generaMenu(pushRouter, data);
 				// console.log('---pushRouter---');
