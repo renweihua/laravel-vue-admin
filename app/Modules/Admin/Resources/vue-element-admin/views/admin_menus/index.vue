@@ -88,9 +88,8 @@
 </template>
 
 <script>
-    import {getList as getRoles} from "@/api/roles";
     import {getList as getMenus, setDel} from "@/api/admin_menus";
-    import Edit from "./components/MenuManagementEdit";
+    import Edit from "./components/detail";
 
     export default {
         name: "MenuManagement",

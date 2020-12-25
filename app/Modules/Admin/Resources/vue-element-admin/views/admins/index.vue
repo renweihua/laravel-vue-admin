@@ -70,9 +70,9 @@
                     label="邮箱"
                     align="center"
             />
-            <el-table-column align="center" prop="link_img" label="头像">
+            <el-table-column align="center" prop="admin_head" label="头像">
                 <template slot-scope="{row}">
-                    <img v-if="row.cover" width="50px" height="50px" :src="row.cover.file_path"/>
+                    <img v-if="row.admin_head" width="100px" height="100px" :src="row.admin_head"/>
                 </template>
             </el-table-column>
             <el-table-column label="创建时间" show-overflow-tooltip align="center">
@@ -98,9 +98,7 @@
             >
                 <template v-slot="scope">
                     <el-button type="text" @click="handleEdit(scope.row)">编辑</el-button>
-                    <el-button type="text" @click="handleDelete(scope.row)">
-                        删除
-                    </el-button>
+                    <el-button type="text" v-if="scope.row.admin_id != 1" @click="handleDelete(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>

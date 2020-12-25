@@ -63,11 +63,17 @@ export function generaMenu(routes, data) {
 			children: [],
 			// name: 'menu_' + item.menu_id,
 		};
+
+		console.log(item);
 		if(item.vue_path != '/') menu.meta = {
 			icon: item.vue_icon,
 			title: item.menu_name,
 			id: item.menu_id
 		};
+
+		console.log(menu.meta);
+
+
 		// 首页
         if(item.vue_path == 'dashboard') menu.meta.affix = true;
 		// 是否跳转

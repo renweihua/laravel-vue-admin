@@ -2,10 +2,9 @@
     <el-dialog
             :title="title"
             :visible.sync="dialogFormVisible"
-            width="500px"
             @close="close"
     >
-        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form ref="form" :model="form" :rules="rules">
             <el-form-item label="账户：">
                 <el-input
                         v-model.trim="form.admin_name"
@@ -13,22 +12,22 @@
                         placeholder="管理员账户"
                 />
             </el-form-item>
-            <el-form-item label="邮箱">
+            <el-form-item label="邮箱：">
                 <el-input
-                        v-model="form.admin_email"
-                        :autosize="{ minRows: 2, maxRows: 20}"
-                        type="textarea"
-                        placeholder="邮箱"
+                    v-model="form.admin_email"
+                    :autosize="{ minRows: 2, maxRows: 20}"
+                    type="email"
+                    placeholder="邮箱"
                 />
             </el-form-item>
-            <el-form-item label="头像" prop="admin_head">
+            <el-form-item label="头像：" prop="admin_head">
                 <pan-thumb :image="image_url"/>
 
                 <el-button
-                        type="primary"
-                        icon="el-icon-upload"
-                        style="position: absolute;bottom: 15px;margin-left: 40px;"
-                        @click="show=true"
+                    id="img-btn"
+                    type="primary"
+                    icon="el-icon-upload"
+                    @click="show=true"
                 >
                     头像
                 </el-button>
@@ -48,32 +47,28 @@
                         @crop-upload-fail="cropUploadFail"
                 />
             </el-form-item>
-            <el-form-item label="密码">
+            <el-form-item label="密码：">
                 <el-input v-model="form.password" placeholder="登录密码"/>
                 <span>
-                        已设置密码【再次输入，默认会更改；不输入，则不变动】
-                        请设置密码【默认为：123456】
-                    </span>
+                    已设置密码【再次输入，默认会更改；不输入，则不变动】
+                    <br>
+                    请设置密码【默认为：123456】
+                </span>
             </el-form-item>
-            <el-form-item label="授权角色" prop="role_id">
-                <el-radio-group v-for="(role, index) in roles" :key="index">
-                    <el-checkbox @change="selectRoles(index, role.role_id)"
+            <el-form-item label="授权角色：" prop="role_id" v-if="form.admin_id != 1">
+                <el-radio-group >
+                    <el-checkbox v-for="(role, index) in roles"
+                                 :key="index"
+                                 @change="selectRoles(index, role.role_id)"
                                  :label="role.role_id"
-                                 :checked="form.role_ids.indexOf(role.role_id) == -1 ? 'checked' : ''"
-                    >{{ role.role_name }} --- {{form.role_ids.indexOf(role.role_id)}}</el-checkbox>1
+                                 :checked="form.role_ids.indexOf(role.role_id) == -1 ? false : true"
+                    >{{ role.role_name }}</el-checkbox>
                 </el-radio-group>
-
-
-
-
-                <select name="public-choice" style="width: 200px;" autocomplete="off" @change="changeRole($event)">
-                  <option value="" >请选择</option>
-                  <option v-for="role in roles" :value="role.role_id">
-                    {{ role.role_name }}
-                  </option>
-                </select>
             </el-form-item>
-            <el-form-item label="是否启用" prop="is_check">
+            <el-form-item label="授权角色：" prop="role_id" v-else>
+                <span class="danger-text">超管无需设置角色</span>
+            </el-form-item>
+            <el-form-item label="是否启用：" prop="is_check">
                 <el-radio-group v-model="form.is_check">
                     <el-radio :label="0" :checked="form.is_check == 0 ? 'checked' : ''">禁用</el-radio>
                     <el-radio :label="1" :checked="form.is_check == 1 ? 'checked' : ''">启用</el-radio>
@@ -91,7 +86,7 @@
     import {create, update} from '@/api/admins';
     import {getUploadUrl} from '@/api/common';
     import {validEmail} from '@/utils/validate';
-    import {getRolesSelect} from '@/api/roles';
+    import {getRolesSelect} from '@/api/admin_roles';
 
     import myUpload from '@/components/Uploads/image/index';
     import PanThumb from '@/components/PanThumb';
@@ -171,14 +166,10 @@
             },
             // 管理员授权角色
             selectRoles(index, role_id){
-                console.log('selectRoles');
-                console.log(role_id);
-                console.log(this.form.role_ids);
-                console.log(this.form.role_ids.indexOf(role_id));
                 if (this.form.role_ids.indexOf(role_id) == -1){
                     this.form.role_ids.push(role_id);
                 }else{
-                    this.form.role_ids.splice(index, 1);
+                    this.form.role_ids.splice(this.form.role_ids.indexOf(role_id), 1);
                 }
             },
             toggleShow() {
@@ -212,7 +203,7 @@
                         }
                     }
                     // 设置展示的图标
-                    this.image_url = this.form.cover ? this.form.cover.file_path : '';
+                    this.image_url = this.form.admin_head;
                 }
                 console.log(this.form);
                 this.dialogFormVisible = true
@@ -241,3 +232,16 @@
         }
     }
 </script>
+
+
+<style scoped>
+    .el-form-item>labe{
+        width: 100px;
+    }
+    label.el-checkbox {
+        display: block;
+    }
+    #img-btn{
+        position: absolute;bottom: 15px;margin-left: 40px;
+    }
+</style>

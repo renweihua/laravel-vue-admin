@@ -101,14 +101,25 @@ service.interceptors.response.use(
 	},
 	error => {
 		console.log('err' + error) // for debug
-        console.log(error) // for debug
         console.log(error.response) // for debug
+        let msg = error.msg;
+        switch (error.response.status) {
+            case 404:
+                msg = error.response.statusText;
+                break;
+            case 401: // 认证失败
+                msg = error.data.msg;
+                break;
+            case 500: // 认证失败
+                msg = error.response.statusText;
+                break;
+        }
 		Message({
-			message: error.msg,
+			message: msg,
 			type: 'error',
 			duration: 5 * 1000
-		})
-		return Promise.reject(error)
+		});
+		return Promise.reject(error);
 	}
 )
 

@@ -87,7 +87,7 @@
             >
                 <template v-slot="scope">
                     <el-button type="text" @click="handleEdit(scope.row)">编辑</el-button>
-                    <el-button type="text" @click="handleDelete(scope.row)">
+                    <el-button type="text" v-if="scope.row.role_id != 1" @click="handleDelete(scope.row)">
                         删除
                     </el-button>
                 </template>
@@ -141,7 +141,7 @@
 </template>
 
 <script>
-    import {getList, create, update, setDel, changeFiled} from '@/api/roles';
+    import {getList, create, update, setDel, changeFiled} from '@/api/admin_roles';
     import waves from '@/directive/waves' // waves directive
     import {parseTime, getFormatDate, deepClone} from '@/utils/index';
     import {getMenusSelect} from '@/api/admin_menus';
