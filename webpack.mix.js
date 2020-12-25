@@ -11,20 +11,9 @@ const mix = require('laravel-mix');
  |
  */
 
-let vue_path = 'vue-element-admin';
+require(`${__dirname}\\webpack.admin.js`);
 
-mix.js('resources/js/app.js', 'public/' + vue_path)
-    .postCss('resources/css/app.css', 'public/' + vue_path, [
-        //
-    ]);
-
-
-mix.js('app/Modules/Admin/resources/' + vue_path + '/main.js', 'public/' + vue_path);
-
-mix.webpackConfig({
-    resolve: {
-        alias: {
-            '@': path.resolve(__dirname, 'app/Modules/Admin/resources/' + vue_path),
-        },
-    },
-});
+// mix.js('resources/js/app.js', 'public/' + vue_path)
+//     .postCss('resources/css/app.css', 'public/' + vue_path, [
+//         //
+//     ]);

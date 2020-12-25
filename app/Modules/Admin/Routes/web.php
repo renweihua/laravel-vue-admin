@@ -19,7 +19,7 @@ Route::prefix('admin')->group(function() {
 //    Route::get('/', 'AdminController@index');
     //后台管理路由
     Route::get('/', function(){
-        return view('admin');
+        return view('admin::admin');
     });
 
     Route::prefix('auth')->group(function() {

@@ -10,19 +10,45 @@ const mix = require('laravel-mix');
  | file for the application as well as bundling up all the JS files.
  |
  */
+
 let vue_path = 'vue-element-admin';
 
-mix.setPublicPath('public/' + vue_path);
+// svg dir
+const svgDirPath  = path.resolve(__dirname, 'app/Modules/Admin/resources/' + vue_path + 'icons/svg')
 
-mix.js('app/Modules/Admin/Resources/assets/js/app.js', 'public/' + vue_path + '/js/admin.js')
-    .sass('app/Modules/Admin/Resources/assets/sass/app.scss', 'public/' + vue_path + '/css/admin.css');
-
-mix.js('app/Modules/Admin/Resources/' + vue_path + '/main.js','public/' +  vue_path + '/js/main.js');
+Mix.listen('configReady', (webpackConfig) => {
+    // Exclude 'svg' folder from font loader
+    let fontLoaderConfig = webpackConfig.module.rules.find(rule => String(rule.test) === String(/(\.(png|jpe?g|gif|webp)$|^((?!font).)*\.svg$)/));
+    fontLoaderConfig.exclude = [svgDirPath];
+});
 
 mix.webpackConfig({
     resolve: {
         alias: {
             '@': path.resolve(__dirname, 'app/Modules/Admin/resources/' + vue_path),
         },
-    }
+    },
+    module: {
+        rules: [
+            {
+                test: /\.svg$/,
+                loader: 'svg-sprite-loader',
+                include: [path.resolve(__dirname, 'app/Modules/Admin/resources/' + vue_path + 'icons/svg')],
+                options: {
+                    symbolId: 'icon-[name]'
+                }
+            }
+        ],
+    },
+}).babelConfig({
+    plugins: ['dynamic-import-node']
 });
+
+mix.js('app/Modules/Admin/resources/assets/js/app.js', 'public/js')
+    .sass('app/Modules/Admin/resources/assets/sass/app.scss', 'public/css');
+
+mix.js('app/Modules/Admin/resources/' + vue_path + '/main.js', 'public/js').extract(['vue', 'axios']);
+
+if (mix.inProduction()) {
+    mix.version();
+}

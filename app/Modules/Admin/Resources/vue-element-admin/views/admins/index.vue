@@ -97,8 +97,8 @@
                     align="center"
             >
                 <template v-slot="scope">
-                    <el-button type="text" @click="handleEdit(scope.row)">编辑</el-button>
-                    <el-button type="text" v-if="scope.row.admin_id != 1" @click="handleDelete(scope.row)">删除</el-button>
+                    <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
+                    <el-button type="text" icon="el-icon-delete" v-if="scope.row.admin_id != 1" @click="handleDelete(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>

@@ -13,9 +13,11 @@ Gitee 是 OSCHINA 推出的基于 Git 的代码托管平台（同时支持 SVN�
 
 #### 安装教程
 
-1.  生成 APP_KEY：php artisan key:generate
-2.  JWT的key：php artisan jwt:secret
-3.  xxxx
+1.  composer install
+2.  cp .env.example .env
+3.  生成 APP_KEY：php artisan key:generate
+4.  JWT的key：php artisan jwt:secret
+5.  导入sql：laravel-vue-admin
 
 #### 使用说明
 
