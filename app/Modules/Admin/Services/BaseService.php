@@ -91,7 +91,7 @@ class BaseService extends Service
         }
         // 是否为批量删除
         if (isset($params['is_batch']) && $params['is_batch'] == 1){
-            $ids = $params['ids'] ?? $params[$primaryKey];
+            $ids = explode(',', $params['ids'] ?? $params[$primaryKey]);
         }else{
             $ids = [$params[$primaryKey]];
         }
@@ -102,9 +102,9 @@ class BaseService extends Service
             $this->model = $this->model->setMonthTable($params['month']);
         }
         if ($this->model->getIsDelete() == 0){
-            return $this->model->where($primaryKey, 'IN', $ids)->update([$this->model->getDeleteField() => 1]);
+            return $this->model->whereIn($primaryKey, $ids)->update([$this->model->getDeleteField() => 1]);
         }else{
-            return $this->model->where($primaryKey, 'IN', $ids)->delete();
+            return $this->model->whereIn($primaryKey, $ids)->delete();
         }
     }
 

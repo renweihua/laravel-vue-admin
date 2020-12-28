@@ -103,13 +103,13 @@ Route::prefix('admin')->group(function() {
         // 管理员日志
         Route::prefix('adminlogs')->group(function() {
             Route::get('/', 'Log\AdminLogController@index');
-            Route::delete('/', 'System\AdminLogController@delete');
+            Route::delete('/', 'Log\AdminLogController@delete');
         });
 
         // 管理员登录日志
         Route::prefix('adminloginlogs')->group(function() {
             Route::get('/', 'Log\AdminLoginLogController@index');
-            Route::delete('/', 'System\AdminLoginLogController@delete');
+            Route::delete('/', 'Log\AdminLoginLogController@delete');
         });
     });
 });
