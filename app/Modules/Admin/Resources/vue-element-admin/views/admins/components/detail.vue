@@ -205,7 +205,6 @@
                     // 设置展示的图标
                     this.image_url = this.form.admin_head;
                 }
-                console.log(this.form);
                 this.dialogFormVisible = true
             },
             close() {

@@ -134,19 +134,6 @@ export const asyncRoutes = [
             }
         ]
     },
-
-    {
-        path: '/error-log',
-        component: Layout,
-        children: [
-            {
-                path: 'log',
-                component: () => import('@/views/error-log/index'),
-                name: 'ErrorLog',
-                meta: {title: 'errorLog', icon: 'bug'}
-            }
-        ]
-    },
     // {
     //     path: 'external-link',
     //     component: Layout,

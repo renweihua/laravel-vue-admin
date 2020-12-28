@@ -38,8 +38,9 @@
                 show-overflow-tooltip
                 prop="api_url"
                 label="API路由"
+                align="center"
             ></el-table-column>
-            <el-table-column show-overflow-tooltip label="是否隐藏">
+            <el-table-column show-overflow-tooltip label="是否隐藏" align="center">
                 <template slot-scope="scope">
                           <span>
                             {{ scope.row.is_hidden == 1 ? "是" : "否" }}
@@ -55,20 +56,20 @@
                 show-overflow-tooltip
                 prop="menu_sort"
                 label="排序"
+                align="center"
             ></el-table-column>
-            <el-table-column show-overflow-tooltip label="图标">
+            <el-table-column
+                show-overflow-tooltip
+                label="图标"
+                align="center"
+            >
                 <template slot-scope="scope">
-                          <span v-if="scope.row.vue_icon">
-                            <vab-icon
-                                v-if="scope.row.vue_icon"
-                                :icon="['fas', scope.row.vue_icon]"
-                            ></vab-icon>
-                          </span>
+                    <i :class="scope.row.vue_icon"></i>
                 </template>
             </el-table-column>
             <el-table-column
                 show-overflow-tooltip
-                fixed="right"
+                align="center"
                 label="操作"
                 width="200"
             >
