@@ -159,6 +159,7 @@
         },
         data() {
             return {
+                is_batch: 0, // 默认不开启批量删除
                 list: [],
                 listLoading: true,
                 layout: 'total, sizes, prev, pager, next, jumper',
@@ -232,6 +233,7 @@
             },
             setSelectRows(val) {
                 this.selectRows = val;
+                this.is_batch = 1;
             },
             handleEdit(row) {
                 if (row) {
@@ -263,7 +265,7 @@
                         type: 'warning'
                     })
                     .then(async () => {
-                        const {status, msg} = await setDel({banner_id: ids});
+                        const {status, msg} = await setDel({banner_id: ids, 'is_batch' : this.is_batch});
 
                         switch (status) {
                             case 1:

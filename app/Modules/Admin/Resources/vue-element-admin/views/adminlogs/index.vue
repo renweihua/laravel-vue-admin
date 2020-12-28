@@ -3,18 +3,26 @@
         <div class="filter-container">
             <el-input
                     v-model="listQuery.search"
-                    placeholder="请输入管理员账户/邮箱"
-                    style="width: 200px;"
-                    class="filter-item"
+                    placeholder="请输入管理员账户/Id"
+                    class="filter-item width-200-px"
                     @keyup.enter.native="handleFilter"
             />
-            <el-select v-model="listQuery.is_check" placeholder="请选择启用状态" clearable class="filter-item">
+            <el-select v-model="listQuery.log_status" placeholder="请选择登录状态" clearable class="filter-item">
                 <el-option
-                        v-for="item in calendarCheckOptions"
-                        :key="item.key"
-                        :checked="item.key == listQuery.is_check"
-                        :label="item.display_name+'('+item.key+')'"
-                        :value="item.key"
+                    v-for="item in calendarCheckOptions"
+                    :key="item.key"
+                    :checked="item.key == listQuery.log_status"
+                    :label="item.display_name+'('+item.key+')'"
+                    :value="item.key"
+                />
+            </el-select>
+            <el-select v-model="listQuery.search_month" placeholder="请选择指定月份的日志" clearable class="filter-item">
+                <el-option
+                    v-for="item in month_lists"
+                    :key="item"
+                    :checked="item == listQuery.search_month"
+                    :label="item + '( 的日志)'"
+                    :value="item"
                 />
             </el-select>
             <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
@@ -22,25 +30,6 @@
             </el-button>
             <el-button v-waves class="filter-item" type="danger" icon="el-icon-delete" @click="handleDelete">
                 批量删除
-            </el-button>
-            <el-button
-                    class="filter-item"
-                    style="margin-left: 10px;"
-                    type="primary"
-                    icon="el-icon-plus"
-                    @click="handleEdit"
-            >
-                {{ $t('table.add') }}
-            </el-button>
-            <el-button
-                    v-waves
-                    :loading="downloadLoading"
-                    class="filter-item"
-                    type="primary"
-                    icon="el-icon-download"
-                    @click="handleDownload"
-            >
-                {{ $t('table.export') }}
             </el-button>
         </div>
 
@@ -55,50 +44,68 @@
             <el-table-column show-overflow-tooltip type="selection"/>
             <el-table-column
                     show-overflow-tooltip
-                    prop="admin_id"
+                    prop="log_id"
                     label="Id"
-            />
-            <el-table-column
-                    show-overflow-tooltip
-                    prop="admin_name"
-                    label="管理员"
                     align="center"
             />
-            <el-table-column
-                    show-overflow-tooltip
-                    prop="admin_email"
-                    label="邮箱"
-                    align="center"
-            />
-            <el-table-column align="center" prop="admin_head" label="头像">
-                <template slot-scope="{row}">
-                    <img v-if="row.admin_head" width="100px" height="100px" :src="row.admin_head"/>
-                </template>
-            </el-table-column>
-            <el-table-column label="创建时间" show-overflow-tooltip align="center">
+            <el-table-column align="center" prop="admin" label="管理员">
                 <template slot-scope="{ row }">
-                  <span>
-                    {{ row.admin_info.created_time | parseTime("{y}-{m}-{d} {h}:{i}") }}
-                  </span>
+                    <span v-if="row.admin">
+                        Id：{{ row.admin.admin_id }}
+                        <br>
+                        账户：{{ row.admin.admin_name }}
+                    </span>
                 </template>
             </el-table-column>
-            <el-table-column align="center" prop="is_check" label="启用状态">
+            <el-table-column
+                show-overflow-tooltip
+                prop="log_method"
+                label="请求方式"
+                align="center"
+            />
+            <el-table-column
+                show-overflow-tooltip
+                prop="log_action"
+                label="请求地址"
+                align="center"
+            />
+            <el-table-column
+                show-overflow-tooltip
+                prop="log_duration"
+                label="耗时"
+                align="center"
+            >
+                <template slot-scope="{ row }">
+                    {{ row.log_duration }} ms
+                </template>
+            </el-table-column>
+            <el-table-column
+                show-overflow-tooltip
+                prop="created_ip"
+                label="IP"
+                align="center"
+            />
+            <el-table-column align="center" prop="log_status" label="请求状态">
                 <template slot-scope="scope">
-                    <el-tag :type="scope.row.is_check | statusFilter">
-                        {{ scope.row.is_check | checkFilter }}
+                    <el-tag :type="scope.row.log_status | statusFilter">
+                        {{ scope.row.log_status | checkFilter }}
                     </el-tag>
                 </template>
             </el-table-column>
+            <el-table-column label="登录时间" show-overflow-tooltip align="center">
+                <template slot-scope="{ row }">
+                  <span>
+                    {{ row.created_time | parseTime("{y}-{m}-{d} {h}:{i}") }}
+                  </span>
+                </template>
+            </el-table-column>
             <el-table-column
                     show-overflow-tooltip
-                    fixed="right"
                     label="操作"
-                    width="200"
                     align="center"
             >
                 <template v-slot="scope">
-                    <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
-                    <el-button type="text" icon="el-icon-delete" v-if="scope.row.admin_id != 1" @click="handleDelete(scope.row)">删除</el-button>
+                    <el-button type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -112,21 +119,19 @@
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
         />
-        <!-- 详情 -->
-        <edit ref="edit" @fetchData="getList"/>
     </div>
 </template>
 
 <script>
-    import {getList, setDel, changeFiled} from '@/api/admins';
+    import {getList, setDel} from '@/api/adminlogs';
+    import {getMonthLists} from '@/api/common';
     import waves from '@/directive/waves' // waves directive
-    import Edit from './components/detail'
     import {parseTime, getFormatDate} from '@/utils/index';
 
     const calendarCheckOptions = [
-        {key: '-1', display_name: '全部'},
-        {key: '1', display_name: '启用'},
-        {key: '0', display_name: '禁用'}
+        {key: -1, display_name: '全部'},
+        {key: 1, display_name: '成功'},
+        {key: 0, display_name: '失败'}
     ]
 
     const calendarCheckKeyValue = calendarCheckOptions.reduce((acc, cur) => {
@@ -136,7 +141,6 @@
 
     export default {
         name: 'UserManagement',
-        components: {Edit},
         directives: {waves},
         filters: {
             parseTime: parseTime,
@@ -156,6 +160,7 @@
             return {
                 is_batch: 0, // 默认不开启批量删除
                 list: [],
+                month_lists:[],
                 listLoading: true,
                 layout: 'total, sizes, prev, pager, next, jumper',
                 total: 0,
@@ -165,66 +170,19 @@
                     page: 1,
                     limit: 10,
                     search: '',
-                    is_check: ''
+                    log_status: -1,
+                    search_month:'',
                 },
                 downloadLoading: false,
-                calendarCheckOptions
+                calendarCheckOptions,
             }
         },
         created() {
-            this.getList()
+            this.getList();
+
+            this.getMonthLists();
         },
         methods: {
-            handleDownload() {
-                this.downloadLoading = true
-                import('@/vendor/Export2Excel').then((excel) => {
-                    const tHeader = [
-                        'Id',
-                        '管理员账户',
-                        '邮箱',
-                        '头像',
-                        '拥有角色',
-                        '创建时间',
-                        '启用状态'
-                    ];
-                    const filterVal = [
-                        'admin_id',
-                        'admin_name',
-                        'admin_email',
-                        'admin_head',
-                        'roles',
-                        'created_time',
-                        'is_check'
-                    ];
-                    const data = this.formatJson(filterVal);
-                    excel.export_json_to_excel({
-                        header: tHeader,
-                        data,
-                        filename: '管理员列表-' + getFormatDate()
-                    });
-                    this.downloadLoading = false;
-                })
-            },
-            formatJson(filterVal) {
-                return this.list.map((v) =>
-                    filterVal.map((j) => {
-                        switch (j) {
-                            case 'created_time':
-                                return parseTime(v[j]);
-                                break;
-                            case 'is_check':
-                                return this.checkFilter(v[j]);
-                                break;
-                            case 'admin_head':
-                                return v.cover.file_path;
-                                break;
-                            default:
-                                return v[j];
-                                break;
-                        }
-                    })
-                )
-            },
             checkFilter(val) {
                 return calendarCheckKeyValue[val] || '';
             },
@@ -232,20 +190,16 @@
                 this.selectRows = val;
                 this.is_batch = 1;
             },
-            handleEdit(row) {
-                if (row) {
-                    this.$refs['edit'].showEdit(row);
-                } else {
-                    this.$refs['edit'].showEdit({});
-                }
-            },
             handleDelete(row) {
-                var ids = '';
-                if (row.admin_id) {
-                    ids = row.admin_id;
+                var ids = '',
+                month = '';
+                if (row.log_id) {
+                    ids = row.log_id;
+                    month = parseTime(row.created_time, "{y}-{m}");
                 } else {
                     if (this.selectRows.length > 0) {
-                        ids = this.selectRows.map((item) => item.admin_id).join();
+                        month = parseTime(this.selectRows[0].created_time, "{y}-{m}");
+                        ids = this.selectRows.map((item) => item.log_id).join();
                     } else {
                         this.$message('未选中任何行', 'error');
                         return false
@@ -262,7 +216,7 @@
                         type: 'warning'
                     })
                     .then(async () => {
-                        const {status, msg} = await setDel({admin_id: ids, 'is_batch' : this.is_batch});
+                        const {status, msg} = await setDel({log_id: ids, 'month' : month, 'is_batch' : this.is_batch});
 
                         switch (status) {
                             case 1:
@@ -308,6 +262,10 @@
                 setTimeout(() => {
                     this.listLoading = false
                 }, 300)
+            },
+            async getMonthLists() {
+                const {data} = await getMonthLists();
+                this.month_lists = data;
             }
         }
     }

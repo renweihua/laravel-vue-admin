@@ -157,6 +157,7 @@
         },
         data() {
             return {
+                is_batch: 0, // 默认不开启批量删除
                 layout: 'total, sizes, prev, pager, next, jumper',
                 selectRows: '',
                 elementLoadingText: '正在加载...',
@@ -232,7 +233,8 @@
                 return calendarCheckKeyValue[val] || '';
             },
             setSelectRows(val) {
-                this.selectRows = val
+                this.selectRows = val;
+                this.is_batch = 1;
             },
             handleEdit(row) {
                 if (row) {
@@ -264,7 +266,7 @@
                         type: 'warning'
                     })
                     .then(async () => {
-                        const {status, msg} = await setDel({link_id: ids});
+                        const {status, msg} = await setDel({link_id: ids, 'is_batch' : this.is_batch});
 
                         switch (status) {
                             case 1:
