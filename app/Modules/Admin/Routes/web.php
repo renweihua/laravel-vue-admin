@@ -44,6 +44,7 @@ Route::prefix('admin')->group(function() {
             Route::delete('/', 'System\BannerController@delete');
         });
 
+        // 配置管理
         Route::prefix('configs')->group(function() {
             Route::get('/', 'System\ConfigController@index');
             Route::post('/', 'System\ConfigController@create');
@@ -51,6 +52,7 @@ Route::prefix('admin')->group(function() {
             Route::delete('/', 'System\ConfigController@delete');
         });
 
+        // 友情链接
         Route::prefix('friendlinks')->group(function() {
             Route::get('/', 'System\FriendlinkController@index');
             Route::post('/', 'System\FriendlinkController@create');

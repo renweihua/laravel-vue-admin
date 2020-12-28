@@ -9,5 +9,6 @@ class AdminLoginLogService extends BaseService
     public function __construct(AdminLoginLog $adminLoginLog)
     {
         $this->model = $adminLoginLog;
+        $this->with = ['admin'];
     }
 }
