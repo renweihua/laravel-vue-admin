@@ -18,7 +18,7 @@ class AuthController extends BaseController
      *
      * @param LoginRequest $request
      * @return \Illuminate\Http\JsonResponse
-     * @throws \App\Exceptions\AuthException
+     * @throws \App\Exceptions\Admin\AuthException
      * @throws \App\Exceptions\InvalidRequestException
      */
     public function login(LoginRequest $request)
@@ -35,7 +35,7 @@ class AuthController extends BaseController
      * 获取登录管理员信息
      *
      * @return \Illuminate\Http\JsonResponse
-     * @throws \App\Exceptions\AuthException
+     * @throws \App\Exceptions\Admin\AuthException
      */
     public function me()
     {
