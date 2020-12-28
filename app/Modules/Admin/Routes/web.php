@@ -19,7 +19,7 @@ Route::prefix('admin')->group(function() {
 //    Route::get('/', 'AdminController@index');
     //后台管理路由
     Route::get('/', function(){
-        return view('admin');
+        return view('admin::admin');
     });
 
     Route::prefix('auth')->group(function() {
@@ -32,7 +32,9 @@ Route::prefix('admin')->group(function() {
     Route::middleware([CheckAuth::class, AdminLog::class])->group(function () {
 
         // 首页
-        Route::post('indexs', 'IndexController@index');
+        Route::get('indexs', 'IndexController@index');
+        // 月份表列表
+        Route::get('get_month_lists', 'IndexController@getMonthList');
 
         // 文件上传
         Route::post('upload_file', 'UploadController@file');
@@ -44,6 +46,7 @@ Route::prefix('admin')->group(function() {
             Route::delete('/', 'System\BannerController@delete');
         });
 
+        // 配置管理
         Route::prefix('configs')->group(function() {
             Route::get('/', 'System\ConfigController@index');
             Route::post('/', 'System\ConfigController@create');
@@ -51,6 +54,7 @@ Route::prefix('admin')->group(function() {
             Route::delete('/', 'System\ConfigController@delete');
         });
 
+        // 友情链接
         Route::prefix('friendlinks')->group(function() {
             Route::get('/', 'System\FriendlinkController@index');
             Route::post('/', 'System\FriendlinkController@create');
@@ -96,14 +100,16 @@ Route::prefix('admin')->group(function() {
             Route::get('/getSelectLists', 'Rabc\AdminMenuController@getSelectLists');
         });
 
+        // 管理员日志
         Route::prefix('adminlogs')->group(function() {
             Route::get('/', 'Log\AdminLogController@index');
-            Route::delete('/', 'System\AdminLogController@delete');
+            Route::delete('/', 'Log\AdminLogController@delete');
         });
 
+        // 管理员登录日志
         Route::prefix('adminloginlogs')->group(function() {
             Route::get('/', 'Log\AdminLoginLogController@index');
-            Route::delete('/', 'System\AdminLoginLogController@delete');
+            Route::delete('/', 'Log\AdminLoginLogController@delete');
         });
     });
 });

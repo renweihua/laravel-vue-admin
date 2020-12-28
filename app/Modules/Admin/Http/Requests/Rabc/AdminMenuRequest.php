@@ -24,9 +24,6 @@ class AdminMenuRequest extends BaseRequest
                 'max:256',
                 'unique:' . $instance->getTable() . ',menu_name' . $validate_id
             ],
-            'is_check' => [
-                'required',
-            ]
         ];
     }
 

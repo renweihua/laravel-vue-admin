@@ -22,7 +22,7 @@ class BaseService extends Service
     {
         // 如果是按月分表的模型，设置按月份查询的月份表
         if ($this->model instanceof MonthModel){
-            $this->model = $this->model->setMonthTable(request()->input('search_month', ''));
+            $this->model = $this->model->setMonthTable($this->getSearchMonth());
         }
         $lists = $this->model->with($this->with)->orderBy($this->model->getKeyName(), 'DESC')->paginate($this->getLimit($params['limit'] ?? 10));
 
@@ -91,7 +91,7 @@ class BaseService extends Service
         }
         // 是否为批量删除
         if (isset($params['is_batch']) && $params['is_batch'] == 1){
-            $ids = $params['ids'] ?? $params[$primaryKey];
+            $ids = explode(',', $params['ids'] ?? $params[$primaryKey]);
         }else{
             $ids = [$params[$primaryKey]];
         }
@@ -102,9 +102,9 @@ class BaseService extends Service
             $this->model = $this->model->setMonthTable($params['month']);
         }
         if ($this->model->getIsDelete() == 0){
-            return $this->model->where($primaryKey, 'IN', $ids)->update([$this->model->getDeleteField() => 1]);
+            return $this->model->whereIn($primaryKey, $ids)->update([$this->model->getDeleteField() => 1]);
         }else{
-            return $this->model->where($primaryKey, 'IN', $ids)->delete();
+            return $this->model->whereIn($primaryKey, $ids)->delete();
         }
     }
 

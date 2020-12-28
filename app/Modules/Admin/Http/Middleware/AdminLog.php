@@ -22,6 +22,7 @@ class AdminLog
         $resource = $next($request);
 
         if (strtoupper($request->getMethod()) != 'GET'){
+            $ip_agent = get_client_info();
             \App\Modules\Admin\Entities\Log\AdminLog::getInstance()->create([
                 'request_data' => json_encode($request->all()),
                 'admin_id'     => !empty(auth($guard)->user()) ? auth($guard)->user()->admin_id : 0,

@@ -2,8 +2,10 @@
 
 namespace App\Modules\Admin\Services;
 
-use App\Exceptions\AuthException;
+use App\Exceptions\Admin\AuthException;
+use App\Exceptions\Admin\AuthTokenException;
 use App\Exceptions\InvalidRequestException;
+use App\Modules\Admin\Entities\Log\AdminLoginLog;
 use App\Services\Service;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,15 +27,16 @@ class AuthService extends Service
         $token = $auth->attempt($data);
         if (!$token) throw new AuthException('认证失败！');
         $admin = $auth->user();
-        if ( !$admin ) throw new InvalidRequestException('管理员账户不存在！');
+        if ( !$admin ) throw new AuthException('管理员账户不存在！');
         switch ($admin->is_check) {
             case 0:
-                throw new InvalidRequestException('该管理员尚未启用！');
+                throw new AuthException('该管理员尚未启用！', 0, $admin->admin_id);
                 break;
             case 2:
-                throw new InvalidRequestException('该管理员已禁用！');
+                throw new AuthException('该管理员已禁用！', 0, $admin->admin_id);
                 break;
         }
+        AdminLoginLog::getInstance()->add($admin->admin_id, 1, '登录成功');
         return $this->respondWithToken($token);
     }
 
@@ -41,12 +44,12 @@ class AuthService extends Service
      * 登录管理员信息获取
      *
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
-     * @throws AuthException
+     * @throws \App\Exceptions\Admin\AuthTokenException
      */
     public function me()
     {
         if (!$admin = Auth::guard($this->guard)->user()){
-            throw new AuthException('认证失败！');
+            throw new AuthTokenException('认证失败！');
         }
         $admin->admin_head = asset($admin->admin_head);
         $admin['roles'] = ['admin'];

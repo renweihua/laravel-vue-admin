@@ -8,9 +8,11 @@ Software architecture description
 
 #### Installation
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  composer install
+2.  cp .env.example .env
+3.  生成 APP_KEY：php artisan key:generate
+4.  JWT的key：php artisan jwt:secret
+5.  导入sql：laravel-vue-admin
 
 #### Instructions
 

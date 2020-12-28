@@ -93,10 +93,22 @@ export const constantRoutes = [
                 path: 'index',
                 component: () => import('@/views/profile/index'),
                 name: 'Profile',
-                meta: {title: 'profile', icon: 'user', noCache: true}
+                meta: {title: 'profile', icon: 'el-icon-user', noCache: true}
             }
         ]
-    }
+    },
+    {
+        path: '/icon',
+        component: Layout,
+        children: [
+            {
+                path: 'index',
+                component: () => import('@/views/icons/index'),
+                name: 'Icons',
+                meta: { title: 'icons', icon: 'icon', noCache: true }
+            }
+        ]
+    },
 ]
 
 /**
@@ -131,19 +143,6 @@ export const asyncRoutes = [
                 component: () => import('@/views/error-page/404'),
                 name: 'Page404',
                 meta: {title: 'page404', noCache: true}
-            }
-        ]
-    },
-
-    {
-        path: '/error-log',
-        component: Layout,
-        children: [
-            {
-                path: 'log',
-                component: () => import('@/views/error-log/index'),
-                name: 'ErrorLog',
-                meta: {title: 'errorLog', icon: 'bug'}
             }
         ]
     },

@@ -1,3 +1,4 @@
+const config = require('./webpack.config');
 const mix = require('laravel-mix');
 
 /*
@@ -10,19 +11,65 @@ const mix = require('laravel-mix');
  | file for the application as well as bundling up all the JS files.
  |
  */
+
 let vue_path = 'vue-element-admin';
 
-mix.setPublicPath('public/' + vue_path);
+function resolve(dir) {
+    return path.join(
+        __dirname,
+        '/app/Modules/Admin/resources/vue-element-admin',
+        dir
+    );
+}
 
-mix.js('app/Modules/Admin/Resources/assets/js/app.js', 'public/' + vue_path + '/js/admin.js')
-    .sass('app/Modules/Admin/Resources/assets/sass/app.scss', 'public/' + vue_path + '/css/admin.css');
-
-mix.js('app/Modules/Admin/Resources/' + vue_path + '/main.js','public/' +  vue_path + '/js/main.js');
-
-mix.webpackConfig({
-    resolve: {
-        alias: {
-            '@': path.resolve(__dirname, 'app/Modules/Admin/resources/' + vue_path),
-        },
-    }
+Mix.listen('configReady', webpackConfig => {
+    // Add "svg" to image loader test
+    const imageLoaderConfig = webpackConfig.module.rules.find(
+        rule =>
+            String(rule.test) ===
+            String(/(\.(png|jpe?g|gif|webp)$|^((?!font).)*\.svg$)/)
+    );
+    imageLoaderConfig.exclude = resolve('icons');
 });
+
+mix.webpackConfig(config);
+
+
+mix
+    .js('app/Modules/Admin/resources/vue-element-admin/main.js', 'public/js')
+    .sass('app/Modules/Admin/resources/assets/sass/app.scss', 'public/css')
+    .extract([
+        'vue',
+        'axios',
+        'vuex',
+        'vue-router',
+        'vue-i18n',
+        'element-ui',
+        'echarts',
+        'highlight.js',
+        'sortablejs',
+        'dropzone',
+        'xlsx',
+        'tui-editor',
+        'codemirror',
+    ])
+    .options({
+        processCssUrls: false,
+        postCss: [
+            require('autoprefixer'),
+        ],
+    });
+
+if (mix.inProduction()) {
+    mix.version();
+} else {
+    if (process.env.LARAVUE_USE_ESLINT === 'true') {
+        mix.eslint();
+    }
+    // Development settings
+    mix
+        .sourceMaps()
+        .webpackConfig({
+            devtool: 'cheap-eval-source-map', // Fastest for development
+        });
+}

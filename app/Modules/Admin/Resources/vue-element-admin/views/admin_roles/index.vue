@@ -86,10 +86,8 @@
                 align="center"
             >
                 <template v-slot="scope">
-                    <el-button type="text" @click="handleEdit(scope.row)">编辑</el-button>
-                    <el-button type="text" v-if="scope.row.role_id != 1" @click="handleDelete(scope.row)">
-                        删除
-                    </el-button>
+                    <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
+                    <el-button type="text" icon="el-icon-delete" v-if="scope.row.role_id != 1" @click="handleDelete(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -184,6 +182,7 @@
         },
         data() {
             return {
+                is_batch: 0, // 默认不开启批量删除
                 list: [],
                 listLoading: true,
                 layout: 'total, sizes, prev, pager, next, jumper',
@@ -285,6 +284,7 @@
             },
             setSelectRows(val) {
                 this.selectRows = val;
+                this.is_batch = 1;
             },
             handleEdit(row) {
                 this.dialogVisible = true;
@@ -326,7 +326,7 @@
                         type: 'warning'
                     })
                     .then(async () => {
-                        const {status, msg} = await setDel({role_id: ids});
+                        const {status, msg} = await setDel({role_id: ids, 'is_batch' : this.is_batch});
 
                         switch (status) {
                             case 1:
