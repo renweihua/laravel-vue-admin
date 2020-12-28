@@ -1,3 +1,4 @@
+const config = require('./webpack.config');
 const mix = require('laravel-mix');
 
 /*
@@ -13,42 +14,62 @@ const mix = require('laravel-mix');
 
 let vue_path = 'vue-element-admin';
 
-// svg dir
-const svgDirPath  = path.resolve(__dirname, 'app/Modules/Admin/resources/' + vue_path + 'icons/svg')
+function resolve(dir) {
+    return path.join(
+        __dirname,
+        '/app/Modules/Admin/resources/vue-element-admin',
+        dir
+    );
+}
 
-Mix.listen('configReady', (webpackConfig) => {
-    // Exclude 'svg' folder from font loader
-    let fontLoaderConfig = webpackConfig.module.rules.find(rule => String(rule.test) === String(/(\.(png|jpe?g|gif|webp)$|^((?!font).)*\.svg$)/));
-    fontLoaderConfig.exclude = [svgDirPath];
+Mix.listen('configReady', webpackConfig => {
+    // Add "svg" to image loader test
+    const imageLoaderConfig = webpackConfig.module.rules.find(
+        rule =>
+            String(rule.test) ===
+            String(/(\.(png|jpe?g|gif|webp)$|^((?!font).)*\.svg$)/)
+    );
+    imageLoaderConfig.exclude = resolve('icons');
 });
 
-mix.webpackConfig({
-    resolve: {
-        alias: {
-            '@': path.resolve(__dirname, 'app/Modules/Admin/resources/' + vue_path),
-        },
-    },
-    module: {
-        rules: [
-            {
-                test: /\.svg$/,
-                loader: 'svg-sprite-loader',
-                include: [path.resolve(__dirname, 'app/Modules/Admin/resources/' + vue_path + 'icons/svg')],
-                options: {
-                    symbolId: 'icon-[name]'
-                }
-            }
+mix.webpackConfig(config);
+
+
+mix
+    .js('app/Modules/Admin/resources/vue-element-admin/main.js', 'public/js')
+    .sass('app/Modules/Admin/resources/assets/sass/app.scss', 'public/css')
+    .extract([
+        'vue',
+        'axios',
+        'vuex',
+        'vue-router',
+        'vue-i18n',
+        'element-ui',
+        'echarts',
+        'highlight.js',
+        'sortablejs',
+        'dropzone',
+        'xlsx',
+        'tui-editor',
+        'codemirror',
+    ])
+    .options({
+        processCssUrls: false,
+        postCss: [
+            require('autoprefixer'),
         ],
-    },
-}).babelConfig({
-    plugins: ['dynamic-import-node']
-});
-
-mix.js('app/Modules/Admin/resources/assets/js/app.js', 'public/js')
-    .sass('app/Modules/Admin/resources/assets/sass/app.scss', 'public/css');
-
-mix.js('app/Modules/Admin/resources/' + vue_path + '/main.js', 'public/js').extract(['vue', 'axios']);
+    });
 
 if (mix.inProduction()) {
     mix.version();
+} else {
+    if (process.env.LARAVUE_USE_ESLINT === 'true') {
+        mix.eslint();
+    }
+    // Development settings
+    mix
+        .sourceMaps()
+        .webpackConfig({
+            devtool: 'cheap-eval-source-map', // Fastest for development
+        });
 }

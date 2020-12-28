@@ -13,6 +13,8 @@ const mix = require('laravel-mix');
 
 require(`${__dirname}\\webpack.admin.js`);
 
+
+
 // mix.js('resources/js/app.js', 'public/' + vue_path)
 //     .postCss('resources/css/app.css', 'public/' + vue_path, [
 //         //

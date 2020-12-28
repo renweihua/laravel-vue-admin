@@ -79,7 +79,7 @@ export const constantRoutes = [
                 path: 'dashboard',
                 component: () => import('@/views/dashboard/index'),
                 name: 'Dashboard',
-                meta: {title: 'dashboard', icon: 'el-icon-s-home', affix: true}
+                meta: {title: 'dashboard', icon: 'dashboard', affix: true}
             }
         ]
     },
@@ -94,6 +94,18 @@ export const constantRoutes = [
                 component: () => import('@/views/profile/index'),
                 name: 'Profile',
                 meta: {title: 'profile', icon: 'el-icon-user', noCache: true}
+            }
+        ]
+    },
+    {
+        path: '/icon',
+        component: Layout,
+        children: [
+            {
+                path: 'index',
+                component: () => import('@/views/icons/index'),
+                name: 'Icons',
+                meta: { title: 'icons', icon: 'icon', noCache: true }
             }
         ]
     },
