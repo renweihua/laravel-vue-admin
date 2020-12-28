@@ -22,7 +22,7 @@ class BaseService extends Service
     {
         // 如果是按月分表的模型，设置按月份查询的月份表
         if ($this->model instanceof MonthModel){
-            $this->model = $this->model->setMonthTable(request()->input('search_month', ''));
+            $this->model = $this->model->setMonthTable($this->getSearchMonth());
         }
         $lists = $this->model->with($this->with)->orderBy($this->model->getKeyName(), 'DESC')->paginate($this->getLimit($params['limit'] ?? 10));
 

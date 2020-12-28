@@ -14,4 +14,9 @@ class AdminLog extends MonthModel
     {
         return $this->belongsTo(Admin::class, 'admin_id', 'admin_id');
     }
+
+    public function getLogDurationAttribute($key)
+    {
+        return floatval($key);
+    }
 }

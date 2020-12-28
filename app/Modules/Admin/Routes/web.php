@@ -32,7 +32,9 @@ Route::prefix('admin')->group(function() {
     Route::middleware([CheckAuth::class, AdminLog::class])->group(function () {
 
         // 首页
-        Route::post('indexs', 'IndexController@index');
+        Route::get('indexs', 'IndexController@index');
+        // 月份表列表
+        Route::get('get_month_lists', 'IndexController@getMonthList');
 
         // 文件上传
         Route::post('upload_file', 'UploadController@file');
@@ -98,11 +100,13 @@ Route::prefix('admin')->group(function() {
             Route::get('/getSelectLists', 'Rabc\AdminMenuController@getSelectLists');
         });
 
+        // 管理员日志
         Route::prefix('adminlogs')->group(function() {
             Route::get('/', 'Log\AdminLogController@index');
             Route::delete('/', 'System\AdminLogController@delete');
         });
 
+        // 管理员登录日志
         Route::prefix('adminloginlogs')->group(function() {
             Route::get('/', 'Log\AdminLoginLogController@index');
             Route::delete('/', 'System\AdminLoginLogController@delete');
