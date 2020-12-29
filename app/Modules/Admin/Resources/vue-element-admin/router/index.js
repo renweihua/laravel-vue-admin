@@ -46,7 +46,7 @@ export const constantRoutes = [
         children: [
             {
                 path: '/redirect/:path(.*)',
-                component: () => import('@/views/redirect/index')
+                component: () => import('@/views/sundry/redirect/index')
             }
         ]
     },
@@ -103,7 +103,7 @@ export const constantRoutes = [
         children: [
             {
                 path: 'index',
-                component: () => import('@/views/icons/index'),
+                component: () => import('@/views/sundry/icons/index'),
                 name: 'Icons',
                 meta: { title: 'icons', icon: 'icon', noCache: true }
             }

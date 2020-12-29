@@ -9,16 +9,13 @@ import {
 } from '@/utils/auth';
 
 
-//
-// console.log(process);
-// console.log(process.env);
-// console.log(process.env.VUE_APP_BASE_API);
+
+console.log(process);
+console.log(process.env);
+console.log(process.env.VUE_APP_BASE_API);
 
 
-process.env.VUE_APP_BASE_API = 'http://laravel-admin.cnpscy.com/admin';
-
-
-
+// process.env.VUE_APP_BASE_API = 'http://laravel-admin.cnpscy.com/admin';
 
 // create an axios instance
 const service = axios.create({
