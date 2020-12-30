@@ -72,12 +72,6 @@ class Model extends EloquentModel
      */
     protected $guarded = [];
 
-
-
-
-
-
-
     /**
      * 模型的 "booted" 方法
      *
