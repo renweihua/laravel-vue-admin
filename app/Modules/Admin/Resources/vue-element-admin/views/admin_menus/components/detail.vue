@@ -6,7 +6,21 @@
     >
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
             <el-form-item label="父级菜单" prop="parent_id">
-                <el-input v-model="form.parent_id" autocomplete="off"></el-input>
+                <el-select v-model="form.parent_id" placeholder="请选择父级" autocomplete="off">
+                    <el-option
+                        key="0"
+                        :checked="0 == form.parent_id"
+                        label="默认顶级"
+                        value="0"
+                    />
+                    <el-option
+                        v-for="item in menus"
+                        :key="item.menu_id"
+                        :checked="item.menu_id == form.parent_id"
+                        :label="item.menu_name"
+                        :value="item.menu_id"
+                    />
+                </el-select>
             </el-form-item>
             <el-form-item label="菜单名称" prop="menu_name">
                 <el-input v-model="form.menu_name" autocomplete="off"></el-input>
@@ -44,13 +58,14 @@
 </template>
 
 <script>
-    import {create, update} from "@/api/admin_menus";
+    import {create, update, getMenusSelect} from "@/api/admin_menus";
 
     export default {
         name: "",
         data() {
             return {
                 form: {},
+                menus:[], // 父级
                 rules: {
                     id: [{required: true, trigger: "blur", message: "请输入路径"}],
                 },
@@ -59,8 +74,14 @@
             };
         },
         created() {
+            this.getMenusSelect();
         },
         methods: {
+            // 获取菜单列表
+            async getMenusSelect() {
+                const res = await getMenusSelect();
+                this.menus = res.data;
+            },
             showEdit(row) {
                 console.log(row);
                 if (!row) {
