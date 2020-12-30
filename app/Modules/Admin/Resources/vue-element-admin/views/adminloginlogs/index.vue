@@ -76,7 +76,7 @@
                 align="center"
             >
                 <template slot-scope="{ row }">
-                    {{ row.log_duration }} ms
+                    {{ row.log_duration }} s
                 </template>
             </el-table-column>
             <el-table-column

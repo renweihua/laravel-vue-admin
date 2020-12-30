@@ -8,17 +8,13 @@ import {
 	getToken
 } from '@/utils/auth';
 
-
-//
 // console.log(process);
 // console.log(process.env);
 // console.log(process.env.VUE_APP_BASE_API);
 
-
-process.env.VUE_APP_BASE_API = 'http://laravel-admin.cnpscy.com/admin';
-
-
-
+// process失效了，默认为当前URL为请求地址
+process.env.VUE_APP_BASE_API = window.location.origin + window.location.pathname;
+console.log(process.env.VUE_APP_BASE_API);
 
 // create an axios instance
 const service = axios.create({

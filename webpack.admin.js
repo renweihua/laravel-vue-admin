@@ -60,6 +60,11 @@ mix
         ],
     });
 
+//
+// console.log(process);
+// console.log(process.env);
+// console.log(process.env.VUE_APP_BASE_API);
+
 if (mix.inProduction()) {
     mix.version();
 } else {
