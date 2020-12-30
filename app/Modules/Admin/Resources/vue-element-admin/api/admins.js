@@ -46,3 +46,11 @@ export function setDel(data) {
         data
     })
 }
+
+export function changeFiledStatus(data) {
+    return request({
+        url: `/admins/changeFiledStatus`,
+        method: 'put',
+        data
+    })
+}

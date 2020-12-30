@@ -11,7 +11,7 @@ class ArticleCategoryService extends BaseService
         $this->model = $article;
     }
 
-    public function lists(array $params): array
+    public function lists(array $params) : array
     {
         $lists = $this->model->orderBy('category_sort', 'ASC')->get();
 

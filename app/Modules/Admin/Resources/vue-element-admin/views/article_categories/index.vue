@@ -48,7 +48,7 @@
                 show-overflow-tooltip
                 align="center"
                 label="操作"
-                width="300"
+                width="230"
             >
                 <template v-slot="scope">
                     <!-- 状态变更 -->
@@ -64,7 +64,6 @@
                             禁用
                         </el-tag>
                     </el-button>
-
                     <!-- 编辑与删除 -->
                     <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
                     <el-button type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
@@ -165,12 +164,10 @@
             // 状态变更
             async changeStatus(row, value) {
                 const {data, msg, status} = await changeFiledStatus({
-                    category_id: row.category_id,
+                    'category_id': row.category_id,
                     'change_field': 'is_check',
                     'change_value': value
                 });
-
-                console.log(data, msg, status);
 
                 // 设置成功之后，同步到当前列表数据
                 if (status == 1) row.is_check = value;

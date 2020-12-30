@@ -38,3 +38,11 @@ export function setDel(data) {
         data
     })
 }
+
+export function changeFiledStatus(data) {
+    return request({
+        url: `/admin_roles/changeFiledStatus`,
+        method: 'put',
+        data
+    })
+}

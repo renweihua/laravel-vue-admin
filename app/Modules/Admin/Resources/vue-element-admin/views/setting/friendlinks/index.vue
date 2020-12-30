@@ -98,10 +98,24 @@
                     show-overflow-tooltip
                     fixed="right"
                     label="操作"
-                    width="200"
+                    width="230"
                     align="center"
             >
                 <template v-slot="scope">
+                    <!-- 状态变更 -->
+                    <el-button v-if="scope.row.is_check == 0" type="text" icon="el-icon-unlock"
+                               @click="changeStatus(scope.row, 1)">
+                        <el-tag :type="1 | statusFilter">
+                            启用
+                        </el-tag>
+                    </el-button>
+                    <el-button v-else-if="scope.row.is_check == 1" type="text" icon="el-icon-lock"
+                               @click="changeStatus(scope.row, 0)">
+                        <el-tag :type="0 | statusFilter">
+                            禁用
+                        </el-tag>
+                    </el-button>
+                    <!-- 编辑与删除 -->
                     <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
                     <el-button type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
                 </template>
@@ -121,7 +135,7 @@
 </template>
 
 <script>
-    import {getList, setDel, changeFiled} from '@/api/friendlinks';
+    import {getList, setDel, changeFiledStatus} from '@/api/friendlinks';
     import waves from '@/directive/waves'; // waves directive
     import Edit from './components/detail';
     import {parseTime, getFormatDate} from '@/utils/index';
@@ -312,7 +326,22 @@
                 setTimeout(() => {
                     this.listLoading = false;
                 }, 300);
-            }
+            },
+            // 状态变更
+            async changeStatus(row, value) {
+                const {data, msg, status} = await changeFiledStatus({
+                    'link_id': row.link_id,
+                    'change_field': 'is_check',
+                    'change_value': value
+                });
+
+                // 设置成功之后，同步到当前列表数据
+                if (status == 1) row.is_check = value;
+                this.$message({
+                    message: msg,
+                    type: status == 1 ? 'success' : 'error',
+                });
+            },
         }
     }
 </script>
