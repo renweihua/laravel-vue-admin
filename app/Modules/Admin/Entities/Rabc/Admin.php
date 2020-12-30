@@ -2,10 +2,12 @@
 
 namespace App\Modules\Admin\Entities\Rabc;
 
+use App\Scopes\DeleteScope;
 use App\Traits\Instance;
 use App\Traits\MysqlTable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Builder;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class Admin extends Authenticatable implements JWTSubject
@@ -14,6 +16,8 @@ class Admin extends Authenticatable implements JWTSubject
     use MysqlTable;
 
     protected $primaryKey = 'admin_id';
+    protected $is_delete = 0; //是否开启删除（1.开启删除，就是直接删除；0.假删除）
+    protected $delete_field = 'is_delete'; //删除字段
 
     /**
      * 是否主动维护时间戳
@@ -30,6 +34,22 @@ class Admin extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $guarded = [];
+
+    /**
+     * 模型的 "booted" 方法
+     *
+     * 应用全局作用域
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        // 假删除的作用域
+        $static = new static;
+        static::addGlobalScope('delete', function(Builder $builder) use ($static){
+            if ($static->is_delete == 0) $builder->where($static->delete_field, $static->is_delete);
+        });
+    }
 
     public function getAdminByName(string $admin_name)
     {

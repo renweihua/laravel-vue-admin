@@ -15,14 +15,6 @@ export function getList(params) {
     })
 }
 
-export function detail(data) {
-    return request({
-        url: '/admin_roles/detail',
-        method: 'post',
-        data
-    })
-}
-
 export function create(data) {
     return request({
         url: '/admin_roles',
@@ -43,6 +35,14 @@ export function setDel(data) {
     return request({
         url: `/admin_roles`,
         method: 'delete',
+        data
+    })
+}
+
+export function changeFiledStatus(data) {
+    return request({
+        url: `/admin_roles/changeFiledStatus`,
+        method: 'put',
         data
     })
 }

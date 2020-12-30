@@ -33,10 +33,10 @@ export function setDel(data) {
     })
 }
 
-export function changeFiled(data) {
+export function changeFiledStatus(data) {
     return request({
         url: '/friendlinks/changeFiledStatus',
-        method: 'post',
+        method: 'put',
         data
     })
 }

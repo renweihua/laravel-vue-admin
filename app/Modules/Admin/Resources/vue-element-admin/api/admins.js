@@ -15,13 +15,13 @@ export function getList(params) {
     })
 }
 
-export function detail(data) {
-    return request({
-        url: '/admins/detail',
-        method: 'post',
-        data
-    })
-}
+// export function detail(data) {
+//     return request({
+//         url: '/admins/detail',
+//         method: 'post',
+//         data
+//     })
+// }
 
 export function create(data) {
     return request({
@@ -43,6 +43,14 @@ export function setDel(data) {
     return request({
         url: `/admins`,
         method: 'delete',
+        data
+    })
+}
+
+export function changeFiledStatus(data) {
+    return request({
+        url: `/admins/changeFiledStatus`,
+        method: 'put',
         data
     })
 }

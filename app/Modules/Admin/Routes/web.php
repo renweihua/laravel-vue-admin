@@ -44,6 +44,7 @@ Route::prefix('admin')->group(function() {
             Route::post('/', 'System\BannerController@create');
             Route::put('/', 'System\BannerController@update');
             Route::delete('/', 'System\BannerController@delete');
+            Route::put('/changeFiledStatus', 'System\BannerController@changeFiledStatus');
         });
 
         // 配置管理
@@ -52,6 +53,7 @@ Route::prefix('admin')->group(function() {
             Route::post('/', 'System\ConfigController@create');
             Route::put('/', 'System\ConfigController@update');
             Route::delete('/', 'System\ConfigController@delete');
+            Route::put('/changeFiledStatus', 'System\ConfigController@changeFiledStatus');
         });
 
         // 友情链接
@@ -60,6 +62,7 @@ Route::prefix('admin')->group(function() {
             Route::post('/', 'System\FriendlinkController@create');
             Route::put('/', 'System\FriendlinkController@update');
             Route::delete('/', 'System\FriendlinkController@delete');
+            Route::put('/changeFiledStatus', 'System\FriendlinkController@changeFiledStatus');
         });
 
         Route::prefix('protocols')->group(function() {
@@ -74,6 +77,7 @@ Route::prefix('admin')->group(function() {
             Route::post('/', 'System\VersionController@create');
             Route::put('/', 'System\VersionController@update');
             Route::delete('/', 'System\VersionController@delete');
+            Route::put('/changeFiledStatus', 'System\VersionController@changeFiledStatus');
         });
 
         Route::prefix('admins')->group(function() {
@@ -82,6 +86,7 @@ Route::prefix('admin')->group(function() {
             Route::put('/', 'Rabc\AdminController@update');
             Route::delete('/', 'Rabc\AdminController@delete');
             Route::get('/getSelectLists', 'Rabc\AdminController@getSelectLists');
+            Route::put('/changeFiledStatus', 'Rabc\AdminController@changeFiledStatus');
         });
 
         Route::prefix('admin_roles')->group(function() {
@@ -90,6 +95,7 @@ Route::prefix('admin')->group(function() {
             Route::put('/', 'Rabc\AdminRoleController@update');
             Route::delete('/', 'Rabc\AdminRoleController@delete');
             Route::get('/getSelectLists', 'Rabc\AdminRoleController@getSelectLists');
+            Route::put('/changeFiledStatus', 'Rabc\AdminRoleController@changeFiledStatus');
         });
 
         Route::prefix('admin_menus')->group(function() {
@@ -98,6 +104,7 @@ Route::prefix('admin')->group(function() {
             Route::put('/', 'Rabc\AdminMenuController@update');
             Route::delete('/', 'Rabc\AdminMenuController@delete');
             Route::get('/getSelectLists', 'Rabc\AdminMenuController@getSelectLists');
+            Route::put('/changeFiledStatus', 'Rabc\AdminMenuController@changeFiledStatus');
         });
 
         // 管理员日志
@@ -110,6 +117,24 @@ Route::prefix('admin')->group(function() {
         Route::prefix('adminloginlogs')->group(function() {
             Route::get('/', 'Log\AdminLoginLogController@index');
             Route::delete('/', 'Log\AdminLoginLogController@delete');
+        });
+
+        // 文章分类
+        Route::prefix('article_categorys')->group(function() {
+            Route::get('/', 'Article\ArticleCategoryController@index');
+            Route::post('/', 'Article\ArticleCategoryController@create');
+            Route::put('/', 'Article\ArticleCategoryController@update');
+            Route::delete('/', 'Article\ArticleCategoryController@delete');
+            Route::get('/getSelectLists', 'Article\ArticleCategoryController@getSelectLists');
+            Route::put('/changeFiledStatus', 'Article\ArticleCategoryController@changeFiledStatus');
+        });
+
+        // 文章管理
+        Route::prefix('articles')->group(function() {
+            Route::get('/', 'Article\ArticleController@index');
+            Route::post('/', 'Article\ArticleController@create');
+            Route::put('/', 'Article\ArticleController@update');
+            Route::delete('/', 'Article\ArticleController@delete');
         });
     });
 });

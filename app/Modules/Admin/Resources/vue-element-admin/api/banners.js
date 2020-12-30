@@ -32,10 +32,10 @@ export function setDel(data) {
     });
 }
 
-export function changeFiled(data) {
+export function changeFiledStatus(data) {
     return request({
         url: '/banners/changeFiledStatus',
-        method: 'post',
+        method: 'put',
         data
-    });
+    })
 }

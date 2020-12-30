@@ -15,14 +15,6 @@ export function getList(params) {
     })
 }
 
-export function detail(data) {
-    return request({
-        url: '/articles/detail',
-        method: 'post',
-        data
-    })
-}
-
 export function create(data) {
     return request({
         url: '/articles',
@@ -47,6 +39,10 @@ export function setDel(data) {
     })
 }
 
-export function fetchArticle() {
-
+export function changeFiledStatus(data) {
+    return request({
+        url: '/articles/changeFiledStatus',
+        method: 'put',
+        data
+    })
 }

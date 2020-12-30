@@ -24,7 +24,10 @@ class BaseService extends Service
         if ($this->model instanceof MonthModel){
             $this->model = $this->model->setMonthTable($this->getSearchMonth());
         }
-        $lists = $this->model->with($this->with)->orderBy($this->model->getKeyName(), 'DESC')->paginate($this->getLimit($params['limit'] ?? 10));
+        $lists = $this->model->where($params['where_callback'] ?? [])
+            ->with($this->with)
+            ->orderBy(empty($params['order']) ? $this->model->getKeyName() : $params['order'], empty($params['order_sort']) ? 'DESC' : $params['order_sort'])
+            ->paginate($this->getLimit($params['limit'] ?? 10));
 
         return [
             'current_page' => $lists->currentPage(),

@@ -57,6 +57,7 @@
                 show-overflow-tooltip
                 prop="role_id"
                 label="Id"
+                align="center"
             />
             <el-table-column
                 show-overflow-tooltip
@@ -66,9 +67,7 @@
             />
             <el-table-column label="创建时间" show-overflow-tooltip align="center">
                 <template slot-scope="{ row }">
-                  <span>
                     {{ row.created_time | parseTime("{y}-{m}-{d} {h}:{i}") }}
-                  </span>
                 </template>
             </el-table-column>
             <el-table-column align="center" prop="is_check" label="启用状态">
@@ -82,12 +81,26 @@
                 show-overflow-tooltip
                 fixed="right"
                 label="操作"
-                width="200"
+                width="230"
                 align="center"
             >
                 <template v-slot="scope">
+                    <!-- 状态变更 -->
+                    <el-button v-if="scope.row.role_id > 1 && scope.row.is_check == 0" type="text" icon="el-icon-unlock"
+                               @click="changeStatus(scope.row, 1)">
+                        <el-tag :type="1 | statusFilter">
+                            启用
+                        </el-tag>
+                    </el-button>
+                    <el-button v-else-if="scope.row.role_id > 1 && scope.row.is_check == 1" type="text" icon="el-icon-lock"
+                               @click="changeStatus(scope.row, 0)">
+                        <el-tag :type="0 | statusFilter">
+                            禁用
+                        </el-tag>
+                    </el-button>
+
                     <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
-                    <el-button type="text" icon="el-icon-delete" v-if="scope.row.role_id != 1" @click="handleDelete(scope.row)">删除</el-button>
+                    <el-button type="text" icon="el-icon-delete" v-if="scope.row.role_id > 1" @click="handleDelete(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -139,7 +152,7 @@
 </template>
 
 <script>
-    import {getList, create, update, setDel, changeFiled} from '@/api/admin_roles';
+    import {getList, create, update, setDel, changeFiledStatus} from '@/api/admin_roles';
     import waves from '@/directive/waves' // waves directive
     import {parseTime, getFormatDate, deepClone} from '@/utils/index';
     import {getMenusSelect} from '@/api/admin_menus';
@@ -425,6 +438,21 @@
                     } else {
                         return false;
                     }
+                });
+            },
+            // 状态变更
+            async changeStatus(row, value) {
+                const {data, msg, status} = await changeFiledStatus({
+                    'role_id': row.role_id,
+                    'change_field': 'is_check',
+                    'change_value': value
+                });
+
+                // 设置成功之后，同步到当前列表数据
+                if (status == 1) row.is_check = value;
+                this.$message({
+                    message: msg,
+                    type: status == 1 ? 'success' : 'error',
                 });
             },
         },

@@ -2,19 +2,19 @@
     <div class="app-container">
         <div class="filter-container">
             <el-input
-                    v-model="listQuery.search"
-                    placeholder="请输入管理员账户/邮箱"
-                    style="width: 200px;"
-                    class="filter-item"
-                    @keyup.enter.native="handleFilter"
+                v-model="listQuery.search"
+                placeholder="请输入管理员账户/邮箱"
+                style="width: 200px;"
+                class="filter-item"
+                @keyup.enter.native="handleFilter"
             />
             <el-select v-model="listQuery.is_check" placeholder="请选择启用状态" clearable class="filter-item">
                 <el-option
-                        v-for="item in calendarCheckOptions"
-                        :key="item.key"
-                        :checked="item.key == listQuery.is_check"
-                        :label="item.display_name+'('+item.key+')'"
-                        :value="item.key"
+                    v-for="item in calendarCheckOptions"
+                    :key="item.key"
+                    :checked="item.key == listQuery.is_check"
+                    :label="item.display_name+'('+item.key+')'"
+                    :value="item.key"
                 />
             </el-select>
             <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
@@ -24,51 +24,52 @@
                 批量删除
             </el-button>
             <el-button
-                    class="filter-item"
-                    style="margin-left: 10px;"
-                    type="primary"
-                    icon="el-icon-plus"
-                    @click="handleEdit"
+                class="filter-item"
+                style="margin-left: 10px;"
+                type="primary"
+                icon="el-icon-plus"
+                @click="handleEdit"
             >
                 {{ $t('table.add') }}
             </el-button>
             <el-button
-                    v-waves
-                    :loading="downloadLoading"
-                    class="filter-item"
-                    type="primary"
-                    icon="el-icon-download"
-                    @click="handleDownload"
+                v-waves
+                :loading="downloadLoading"
+                class="filter-item"
+                type="primary"
+                icon="el-icon-download"
+                @click="handleDownload"
             >
                 {{ $t('table.export') }}
             </el-button>
         </div>
 
         <el-table
-                v-loading="listLoading"
-                :data="list"
-                :element-loading-text="elementLoadingText"
-                @selection-change="setSelectRows"
-                border
-                class="margin-buttom-10"
+            v-loading="listLoading"
+            :data="list"
+            :element-loading-text="elementLoadingText"
+            @selection-change="setSelectRows"
+            border
+            class="margin-buttom-10"
         >
             <el-table-column show-overflow-tooltip type="selection"/>
             <el-table-column
-                    show-overflow-tooltip
-                    prop="admin_id"
-                    label="Id"
+                show-overflow-tooltip
+                prop="admin_id"
+                label="Id"
+                align="center"
             />
             <el-table-column
-                    show-overflow-tooltip
-                    prop="admin_name"
-                    label="管理员"
-                    align="center"
+                show-overflow-tooltip
+                prop="admin_name"
+                label="管理员"
+                align="center"
             />
             <el-table-column
-                    show-overflow-tooltip
-                    prop="admin_email"
-                    label="邮箱"
-                    align="center"
+                show-overflow-tooltip
+                prop="admin_email"
+                label="邮箱"
+                align="center"
             />
             <el-table-column align="center" prop="admin_head" label="头像">
                 <template slot-scope="{row}">
@@ -77,9 +78,7 @@
             </el-table-column>
             <el-table-column label="创建时间" show-overflow-tooltip align="center">
                 <template slot-scope="{ row }">
-                  <span>
                     {{ row.admin_info.created_time | parseTime("{y}-{m}-{d} {h}:{i}") }}
-                  </span>
                 </template>
             </el-table-column>
             <el-table-column align="center" prop="is_check" label="启用状态">
@@ -90,27 +89,43 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    show-overflow-tooltip
-                    fixed="right"
-                    label="操作"
-                    width="200"
-                    align="center"
+                show-overflow-tooltip
+                fixed="right"
+                label="操作"
+                width="230"
+                align="center"
             >
                 <template v-slot="scope">
+                    <!-- 状态变更 -->
+                    <el-button v-if="scope.row.admin_id > 1 && scope.row.is_check == 0" type="text" icon="el-icon-unlock"
+                               @click="changeStatus(scope.row, 1)">
+                        <el-tag :type="1 | statusFilter">
+                            启用
+                        </el-tag>
+                    </el-button>
+                    <el-button v-else-if="scope.row.admin_id > 1 && scope.row.is_check == 1" type="text" icon="el-icon-lock"
+                               @click="changeStatus(scope.row, 0)">
+                        <el-tag :type="0 | statusFilter">
+                            禁用
+                        </el-tag>
+                    </el-button>
+
                     <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
-                    <el-button type="text" icon="el-icon-delete" v-if="scope.row.admin_id != 1" @click="handleDelete(scope.row)">删除</el-button>
+                    <el-button type="text" icon="el-icon-delete" v-if="scope.row.admin_id != 1"
+                               @click="handleDelete(scope.row)">删除
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
         <!-- 分页 -->
         <el-pagination
-                background
-                :current-page="listQuery.page"
-                :page-size="listQuery.limit"
-                :layout="layout"
-                :total="total"
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
+            background
+            :current-page="listQuery.page"
+            :page-size="listQuery.limit"
+            :layout="layout"
+            :total="total"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
         />
         <!-- 详情 -->
         <edit ref="edit" @fetchData="getList"/>
@@ -118,7 +133,7 @@
 </template>
 
 <script>
-    import {getList, setDel, changeFiled} from '@/api/admins';
+    import {getList, setDel, changeFiledStatus} from '@/api/admins';
     import waves from '@/directive/waves' // waves directive
     import Edit from './components/detail'
     import {parseTime, getFormatDate} from '@/utils/index';
@@ -127,12 +142,12 @@
         {key: '-1', display_name: '全部'},
         {key: '1', display_name: '启用'},
         {key: '0', display_name: '禁用'}
-    ]
+    ];
 
     const calendarCheckKeyValue = calendarCheckOptions.reduce((acc, cur) => {
-        acc[cur.key] = cur.display_name
-        return acc
-    }, {})
+        acc[cur.key] = cur.display_name;
+        return acc;
+    }, {});
 
     export default {
         name: 'UserManagement',
@@ -145,12 +160,12 @@
                 const statusMap = {
                     1: 'success',
                     0: 'danger'
-                }
-                return statusMap[status]
+                };
+                return statusMap[status];
             },
             checkFilter(type) {
-                return calendarCheckKeyValue[type] || ''
-            }
+                return calendarCheckKeyValue[type] || '';
+            },
         },
         data() {
             return {
@@ -262,7 +277,7 @@
                         type: 'warning'
                     })
                     .then(async () => {
-                        const {status, msg} = await setDel({admin_id: ids, 'is_batch' : this.is_batch});
+                        const {status, msg} = await setDel({admin_id: ids, 'is_batch': this.is_batch});
 
                         switch (status) {
                             case 1:
@@ -308,7 +323,22 @@
                 setTimeout(() => {
                     this.listLoading = false
                 }, 300)
-            }
+            },
+            // 状态变更
+            async changeStatus(row, value) {
+                const {data, msg, status} = await changeFiledStatus({
+                    'admin_id': row.admin_id,
+                    'change_field': 'is_check',
+                    'change_value': value
+                });
+
+                // 设置成功之后，同步到当前列表数据
+                if (status == 1) row.is_check = value;
+                this.$message({
+                    message: msg,
+                    type: status == 1 ? 'success' : 'error',
+                });
+            },
         }
     }
 </script>

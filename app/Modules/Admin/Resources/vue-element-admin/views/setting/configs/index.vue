@@ -2,23 +2,20 @@
     <div class="app-container">
         <div class="filter-container">
             <el-input
-                    v-model="listQuery.search"
-                    placeholder="请输入配置标题/名称"
-                    style="width: 200px;"
-                    class="filter-item"
-                    @keyup.enter.native="handleFilter"
+                v-model="listQuery.search"
+                placeholder="请输入配置标题/名称"
+                style="width: 200px;"
+                class="filter-item"
+                @keyup.enter.native="handleFilter"
             />
             <el-select v-model="listQuery.is_check" placeholder="请选择启用状态" clearable class="filter-item">
                 <el-option
-                        v-for="item in calendarCheckOptions"
-                        :key="item.key"
-                        :checked="item.key == listQuery.is_check"
-                        :label="item.display_name+'('+item.key+')'"
-                        :value="item.key"
+                    v-for="item in calendarCheckOptions"
+                    :key="item.key"
+                    :checked="item.key == listQuery.is_check"
+                    :label="item.display_name+'('+item.key+')'"
+                    :value="item.key"
                 />
-            </el-select>
-            <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
-                <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key"/>
             </el-select>
             <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
                 {{ $t('table.search') }}
@@ -27,50 +24,50 @@
                 批量删除
             </el-button>
             <el-button
-                    class="filter-item"
-                    style="margin-left: 10px;"
-                    type="primary"
-                    icon="el-icon-plus"
-                    @click="handleCreate"
+                class="filter-item"
+                style="margin-left: 10px;"
+                type="primary"
+                icon="el-icon-plus"
+                @click="handleCreate"
             >
                 {{ $t('table.add') }}
             </el-button>
             <el-button
-                    v-waves
-                    :loading="downloadLoading"
-                    class="filter-item"
-                    type="primary"
-                    icon="el-icon-download"
-                    @click="handleDownload"
+                v-waves
+                :loading="downloadLoading"
+                class="filter-item"
+                type="primary"
+                icon="el-icon-download"
+                @click="handleDownload"
             >
                 {{ $t('table.export') }}
             </el-button>
         </div>
 
         <el-table
-                v-loading="listLoading"
-                :data="list"
-                :element-loading-text="elementLoadingText"
-                @selection-change="setSelectRows"
-                border
-                class="margin-buttom-10"
+            v-loading="listLoading"
+            :data="list"
+            :element-loading-text="elementLoadingText"
+            @selection-change="setSelectRows"
+            border
+            class="margin-buttom-10"
         >
             <el-table-column show-overflow-tooltip type="selection"/>
             <el-table-column
-                    show-overflow-tooltip
-                    prop="config_id"
-                    label="Id"
+                show-overflow-tooltip
+                prop="config_id"
+                label="Id"
             />
             <el-table-column
-                    show-overflow-tooltip
-                    prop="config_title"
-                    label="配置标题"
-                    align="center"
+                show-overflow-tooltip
+                prop="config_title"
+                label="配置标题"
+                align="center"
             />
             <el-table-column
-                    show-overflow-tooltip
-                    prop="config_name"
-                    label="配置名称"
+                show-overflow-tooltip
+                prop="config_name"
+                label="配置名称"
             />
 
             <el-table-column align="center" prop="config_value" label="配置值">
@@ -81,28 +78,26 @@
             </el-table-column>
 
             <el-table-column
-                    show-overflow-tooltip
-                    prop="config_group"
-                    label="配置分组"
-                    align="center"
+                show-overflow-tooltip
+                prop="config_group"
+                label="配置分组"
+                align="center"
             />
             <el-table-column
-                    show-overflow-tooltip
-                    prop="config_type"
-                    label="配置类型"
-                    align="center"
+                show-overflow-tooltip
+                prop="config_type"
+                label="配置类型"
+                align="center"
             />
             <el-table-column
-                    show-overflow-tooltip
-                    prop="config_sort"
-                    label="排序"
-                    align="center"
+                show-overflow-tooltip
+                prop="config_sort"
+                label="排序"
+                align="center"
             />
             <el-table-column label="创建时间" show-overflow-tooltip align="center">
                 <template slot-scope="{ row }">
-          <span>
-            {{ row.created_time | parseTime("{y}-{m}-{d} {h}:{i}") }}
-          </span>
+                    {{ row.created_time | parseTime("{y}-{m}-{d} {h}:{i}") }}
                 </template>
             </el-table-column>
             <el-table-column align="center" prop="is_check" label="启用状态">
@@ -113,33 +108,47 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    show-overflow-tooltip
-                    fixed="right"
-                    label="操作"
-                    width="200"
-                    align="center"
+                show-overflow-tooltip
+                fixed="right"
+                label="操作"
+                width="230"
+                align="center"
             >
                 <template v-slot="scope">
+                    <!-- 状态变更 -->
+                    <el-button v-if="scope.row.is_check == 0" type="text" icon="el-icon-unlock"
+                               @click="changeStatus(scope.row, 1)">
+                        <el-tag :type="1 | statusFilter">
+                            启用
+                        </el-tag>
+                    </el-button>
+                    <el-button v-else-if="scope.row.is_check == 1" type="text" icon="el-icon-lock"
+                               @click="changeStatus(scope.row, 0)">
+                        <el-tag :type="0 | statusFilter">
+                            禁用
+                        </el-tag>
+                    </el-button>
+                    <!-- 编辑与删除 -->
                     <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
                     <el-button type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <el-pagination
-                background
-                :current-page="queryForm.page"
-                :page-size="queryForm.limit"
-                :layout="layout"
-                :total="total"
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
+            background
+            :current-page="queryForm.page"
+            :page-size="queryForm.limit"
+            :layout="layout"
+            :total="total"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
         />
         <edit ref="edit" @fetchData="getList"/>
     </div>
 </template>
 
 <script>
-    import {getList, setDel, changeFiled} from '@/api/configs'
+    import {getList, setDel, changeFiledStatus} from '@/api/configs'
     import waves from '@/directive/waves' // waves directive
     import Edit from './components/detail'
     import {parseTime} from '@/utils/index'
@@ -193,11 +202,9 @@
                 listQuery: {
                     page: 1,
                     limit: 20,
-                    sort: '+id',
                     is_check: ''
                 },
                 importanceOptions: [1, 2, 3],
-                sortOptions: [{label: 'ID Ascending', key: '+id'}, {label: 'ID Descending', key: '-id'}],
                 statusOptions: ['published', 'draft', 'deleted'],
                 temp: {
                     id: undefined,
@@ -305,7 +312,7 @@
                         type: 'warning'
                     })
                     .then(async () => {
-                        const {status, msg} = await setDel({config_id: ids, 'is_batch' : this.is_batch});
+                        const {status, msg} = await setDel({config_id: ids, 'is_batch': this.is_batch});
 
                         switch (status) {
                             case 1:
@@ -351,7 +358,22 @@
                 setTimeout(() => {
                     this.listLoading = false
                 }, 300)
-            }
+            },
+            // 状态变更
+            async changeStatus(row, value) {
+                const {data, msg, status} = await changeFiledStatus({
+                    'config_id': row.config_id,
+                    'change_field': 'is_check',
+                    'change_value': value
+                });
+
+                // 设置成功之后，同步到当前列表数据
+                if (status == 1) row.is_check = value;
+                this.$message({
+                    message: msg,
+                    type: status == 1 ? 'success' : 'error',
+                });
+            },
         }
     }
 </script>

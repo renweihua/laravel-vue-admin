@@ -146,9 +146,6 @@
                     this.listLoading = false;
                 }, 300);
             },
-            handleNodeClick(data) {
-                this.getMenus();
-            },
         },
     };
 </script>

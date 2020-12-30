@@ -214,7 +214,6 @@
             },
             save() {
                 this.$refs['form'].validate(async (valid) => {
-                    console.log(valid);
                     if (valid) {
                         const {msg} = this.form.admin_id ? await update(this.form) : await create(this.form);
                         this.$message({

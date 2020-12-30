@@ -15,14 +15,6 @@ export function getList(params) {
     })
 }
 
-export function detail(data) {
-    return request({
-        url: '/admin_menus/detail',
-        method: 'get',
-        data
-    })
-}
-
 export function create(data) {
     return request({
         url: '/admin_menus',

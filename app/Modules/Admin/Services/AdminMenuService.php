@@ -17,7 +17,7 @@ class AdminMenuService extends BaseService
      * @param array $params
      * @return array
      */
-    public function lists(array $params): array
+    public function lists(array $params) : array
     {
         $lists = $this->model->with($this->with)->orderBy('menu_sort', 'ASC')->get();
 
