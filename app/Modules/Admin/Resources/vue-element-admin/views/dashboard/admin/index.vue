@@ -81,8 +81,8 @@
             async statistics() {
                 this.listLoading = true;
                 const {data} = await statistics();
+                // console.log(data);
 
-                console.log(data);
                 // 管理员数量
                 this.admins_count = data.admins_count;
                 // 技能

@@ -111,5 +111,14 @@ Route::prefix('admin')->group(function() {
             Route::get('/', 'Log\AdminLoginLogController@index');
             Route::delete('/', 'Log\AdminLoginLogController@delete');
         });
+
+        // 文章分类
+        Route::prefix('article_categorys')->group(function() {
+            Route::get('/', 'Article\ArticleCategoryController@index');
+            Route::post('/', 'Article\ArticleCategoryController@create');
+            Route::put('/', 'Article\ArticleCategoryController@update');
+            Route::delete('/', 'Article\ArticleCategoryController@delete');
+            Route::get('/getSelectLists', 'Article\ArticleCategoryController@getSelectLists');
+        });
     });
 });

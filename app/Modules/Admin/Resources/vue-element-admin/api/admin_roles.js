@@ -15,14 +15,6 @@ export function getList(params) {
     })
 }
 
-export function detail(data) {
-    return request({
-        url: '/admin_roles/detail',
-        method: 'post',
-        data
-    })
-}
-
 export function create(data) {
     return request({
         url: '/admin_roles',
