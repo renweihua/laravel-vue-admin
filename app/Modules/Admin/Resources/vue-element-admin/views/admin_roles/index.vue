@@ -67,9 +67,7 @@
             />
             <el-table-column label="创建时间" show-overflow-tooltip align="center">
                 <template slot-scope="{ row }">
-                  <span>
                     {{ row.created_time | parseTime("{y}-{m}-{d} {h}:{i}") }}
-                  </span>
                 </template>
             </el-table-column>
             <el-table-column align="center" prop="is_check" label="启用状态">

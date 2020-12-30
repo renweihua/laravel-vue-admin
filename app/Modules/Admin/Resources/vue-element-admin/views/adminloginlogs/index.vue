@@ -2,10 +2,10 @@
     <div class="app-container">
         <div class="filter-container">
             <el-input
-                    v-model="listQuery.search"
-                    placeholder="请输入管理员账户/Id"
-                    class="filter-item width-200-px"
-                    @keyup.enter.native="handleFilter"
+                v-model="listQuery.search"
+                placeholder="请输入管理员账户/Id"
+                class="filter-item width-200-px"
+                @keyup.enter.native="handleFilter"
             />
             <el-select v-model="listQuery.log_status" placeholder="请选择登录状态" clearable class="filter-item">
                 <el-option
@@ -34,19 +34,19 @@
         </div>
 
         <el-table
-                v-loading="listLoading"
-                :data="list"
-                :element-loading-text="elementLoadingText"
-                @selection-change="setSelectRows"
-                border
-                class="margin-buttom-10"
+            v-loading="listLoading"
+            :data="list"
+            :element-loading-text="elementLoadingText"
+            @selection-change="setSelectRows"
+            border
+            class="margin-buttom-10"
         >
             <el-table-column show-overflow-tooltip type="selection"/>
             <el-table-column
-                    show-overflow-tooltip
-                    prop="log_id"
-                    label="Id"
-                    align="center"
+                show-overflow-tooltip
+                prop="log_id"
+                label="Id"
+                align="center"
             />
             <el-table-column align="center" prop="admin" label="管理员">
                 <template slot-scope="{ row }">
@@ -100,15 +100,13 @@
             />
             <el-table-column label="登录时间" show-overflow-tooltip align="center">
                 <template slot-scope="{ row }">
-                  <span>
                     {{ row.created_time | parseTime("{y}-{m}-{d} {h}:{i}") }}
-                  </span>
                 </template>
             </el-table-column>
             <el-table-column
-                    show-overflow-tooltip
-                    label="操作"
-                    align="center"
+                show-overflow-tooltip
+                label="操作"
+                align="center"
             >
                 <template v-slot="scope">
                     <el-button type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
@@ -117,13 +115,13 @@
         </el-table>
         <!-- 分页 -->
         <el-pagination
-                background
-                :current-page="listQuery.page"
-                :page-size="listQuery.limit"
-                :layout="layout"
-                :total="total"
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
+            background
+            :current-page="listQuery.page"
+            :page-size="listQuery.limit"
+            :layout="layout"
+            :total="total"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
         />
     </div>
 </template>
@@ -166,7 +164,7 @@
             return {
                 is_batch: 0, // 默认不开启批量删除
                 list: [],
-                month_lists:[],
+                month_lists: [],
                 listLoading: true,
                 layout: 'total, sizes, prev, pager, next, jumper',
                 total: 0,
@@ -177,7 +175,7 @@
                     limit: 10,
                     search: '',
                     log_status: -1,
-                    search_month:'',
+                    search_month: '',
                 },
                 downloadLoading: false,
                 calendarCheckOptions,
@@ -222,7 +220,7 @@
                         type: 'warning'
                     })
                     .then(async () => {
-                        const {status, msg} = await setDel({log_id: ids, 'month' : month, 'is_batch' : this.is_batch});
+                        const {status, msg} = await setDel({log_id: ids, 'month': month, 'is_batch': this.is_batch});
 
                         switch (status) {
                             case 1:

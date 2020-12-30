@@ -128,5 +128,13 @@ Route::prefix('admin')->group(function() {
             Route::get('/getSelectLists', 'Article\ArticleCategoryController@getSelectLists');
             Route::put('/changeFiledStatus', 'Article\ArticleCategoryController@changeFiledStatus');
         });
+
+        // 文章管理
+        Route::prefix('articles')->group(function() {
+            Route::get('/', 'Article\ArticleController@index');
+            Route::post('/', 'Article\ArticleController@create');
+            Route::put('/', 'Article\ArticleController@update');
+            Route::delete('/', 'Article\ArticleController@delete');
+        });
     });
 });
