@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export function getMenusSelect() {
+export function getCategorySelect() {
     return request({
         url: '/article_categorys/getSelectLists',
         method: 'get'

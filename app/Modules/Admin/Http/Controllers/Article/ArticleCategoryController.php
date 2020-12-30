@@ -3,7 +3,7 @@
 namespace App\Modules\Admin\Http\Controllers\Article;
 
 use App\Modules\Admin\Http\Controllers\BaseController;
-use App\Modules\Admin\Http\Requests\Article\ArticleRequest;
+use App\Modules\Admin\Http\Requests\Article\ArticleCategoryRequest;
 use App\Modules\Admin\Services\ArticleCategoryService;
 
 class ArticleCategoryController extends BaseController
@@ -13,12 +13,12 @@ class ArticleCategoryController extends BaseController
         $this->service = $articleCategoryService;
     }
 
-    public function create(ArticleRequest $request)
+    public function create(ArticleCategoryRequest $request)
     {
         return $this->createService($request);
     }
 
-    public function update(ArticleRequest $request)
+    public function update(ArticleCategoryRequest $request)
     {
         return $this->updateService($request);
     }

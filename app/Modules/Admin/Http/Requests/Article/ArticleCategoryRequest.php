@@ -33,8 +33,7 @@ class ArticleCategoryRequest extends BaseRequest
     public function messages()
     {
         return [
-            'article_title.required' => '请输入标题！',
-            'article_cover.required'   => '请上传封面！',
+            'category_name.required' => '请输入名称！',
         ];
     }
 }

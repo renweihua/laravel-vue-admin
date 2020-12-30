@@ -6,34 +6,33 @@
     >
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
             <el-form-item label="父级菜单" prop="parent_id">
-                <el-input v-model="form.parent_id" autocomplete="off"></el-input>
+                <el-select v-model="form.parent_id" placeholder="请选择父级" autocomplete="off">
+                    <el-option
+                        key="0"
+                        :checked="0 == form.parent_id"
+                        label="默认顶级"
+                        value="0"
+                    />
+                    <el-option
+                        v-for="item in category"
+                        :key="item.category_id"
+                        :checked="item.category_id == form.parent_id"
+                        :label="item.category_name"
+                        :value="item.category_id"
+                    />
+                </el-select>
             </el-form-item>
-            <el-form-item label="菜单名称" prop="menu_name">
-                <el-input v-model="form.menu_name" autocomplete="off"></el-input>
+            <el-form-item label="分类名称" prop="category_name">
+                <el-input v-model="form.category_name" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="Vue路由路径" prop="vue_path">
-                <el-input v-model="form.vue_path" autocomplete="off"></el-input>
+            <el-form-item label="排序" prop="category_sort">
+                <el-input v-model="form.category_sort" autocomplete="off" value="99"></el-input>
             </el-form-item>
-            <el-form-item label="Vue的redirect" prop="vue_redirect">
-                <el-input v-model="form.vue_redirect" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="图标" prop="vue_icon">
-                <el-input v-model="form.vue_icon" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="Vue文件路径" prop="vue_component">
-                <el-input v-model="form.vue_component" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="Vue的meta" prop="vue_meta">
-                <el-input v-model="form.vue_meta" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="外链" prop="external_links">
-                <el-input v-model="form.external_links" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="接口路由" prop="api_url">
-                <el-input v-model="form.api_url" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="排序" prop="menu_sort">
-                <el-input v-model="form.menu_sort" autocomplete="off" value="0"></el-input>
+            <el-form-item label="是否启用：" prop="is_check">
+                <el-radio-group v-model="form.is_check">
+                    <el-radio :label="0" :checked="form.is_check == 0 ? 'checked' : ''">禁用</el-radio>
+                    <el-radio :label="1" :checked="form.is_check == 1 ? 'checked' : ''">启用</el-radio>
+                </el-radio-group>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -44,32 +43,42 @@
 </template>
 
 <script>
-    import {create, update} from "@/api/admin_menus";
+    import {create, update, getCategorySelect} from "@/api/article_categories";
 
     export default {
         name: "",
         data() {
             return {
-                form: {},
-                rules: {
-                    id: [{required: true, trigger: "blur", message: "请输入路径"}],
+                title: '',
+                category:[], // 分类组
+                form: {
+                    parent_id: 0,
+                    category_name:'',
+                    category_sort:99,
+                    is_check:1,
                 },
-                title: "",
+                rules: {
+                    category_name: [{required: true, trigger: "blur", message: "请输入分类名称"}],
+                },
                 dialogFormVisible: false,
             };
         },
         created() {
+            this.getCategorySelect();
         },
         methods: {
+            // 获取菜单列表
+            async getCategorySelect() {
+                const res = await getCategorySelect();
+                this.category = res.data;
+            },
             showEdit(row) {
-                console.log(row);
                 if (!row) {
                     this.title = "添加";
                 } else {
                     this.title = "编辑";
                     this.form = Object.assign({}, row);
                 }
-                console.log(this.form);
                 this.dialogFormVisible = true;
             },
             close() {

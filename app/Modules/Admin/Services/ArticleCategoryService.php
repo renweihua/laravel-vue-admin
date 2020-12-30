@@ -17,4 +17,9 @@ class ArticleCategoryService extends BaseService
 
         return list_to_tree($lists->toArray(), 'category_id');
     }
+
+    public function getSelectLists($request)
+    {
+        return $this->model->getSelectLists();
+    }
 }
