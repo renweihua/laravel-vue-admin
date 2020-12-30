@@ -119,6 +119,7 @@ Route::prefix('admin')->group(function() {
             Route::put('/', 'Article\ArticleCategoryController@update');
             Route::delete('/', 'Article\ArticleCategoryController@delete');
             Route::get('/getSelectLists', 'Article\ArticleCategoryController@getSelectLists');
+            Route::put('/changeFiledStatus', 'Article\ArticleCategoryController@changeFiledStatus');
         });
     });
 });

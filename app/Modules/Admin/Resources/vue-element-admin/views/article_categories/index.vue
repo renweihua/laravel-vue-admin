@@ -24,6 +24,12 @@
                 prop="category_name"
                 label="分类名称"
             ></el-table-column>
+            <el-table-column
+                show-overflow-tooltip
+                prop="category_sort"
+                label="排序"
+                align="center"
+            ></el-table-column>
             <el-table-column align="center" prop="is_check" label="启用状态">
                 <template slot-scope="scope">
                     <el-tag :type="scope.row.is_check | statusFilter">
@@ -40,17 +46,26 @@
             </el-table-column>
             <el-table-column
                 show-overflow-tooltip
-                prop="category_sort"
-                label="排序"
-                align="center"
-            ></el-table-column>
-            <el-table-column
-                show-overflow-tooltip
                 align="center"
                 label="操作"
-                width="200"
+                width="300"
             >
                 <template v-slot="scope">
+                    <!-- 状态变更 -->
+                    <el-button v-if="scope.row.is_check == 0" type="text" icon="el-icon-unlock"
+                               @click="changeStatus(scope.row, 1)">
+                        <el-tag :type="1 | statusFilter">
+                            启用
+                        </el-tag>
+                    </el-button>
+                    <el-button v-else-if="scope.row.is_check == 1" type="text" icon="el-icon-lock"
+                               @click="changeStatus(scope.row, 0)">
+                        <el-tag :type="0 | statusFilter">
+                            禁用
+                        </el-tag>
+                    </el-button>
+
+                    <!-- 编辑与删除 -->
                     <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
                     <el-button type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
                 </template>
@@ -62,7 +77,7 @@
 </template>
 
 <script>
-    import {getList as getMenus, setDel} from "@/api/article_categories";
+    import {getList as getMenus, changeFiledStatus, setDel} from "@/api/article_categories";
     import Edit from "./components/detail";
     import {parseTime} from "@/utils";
 
@@ -70,11 +85,11 @@
         {key: '-1', display_name: '全部'},
         {key: '1', display_name: '启用'},
         {key: '0', display_name: '禁用'}
-    ]
+    ];
 
     const calendarCheckKeyValue = calendarCheckOptions.reduce((acc, cur) => {
-        acc[cur.key] = cur.display_name
-        return acc
+        acc[cur.key] = cur.display_name;
+        return acc;
     }, {})
 
     export default {
@@ -147,8 +162,22 @@
                     this.listLoading = false;
                 }, 300);
             },
-            handleNodeClick(data) {
-                this.getMenus();
+            // 状态变更
+            async changeStatus(row, value) {
+                const {data, msg, status} = await changeFiledStatus({
+                    category_id: row.category_id,
+                    'change_field': 'is_check',
+                    'change_value': value
+                });
+
+                console.log(data, msg, status);
+
+                // 设置成功之后，同步到当前列表数据
+                if (status == 1) row.is_check = value;
+                this.$message({
+                    message: msg,
+                    type: status == 1 ? 'success' : 'error',
+                });
             },
         },
     };

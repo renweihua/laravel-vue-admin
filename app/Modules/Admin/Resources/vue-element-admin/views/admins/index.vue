@@ -129,12 +129,12 @@
         {key: '-1', display_name: '全部'},
         {key: '1', display_name: '启用'},
         {key: '0', display_name: '禁用'}
-    ]
+    ];
 
     const calendarCheckKeyValue = calendarCheckOptions.reduce((acc, cur) => {
-        acc[cur.key] = cur.display_name
-        return acc
-    }, {})
+        acc[cur.key] = cur.display_name;
+        return acc;
+    }, {});
 
     export default {
         name: 'UserManagement',
