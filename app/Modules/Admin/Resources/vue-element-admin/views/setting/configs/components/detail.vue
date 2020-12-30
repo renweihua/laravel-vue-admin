@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { create, update } from '@/api/userManagement'
+import { create, update } from '@/api/configs'
 import { isEmail } from '@/utils/validate'
 
 // 定义一个全局的变量，谁用谁知道

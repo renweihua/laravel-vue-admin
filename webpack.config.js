@@ -24,10 +24,6 @@ if (report) {
         openAnalyzer: true,
     }));
 }
-var development = require('./.env.development');
-console.log(development);
-var production = require('./.env.production');
-console.log(production);
 // plugins.push(
 //     new webpack.DefinePlugin({
 //         'process.env':config.dev.env,
