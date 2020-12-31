@@ -183,7 +183,7 @@
                     is_check: ''
                 },
                 downloadLoading: false,
-                calendarCheckOptions
+                calendarCheckOptions,
             }
         },
         created() {
