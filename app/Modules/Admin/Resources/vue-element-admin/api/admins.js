@@ -1,10 +1,11 @@
 import request from '@/utils/request'
 
-export function getRolesSelect() {
+export function getAdminsSelect(params) {
     return request({
-        url: '/admin_roles/getSelectLists',
-        method: 'get'
-    })
+        url: '/admins/getSelectLists',
+        method: 'get',
+        params
+    });
 }
 
 export function getList(params) {

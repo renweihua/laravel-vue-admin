@@ -8,9 +8,9 @@ import {
     getToken
 } from '@/utils/auth';
 
-// console.log(process);
-// console.log(process.env);
-// console.log(process.env.VUE_APP_BASE_API);
+console.log(process);
+console.log(process.env);
+console.log(process.env.VUE_APP_BASE_API);
 
 // process失效了，默认为当前URL为请求地址
 process.env.VUE_APP_BASE_API = window.location.origin + window.location.pathname;
@@ -100,16 +100,20 @@ service.interceptors.response.use(
         console.log(error);
         console.log(error.response); // for debug
         let msg = error.msg;
-        switch (error.response.status) {
-            case 404:
-                msg = error.response.statusText;
-                break;
-            case 401: // 认证失败
-                msg = error.response.data.msg;
-                break;
-            case 500: // 认证失败
-                msg = error.response.statusText;
-                break;
+        if (error.response == undefined){
+            msg = '超时 5000ms，请刷新！';
+        }else{
+            switch (error.response.status) {
+                case 404:
+                    msg = error.response.statusText;
+                    break;
+                case 401: // 认证失败
+                    msg = error.response.data.msg;
+                    break;
+                case 500: // 认证失败
+                    msg = error.response.statusText;
+                    break;
+            }
         }
         Message({
             message: msg,

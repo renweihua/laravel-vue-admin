@@ -10,7 +10,7 @@
                         管理员数量
                     </div>
                     <router-link :to="'/rabc/admins'">
-                        <count-to :start-val="0" :end-val="data.admins_count" :duration="2600" class="card-panel-num"/>
+                        <count-to :start-val="0" :end-val="data.admins_count" :duration="data.admins_count" class="card-panel-num"/>
                     </router-link>
                 </div>
             </div>
@@ -24,7 +24,7 @@
                     <div class="card-panel-text">
                         文章数量
                     </div>
-                    <count-to :start-val="0" :end-val="data.articles_count" :duration="3000" class="card-panel-num"/>
+                    <count-to :start-val="0" :end-val="data.articles_count" :duration="data.articles_count" class="card-panel-num"/>
                 </div>
             </div>
         </el-col>
@@ -38,7 +38,7 @@
                         Banner数量
                     </div>
                     <router-link :to="'/articles'">
-                        <count-to :start-val="0" :end-val="data.banners_count" :duration="3200" class="card-panel-num"/>
+                        <count-to :start-val="0" :end-val="data.banners_count" :duration="data.banners_count" class="card-panel-num"/>
                     </router-link>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                     <div class="card-panel-text">
                         友情链接数量
                     </div>
-                    <count-to :start-val="0" :end-val="data.friendlinks_count" :duration="3600" class="card-panel-num"/>
+                    <count-to :start-val="0" :end-val="data.friendlinks_count" :duration="data.friendlinks_count" class="card-panel-num"/>
                 </div>
             </div>
         </el-col>
@@ -60,7 +60,7 @@
 </template>
 
 <script>
-    import CountTo from 'vue-count-to'
+    import CountTo from 'vue-count-to';
 
     export default {
         components: {

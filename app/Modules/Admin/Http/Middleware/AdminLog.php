@@ -21,7 +21,9 @@ class AdminLog
 
         $resource = $next($request);
 
-        if (strtoupper($request->getMethod()) != 'GET'){
+        $method = strtoupper($request->getMethod());
+
+        if ($method != 'GET'){
             $ip_agent = get_client_info();
             \App\Modules\Admin\Entities\Log\AdminLog::getInstance()->create([
                 'request_data' => json_encode($request->all()),
@@ -30,7 +32,7 @@ class AdminLog
                 'browser_type' => $ip_agent['agent'] ?? $_SERVER['HTTP_USER_AGENT'],
                 'created_time' => time(),
                 'log_action'   => request()->route()->getActionName(),
-                'log_method'   => request()->getMethod(),
+                'log_method'   => $method,
                 'log_duration' => microtime(true) - LARAVEL_START,
                 'request_url'     => URL::full() ?? get_this_url(),
             ]);
