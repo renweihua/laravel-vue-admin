@@ -30,7 +30,7 @@ trait MysqlTable
 
     public function detail(int $id, string $filed = '*', bool $lock = false, array $with = [], array $withCount = [])
     {
-        return $this->fields($filed)
+        return $this->select($filed)
             ->lock($lock)
             ->with($with)
             ->withCount($withCount)

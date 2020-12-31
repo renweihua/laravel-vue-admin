@@ -132,6 +132,7 @@ Route::prefix('admin')->group(function() {
         // 文章管理
         Route::prefix('articles')->group(function() {
             Route::get('/', 'Article\ArticleController@index');
+            Route::get('/detail', 'Article\ArticleController@detail');
             Route::post('/', 'Article\ArticleController@create');
             Route::put('/', 'Article\ArticleController@update');
             Route::delete('/', 'Article\ArticleController@delete');

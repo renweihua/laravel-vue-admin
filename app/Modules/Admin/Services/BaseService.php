@@ -45,8 +45,9 @@ class BaseService extends Service
      *
      * @return mixed
      */
-    public function detail($id)
+    public function detail($request)
     {
+        $id = $request->input($this->model->getKeyName(), 0);
         return $this->model->detail($id);
     }
 

@@ -54,7 +54,7 @@
                 form: {
                     parent_id: 0,
                     category_name:'',
-                    category_sort:99,
+                    category_sort: 99,
                     is_check:1,
                 },
                 rules: {
