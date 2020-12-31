@@ -73,7 +73,7 @@
             <el-table-column align="center" prop="config_value" label="配置值">
                 <template slot-scope="{row}">
                     <img v-if="row.config_type == 5" width="50px" height="50px" :src="row.config_value">
-                    <span v-else>{{ row.config_value }}</span>
+                    <span v-else class="config-value">{{ row.config_value }}</span>
                 </template>
             </el-table-column>
 
@@ -377,3 +377,13 @@
         }
     }
 </script>
+
+<style scoped>
+    span.config-value {
+        max-height: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+        word-break: break-all;
+    }
+</style>
