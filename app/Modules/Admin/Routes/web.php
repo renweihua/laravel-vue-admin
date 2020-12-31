@@ -22,15 +22,15 @@ Route::prefix('admin')->group(function() {
         return view('admin::admin');
     });
 
+    // Auth
     Route::prefix('auth')->group(function() {
-        Route::any('login', 'AuthController@login');
-        Route::any('me', 'AuthController@me')->middleware(CheckAuth::class);
-        Route::any('logout', 'AuthController@logout')->middleware(CheckAuth::class);
-        Route::any('getRabcList', 'AuthController@getRabcList')->middleware(CheckAuth::class);
+        Route::post('login', 'AuthController@login');
+        Route::post('me', 'AuthController@me')->middleware(CheckAuth::class);
+        Route::post('logout', 'AuthController@logout')->middleware(CheckAuth::class);
+        Route::post('getRabcList', 'AuthController@getRabcList')->middleware(CheckAuth::class);
     });
 
     Route::middleware([CheckAuth::class, AdminLog::class])->group(function () {
-
         // 首页
         Route::get('indexs', 'IndexController@index');
         // 月份表列表
@@ -132,6 +132,7 @@ Route::prefix('admin')->group(function() {
         // 文章管理
         Route::prefix('articles')->group(function() {
             Route::get('/', 'Article\ArticleController@index');
+            Route::get('/detail', 'Article\ArticleController@detail');
             Route::post('/', 'Article\ArticleController@create');
             Route::put('/', 'Article\ArticleController@update');
             Route::delete('/', 'Article\ArticleController@delete');

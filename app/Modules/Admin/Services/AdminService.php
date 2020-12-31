@@ -38,8 +38,7 @@ class AdminService extends BaseService
             $search = $request->input('search', '');
             // 可以按照名称进行搜索
             if (!empty($search)){
-                $query->where('admin_id', '=', intval($search))
-                    ->whereOr('admin_id|admin_name', 'LIKE', '%' . trim($search) . '%');
+                $query->where('admin_name', 'LIKE', '%' . trim($search) . '%');
             }
         })->orderBy($this->model->getKeyName(), 'ASC')->limit(100)->get();
     }

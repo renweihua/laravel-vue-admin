@@ -35,12 +35,12 @@ class BaseController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function detail($id = 0)
+    public function detail(Request $request)
     {
         if (!isset($this->service)){
             return $this->successJson([], '请先设置Service或者重写方法！');
         }
-        return $this->successJson(empty($id) ? [] : $this->service->detail($id));
+        return $this->successJson($this->service->detail($request));
     }
 
     /**

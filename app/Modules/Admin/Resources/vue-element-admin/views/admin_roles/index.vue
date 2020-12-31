@@ -315,7 +315,6 @@
                     // set checked state of a node not affects its father and child nodes
                     this.checkStrictly = false;
                 });
-
             },
             handleDelete(row) {
                 var ids = '';

@@ -33,7 +33,9 @@ class ArticleCategoryRequest extends BaseRequest
     public function messages()
     {
         return [
-            'category_name.required' => '请输入名称！',
+            'category_name.required' => '请输入分类名称！',
+            'category_name.max'      => '分类名称字数不可超过 256！',
+            'category_name.unique'   => '分类名称已存在，请更换！',
         ];
     }
 }

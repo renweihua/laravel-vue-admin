@@ -15,6 +15,14 @@ export function getList(params) {
     })
 }
 
+export function detail(id) {
+    return request({
+        url: '/articles/detail',
+        method: 'get',
+        params: { article_id:id }
+    })
+}
+
 export function create(data) {
     return request({
         url: '/articles',

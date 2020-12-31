@@ -1,12 +1,15 @@
 <template>
     <div class="app-container">
         <div class="filter-container">
-            <el-input
-                v-model="listQuery.search"
-                placeholder="请输入管理员账户/Id"
-                class="filter-item width-200-px"
-                @keyup.enter.native="handleFilter"
-            />
+            <el-select class="filter-item width-200-px" v-model="listQuery.admin_id" :remote-method="getSearchAdmins" filterable default-first-option remote placeholder="管理员昵称搜索">
+                <el-option
+                    key="0"
+                    :checked="0 == listQuery.admin_id"
+                    label="请指定管理员筛选"
+                    value="0"
+                />
+                <el-option v-for="(item,index) in admins_list" :key="item.admin_name+index" :label="item.admin_name" :value="item.admin_id" />
+            </el-select>
             <el-select v-model="listQuery.log_status" placeholder="请选择登录状态" clearable class="filter-item">
                 <el-option
                     v-for="item in calendarCheckOptions"
@@ -128,6 +131,7 @@
 
 <script>
     import {getList, setDel} from '@/api/adminloginlogs';
+    import {getAdminsSelect} from '@/api/admins';
     import {getMonthLists} from '@/api/common';
     import waves from '@/directive/waves' // waves directive
     import {parseTime, getFormatDate} from '@/utils/index';
@@ -176,9 +180,12 @@
                     search: '',
                     log_status: -1,
                     search_month: '',
+                    admin_id: '',
                 },
                 downloadLoading: false,
                 calendarCheckOptions,
+
+                admins_list : [], // 管理员列表
             }
         },
         created() {
@@ -187,6 +194,13 @@
             this.getMonthLists();
         },
         methods: {
+            // 搜索管理员
+            getSearchAdmins(query) {
+                getAdminsSelect({'search':query}).then(response => {
+                    if (!response.data) return;
+                    this.admins_list = response.data;
+                })
+            },
             checkFilter(val) {
                 return calendarCheckKeyValue[val] || '';
             },
@@ -254,7 +268,7 @@
                 this.getList()
             },
             handleFilter() {
-                this.listQuery.page = 1
+                this.listQuery.page = 1;
                 this.getList()
             },
             async getList() {
