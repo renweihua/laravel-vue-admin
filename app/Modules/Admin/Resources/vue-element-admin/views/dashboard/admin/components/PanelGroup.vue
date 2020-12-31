@@ -10,7 +10,7 @@
                         <div class="card-panel-text">
                             管理员数量
                         </div>
-                        <count-to :start-val="0" :end-val="admins_count" :duration="2600" class="card-panel-num"/>
+                        <count-to :start-val="0" :end-val="data.admins_count" :duration="2600" class="card-panel-num"/>
                     </div>
                 </div>
             </router-link>
@@ -29,17 +29,20 @@
             </div>
         </el-col>
         <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-            <div class="card-panel" @click="handleSetLineChartData('purchases')">
-                <div class="card-panel-icon-wrapper icon-money">
-                    <svg-icon icon-class="money" class-name="card-panel-icon"/>
-                </div>
-                <div class="card-panel-description">
-                    <div class="card-panel-text">
-                        Purchases
+            <router-link :to="'/articles'">
+                <div class="card-panel" @click="handleSetLineChartData('purchases')">
+                    <div class="card-panel-icon-wrapper icon-money">
+                        <svg-icon icon-class="documentation" class-name="card-panel-icon"/>
                     </div>
-                    <count-to :start-val="0" :end-val="9280" :duration="3200" class="card-panel-num"/>
+                    <div class="card-panel-description">
+                        <div class="card-panel-text">
+                            文章数量
+                        </div>
+                        <count-to :start-val="0" :end-val="data.articles_count" :duration="3200"
+                                  class="card-panel-num"/>
+                    </div>
                 </div>
-            </div>
+            </router-link>
         </el-col>
         <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
             <div class="card-panel" @click="handleSetLineChartData('shoppings')">
@@ -66,21 +69,21 @@
         },
         // 组件传值
         props: {
-            admins_count: {
-                type: Number,
-                default: 0
+            data: {
+                type: Object,
+                default: {}
             }
         },
         // 监听
         watch: {
             //当属性的值发生改变时会执行下面的代码
-            admins_count: function (newValue, oldValue) {
-                this.admins_count = newValue;
+            data: function (newValue, oldValue) {
+                this.data = newValue;
             }
         },
         methods: {
             handleSetLineChartData(type) {
-                this.$emit('handleSetLineChartData', type)
+                this.$emit('handleSetLineChartData', type);
             }
         }
     }

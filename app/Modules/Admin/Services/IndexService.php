@@ -2,6 +2,7 @@
 
 namespace App\Modules\Admin\Services;
 
+use App\Modules\Admin\Entities\Article\Article;
 use App\Modules\Admin\Entities\Rabc\Admin;
 
 class IndexService extends BaseService
@@ -11,6 +12,8 @@ class IndexService extends BaseService
         return [
             // 管理员人数
             'admins_count' => Admin::getInstance()->count(),
+            // 文章总数
+            'articles_count' => Article::getInstance()->count(),
             // 技能
             'skill' => $this->skill()
         ];

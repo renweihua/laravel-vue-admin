@@ -2,7 +2,7 @@
     <div class="dashboard-editor-container">
         <github-corner class="github-corner"/>
 
-        <panel-group @handleSetLineChartData="handleSetLineChartData" :admins_count="admins_count"/>
+        <panel-group @handleSetLineChartData="handleSetLineChartData" :data="data"/>
 
         <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
             <line-chart :chart-data="lineChartData"/>
@@ -71,7 +71,7 @@
             return {
                 lineChartData: lineChartData.newVisitis,
                 skill:[], // 技能组
-                admins_count:0, // 管理员数量
+                data:{},
             }
         },
         created() {
@@ -81,10 +81,11 @@
             async statistics() {
                 this.listLoading = true;
                 const {data} = await statistics();
-                // console.log(data);
 
-                // 管理员数量
-                this.admins_count = data.admins_count;
+                // console.log(data);
+                this.data = data;
+                // console.log(this.data);
+
                 // 技能
                 this.skill = data.skill;
 
@@ -93,7 +94,7 @@
                 }, 300);
             },
             handleSetLineChartData(type) {
-                this.lineChartData = lineChartData[type]
+                this.lineChartData = lineChartData[type];
             }
         }
     }
