@@ -9,19 +9,22 @@
         </el-row>
 
         <el-row :gutter="32">
-            <el-col :xs="24" :sm="24" :lg="8">
+            <el-col :xs="24" :sm="24" :lg="10">
                 <div class="chart-wrapper">
                     <box-card :skill="skill"/>
                 </div>
             </el-col>
-            <el-col :xs="24" :sm="24" :lg="8">
-                <div class="chart-wrapper">
-                    <pie-chart/>
-                </div>
-            </el-col>
-            <el-col :xs="24" :sm="24" :lg="8">
+            <el-col :xs="24" :sm="24" :lg="14">
                 <div class="chart-wrapper">
                     <bar-chart/>
+                </div>
+            </el-col>
+        </el-row>
+
+        <el-row :gutter="32">
+            <el-col :xs="24" :sm="24" :lg="24">
+                <div class="chart-wrapper chart-container">
+                    <chart height="100%" width="100%" />
                 </div>
             </el-col>
         </el-row>
@@ -32,11 +35,10 @@
     import GithubCorner from '@/components/GithubCorner'
     import PanelGroup from './components/PanelGroup'
     import LineChart from './components/LineChart'
-    import PieChart from './components/PieChart'
     import BarChart from './components/BarChart'
     import BoxCard from './components/BoxCard'
+    import Chart from '@/components/Charts/LineMarker'
     import {statistics} from "@/api/indexs";
-    import {getList as getMenus} from "@/api/admin_menus";
 
     const lineChartData = {
         newVisitis: {
@@ -51,11 +53,11 @@
             expectedData: [80, 100, 121, 104, 105, 90, 100],
             actualData: [120, 90, 100, 138, 142, 130, 130]
         },
-        shoppings: {
+        four: {
             expectedData: [130, 140, 141, 142, 145, 150, 160],
             actualData: [120, 82, 91, 154, 162, 140, 130]
         }
-    }
+    };
 
     export default {
         name: 'DashboardAdmin',
@@ -63,9 +65,9 @@
             GithubCorner,
             PanelGroup,
             LineChart,
-            PieChart,
             BarChart,
-            BoxCard
+            BoxCard,
+            Chart
         },
         data() {
             return {
@@ -117,6 +119,12 @@
             background: #fff;
             padding: 16px 16px 0;
             margin-bottom: 32px;
+        }
+
+        .chart-container{
+            position: relative;
+            width: 100%;
+            height: calc(100vh - 100px);
         }
     }
 

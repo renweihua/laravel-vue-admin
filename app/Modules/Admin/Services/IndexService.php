@@ -4,6 +4,8 @@ namespace App\Modules\Admin\Services;
 
 use App\Modules\Admin\Entities\Article\Article;
 use App\Modules\Admin\Entities\Rabc\Admin;
+use App\Modules\Admin\Entities\System\Banner;
+use App\Modules\Admin\Entities\System\Friendlink;
 
 class IndexService extends BaseService
 {
@@ -11,9 +13,13 @@ class IndexService extends BaseService
     {
         return [
             // 管理员人数
-            'admins_count' => Admin::getInstance()->count(),
+            'admins_count' => Admin::count(),
             // 文章总数
-            'articles_count' => Article::getInstance()->count(),
+            'articles_count' => Article::count(),
+            // Banner数量
+            'banners_count' => Banner::count(),
+            // 友情链接数量
+            'friendlinks_count' => Friendlink::count(),
             // 技能
             'skill' => $this->skill()
         ];

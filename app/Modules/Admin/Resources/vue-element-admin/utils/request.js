@@ -105,7 +105,7 @@ service.interceptors.response.use(
                 msg = error.response.statusText;
                 break;
             case 401: // 认证失败
-                msg = error.data.msg;
+                msg = error.response.data.msg;
                 break;
             case 500: // 认证失败
                 msg = error.response.statusText;
