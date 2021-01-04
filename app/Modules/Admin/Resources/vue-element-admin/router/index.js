@@ -7,8 +7,8 @@ Vue.use(Router)
 import Layout from '@/layout'
 
 /* Router Modules */
-// import componentsRouter from './modules/components'
-// import chartsRouter from './modules/charts'
+import componentsRouter from './modules/components'
+import chartsRouter from './modules/charts'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -103,11 +103,17 @@ export const constantRoutes = [
                 path: 'index',
                 component: () => import('@/views/sundry/icons/index'),
                 name: 'Icons',
-                meta: { title: 'icons', icon: 'icon', noCache: true }
+                meta: {title: 'icons', icon: 'icon', noCache: true}
             }
         ]
     },
-]
+    {path: '*', redirect: '/404', hidden: true},
+
+    componentsRouter,
+    chartsRouter
+];
+console.log('---componentsRouter---');
+console.log(componentsRouter);
 
 /**
  * asyncRoutes
@@ -117,6 +123,18 @@ export const asyncRoutes = [
     /** when your routing map is too long, you can split it into small modules **/
     // componentsRouter,
     // chartsRouter,
+
+
+    // {
+    //     path: 'external-link',
+    //     component: Layout,
+    //     children: [
+    //         {
+    //             path: 'https://github.com/PanJiaChen/vue-element-admin',
+    //             meta: {title: 'externalLink', icon: 'link'}
+    //         }
+    //     ]
+    // },
 
     {
         path: '/error',
@@ -142,19 +160,7 @@ export const asyncRoutes = [
             }
         ]
     },
-    // {
-    //     path: 'external-link',
-    //     component: Layout,
-    //     children: [
-    //         {
-    //             path: 'https://github.com/PanJiaChen/vue-element-admin',
-    //             meta: {title: 'externalLink', icon: 'link'}
-    //         }
-    //     ]
-    // },
-
     // 404 page must be placed at the end !!!
-    {path: '*', redirect: '/404', hidden: true}
 ]
 
 const createRouter = () => new Router({
