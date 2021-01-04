@@ -39,4 +39,19 @@ class IndexController extends BaseController
     {
         return $this->successJson(MonthModel::getInstance()->getAllMonthes());
     }
+
+    /**
+     * 编辑登录管理员信息
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request){
+        if ($this->service->updateAdmin($request)){
+            return $this->successJson([], $this->service->getError());
+        }else{
+            return $this->errorJson($this->service->getError());
+        }
+    }
 }

@@ -7,7 +7,6 @@ use App\Modules\Admin\Entities\Log\AdminLog;
 use App\Modules\Admin\Entities\Rabc\Admin;
 use App\Modules\Admin\Entities\System\Banner;
 use App\Modules\Admin\Entities\System\Friendlink;
-use Monolog\Handler\IFTTTHandler;
 
 class IndexService extends BaseService
 {
@@ -126,5 +125,22 @@ class IndexService extends BaseService
             $time = $end_time;
         }
         return (array)$default_data;
+    }
+
+    /**
+     * 编辑登录管理员信息
+     *
+     * @param $request
+     *
+     * @return mixed
+     */
+    public function updateAdmin($request)
+    {
+        $update['admin_name'] = $request->input('admin_name');
+        $password = $request->input('password', '');
+        if (!empty($password)){
+            $update['password'] = $password;
+        }
+        return $request->user()->update($update);
     }
 }
