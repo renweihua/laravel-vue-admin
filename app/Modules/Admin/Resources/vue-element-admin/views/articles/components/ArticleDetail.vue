@@ -247,7 +247,7 @@
                         }else{
                             this.$message({
                                 message: msg,
-                                type: 'success',
+                                type: 'error',
                             });
                         }
 

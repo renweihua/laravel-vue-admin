@@ -19,6 +19,18 @@ class IndexController extends BaseController
     }
 
     /**
+     * 按照日志类型的统计图数据
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logsStatistics(Request $request)
+    {
+        return $this->successJson($this->service->logsStatistics());
+    }
+
+    /**
      * 月份表列表
      *
      * @return \Illuminate\Http\JsonResponse
@@ -26,5 +38,20 @@ class IndexController extends BaseController
     public function getMonthList()
     {
         return $this->successJson(MonthModel::getInstance()->getAllMonthes());
+    }
+
+    /**
+     * 编辑登录管理员信息
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request){
+        if ($this->service->updateAdmin($request)){
+            return $this->successJson([], $this->service->getError());
+        }else{
+            return $this->errorJson($this->service->getError());
+        }
     }
 }

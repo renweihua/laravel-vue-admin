@@ -159,10 +159,10 @@
                 this.$refs['form'].validate(async (valid) => {
                     console.log(valid);
                     if (valid) {
-                        const {msg} = this.form.banner_id ? await update(this.form) : await create(this.form);
+                        const {msg, status} = this.form.banner_id ? await update(this.form) : await create(this.form);
                         this.$message({
                             message: msg,
-                            type: 'success'
+                            type: status == 1 ? 'success' : 'error',
                         });
                         this.$emit('fetchData');
                         this.close();

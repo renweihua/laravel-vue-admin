@@ -20,7 +20,7 @@ export function update(data) {
     return request({
         url: '/configs',
         method: 'put',
-        parmas: data
+        data
     })
 }
 

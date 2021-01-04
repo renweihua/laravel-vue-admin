@@ -137,10 +137,10 @@
                             type: 'warning'
                         })
                         .then(async () => {
-                            const {msg} = await setDel({category_id: row.category_id});
+                            const {msg, status} = await setDel({category_id: row.category_id});
                             this.$message({
                                 message: msg,
-                                type: 'success'
+                                type: status == 1 ? 'success' : 'error',
                             });
                             this.getMenus();
                         })

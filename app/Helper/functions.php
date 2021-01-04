@@ -1,4 +1,40 @@
 <?php
+if ( !function_exists('get_last_month') ) {
+    /**
+     * 上个月份的年月
+     * @param  string  $date
+     *
+     * @return false|string
+     */
+    function get_last_month(string $date)
+    {
+        $timestamp = strtotime($date);
+        return date('Y-m',strtotime(date('Y',$timestamp).'-'.(date('m',$timestamp)-1)));
+    }
+}
+
+if ( !function_exists('get_next_month') ) {
+    /**
+     * 下个月份的年月
+     *
+     * @param  string  $date
+     *
+     * @return false|string
+     */
+    function get_next_month(string $date)
+    {
+        $timestamp = strtotime($date);
+        $arr = getdate($timestamp);
+        if ( $arr['mon'] == 12 ) {
+            $year = $arr['year'] + 1;
+            $month = $arr['mon'] - 11;
+            $firstday = $year . '-0' . $month;
+        } else {
+            $firstday = date('Y-m', strtotime(date('Y', $timestamp) . '-' . (date('m', $timestamp) + 1)));
+        }
+        return $firstday;
+    }
+}
 
 if ( !function_exists('psQty_res') ) {
     /**
@@ -599,6 +635,21 @@ if ( !function_exists('get_month_range') ) {
         $i = 0;
         do {
             $month = date($format, strtotime($start_date . ' + ' . $i . ' month'));
+            $range[] = $month;
+            $i++;
+        } while ( $month < $end );
+        return $range;
+    }
+}
+
+if ( !function_exists('get_year_range') ) {
+    function get_year_range(string $start_date, string $end_date, string $format = 'Y')
+    {
+        $end = date($format, strtotime($end_date)); // 转换为月
+        $range = [];
+        $i = 0;
+        do {
+            $month = date($format, strtotime($start_date . ' + ' . $i . ' year'));
             $range[] = $month;
             $i++;
         } while ( $month < $end );
@@ -3181,7 +3232,7 @@ function msubstr($str, $start = 0, $length, $charset = "utf-8", $suffix = true)
         if ( $suffix ) return iconv_substr($str, $start, $length, $charset) . "..."; else
             return iconv_substr($str, $start, $length, $charset);
     }
-    $re['utf-8'] = "/[x01-x7f]|[xc2-xdf][x80-xbf]|[xe0-xef] 
+    $re['utf-8'] = "/[x01-x7f]|[xc2-xdf][x80-xbf]|[xe0-xef]
 [x80-xbf]{2}|[xf0-xff][x80-xbf]{3}/";
     $re['gb2312'] = "/[x01-x7f]|[xb0-xf7][xa0-xfe]/";
     $re['gbk'] = "/[x01-x7f]|[x81-xfe][x40-xfe]/";
