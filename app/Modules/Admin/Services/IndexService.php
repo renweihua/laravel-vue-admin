@@ -85,10 +85,10 @@ class IndexService extends BaseService
             ],
         ];
         $adminLogInstance = AdminLog::getInstance();
-        $interval_nums = 10; // 时段次数：10个时间段，自己调整
-        $time_interval = 600; // 时段间隔：10分钟，自己调整
-        $hours = $time_interval / 600;
-        $time = strtotime(date('Y-m-d H', strtotime('+' . $hours . ' hour')) . ':00:00');
+        $interval_nums = 100; // 时段次数：100个时间段，自己调整
+        $time_interval = 300; // 时段间隔：5分钟，自己调整
+        $hours = ceil($time_interval / 3600); // 时间间隔设置，超过几小时：查询时的开始时间需要加上才有意义
+        $time = strtotime(date('Y-m-d H:i', strtotime('+' . $hours . ' hour')) . ':00');
 
         // 数据查询
         $list = $adminLogInstance->whereBetWeen('created_time', [
