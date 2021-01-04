@@ -7,6 +7,7 @@ use App\Modules\Admin\Entities\Log\AdminLog;
 use App\Modules\Admin\Entities\Rabc\Admin;
 use App\Modules\Admin\Entities\System\Banner;
 use App\Modules\Admin\Entities\System\Friendlink;
+use Monolog\Handler\IFTTTHandler;
 
 class IndexService extends BaseService
 {
@@ -84,36 +85,39 @@ class IndexService extends BaseService
             ],
         ];
         $adminLogInstance = AdminLog::getInstance();
-        $interval_nums = 10; // 时段次数
-        $time_interval = 3600; // 时段间隔
-        $time = strtotime(date('Y-m-d H', strtotime('+1 hour')) . ':00:00');
+        $interval_nums = 10; // 时段次数：10个时间段，自己调整
+        $time_interval = 600; // 时段间隔：10分钟，自己调整
+        $hours = $time_interval / 600;
+        $time = strtotime(date('Y-m-d H', strtotime('+' . $hours . ' hour')) . ':00:00');
+
+        // 数据查询
+        $list = $adminLogInstance->whereBetWeen('created_time', [
+            $time - $interval_nums * $time_interval,
+            $time,
+        ])->get();
         for ($i = 0; $i < $interval_nums; $i++) {
             $end_time = $time - $time_interval;
             // 默认X轴的时段
-            $default_data['xAxis']['data'][$i] = date('Y-m-d H', $end_time) . ':00';
+            $default_data['xAxis']['data'][$i] = date('Y-m-d H:i', $end_time);
 
-            $default_data['data_lists']['GET'][$i]
-                = $default_data['data_lists']['POST'][$i]
+            // $default_data['data_lists']['GET'][$i] =
+            $default_data['data_lists']['POST'][$i]
                 = $default_data['data_lists']['PUT'][$i]
                 = $default_data['data_lists']['DELETE'][$i]
                 = 0;
 
-            // 数据查询
-            $list = $adminLogInstance->whereBetWeen('created_time', [
-                $end_time,
-                $time,
-            ])
-                ->get();
             if ( $list ) {
                 foreach ($list as $v) {
-                    if ( $v->log_method == 'GET' ) {
-                        // ++$default_data['data_lists']['GET'][$i];
-                    } elseif ( $v->log_method == 'POST' ) {
-                        ++$default_data['data_lists']['POST'][$i];
-                    } elseif ( $v->log_method == 'PUT' ) {
-                        ++$default_data['data_lists']['PUT'][$i];
-                    } elseif ( $v->log_method == 'DELETE' ) {
-                        ++$default_data['data_lists']['DELETE'][$i];
+                    if ($v->created_time >= $end_time && $v->created_time <= $time){
+                        if ( $v->log_method == 'GET' ) {
+                            // ++$default_data['data_lists']['GET'][$i];
+                        } elseif ( $v->log_method == 'POST' ) {
+                            ++$default_data['data_lists']['POST'][$i];
+                        } elseif ( $v->log_method == 'PUT' ) {
+                            ++$default_data['data_lists']['PUT'][$i];
+                        } elseif ( $v->log_method == 'DELETE' ) {
+                            ++$default_data['data_lists']['DELETE'][$i];
+                        }
                     }
                 }
             }
