@@ -38,7 +38,9 @@
 
                 this.updateAdmin();
 
-                this.loading = false;
+                setTimeout(() => {
+                    this.loading = false;
+                }, 500);
             },
             async updateAdmin(){
                 const {msg, status} = await updateAdmin({
