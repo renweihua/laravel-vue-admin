@@ -53,17 +53,20 @@
             class="margin-buttom-10"
         >
             <el-table-column show-overflow-tooltip type="selection"/>
+
             <el-table-column
                 show-overflow-tooltip
                 prop="config_id"
                 label="Id"
             />
+
             <el-table-column
                 show-overflow-tooltip
                 prop="config_title"
                 label="配置标题"
                 align="center"
             />
+
             <el-table-column
                 show-overflow-tooltip
                 prop="config_name"
@@ -89,17 +92,20 @@
                 label="配置类型"
                 align="center"
             />
+
             <el-table-column
                 show-overflow-tooltip
                 prop="config_sort"
                 label="排序"
                 align="center"
             />
+
             <el-table-column label="创建时间" show-overflow-tooltip align="center">
                 <template slot-scope="{ row }">
                     {{ row.created_time | parseTime("{y}-{m}-{d} {h}:{i}") }}
                 </template>
             </el-table-column>
+
             <el-table-column align="center" prop="is_check" label="启用状态">
                 <template slot-scope="scope">
                     <el-tag :type="scope.row.is_check | statusFilter">
@@ -107,6 +113,7 @@
                     </el-tag>
                 </template>
             </el-table-column>
+
             <el-table-column
                 show-overflow-tooltip
                 fixed="right"
@@ -128,6 +135,7 @@
                             禁用
                         </el-tag>
                     </el-button>
+
                     <!-- 编辑与删除 -->
                     <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
                     <el-button type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>

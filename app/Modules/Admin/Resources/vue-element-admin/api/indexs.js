@@ -6,3 +6,10 @@ export function statistics() {
         method: 'get'
     })
 }
+
+export function logsStatistics() {
+    return request({
+        url: '/logsStatistics',
+        method: 'get'
+    })
+}

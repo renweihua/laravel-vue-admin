@@ -33,6 +33,8 @@ Route::prefix('admin')->group(function() {
     Route::middleware([CheckAuth::class, AdminLog::class])->group(function () {
         // 首页
         Route::get('indexs', 'IndexController@index');
+        // 按照日志类型的统计图数据
+        Route::get('logsStatistics', 'IndexController@logsStatistics');
         // 月份表列表
         Route::get('get_month_lists', 'IndexController@getMonthList');
 

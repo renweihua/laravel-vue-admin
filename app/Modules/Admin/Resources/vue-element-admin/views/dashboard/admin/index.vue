@@ -37,7 +37,7 @@
     import LineChart from './components/LineChart'
     import BarChart from './components/BarChart'
     import BoxCard from './components/BoxCard'
-    import Chart from '@/components/Charts/LineMarker'
+    import Chart from './components/LineMarker'
     import {statistics} from "@/api/indexs";
 
     const lineChartData = {
@@ -77,6 +77,7 @@
             }
         },
         created() {
+            console.log('index-created');
             this.statistics();
         },
         methods: {
