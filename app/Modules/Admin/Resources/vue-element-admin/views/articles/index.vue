@@ -3,7 +3,7 @@
         <div class="filter-container">
             <el-input
                 v-model="listQuery.search"
-                placeholder="请输入管理员账户/邮箱"
+                placeholder="请输入 文章标题"
                 style="width: 200px;"
                 class="filter-item"
                 @keyup.enter.native="handleFilter"
@@ -104,13 +104,9 @@
             </el-table-column>
 
             <el-table-column align="center"
-                             abel="操作"
+                             label="操作"
                              width="230">
                 <template slot-scope="scope">
-                    <el-button type="primary" size="small" icon="el-icon-edit" @click="handleEdit(scope.row)">
-                        Edit
-                    </el-button>
-
                     <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row)"> 编辑 </el-button>
                     <el-button type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"> 删除 </el-button>
                 </template>
@@ -128,11 +124,10 @@
 </template>
 
 <script>
-    import {getList} from '@/api/articles';
+    import {getList, setDel} from '@/api/articles';
     import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
     import waves from '@/directive/waves';
-    import {setDel} from "@/api/article_categories";
-    import {deepClone, getFormatDate, parseTime} from "@/utils"; // waves directive
+    import {getFormatDate, parseTime} from "@/utils"; // waves directive
 
     const calendarCheckOptions = [
         {key: '-1', display_name: '全部'},
@@ -197,11 +192,11 @@
             },
             handleDelete(row) {
                 var ids = '';
-                if (row.role_id) {
-                    ids = row.role_id;
+                if (row.article_id) {
+                    ids = row.article_id;
                 } else {
                     if (this.selectRows.length > 0) {
-                        ids = this.selectRows.map((item) => item.role_id).join();
+                        ids = this.selectRows.map((item) => item.article_id).join();
                     } else {
                         this.$message('未选中任何行', 'error');
                         return false;
@@ -216,13 +211,13 @@
                         type: 'warning'
                     })
                     .then(async () => {
-                        const {status, msg} = await setDel({role_id: ids, 'is_batch' : this.is_batch});
+                        const {status, msg} = await setDel({article_id: ids, 'is_batch' : this.is_batch});
                         this.$message({
                             message: msg,
                             type: 'success'
                         });
                         // 重新加载列表
-                        this.getList();
+                        this.handleFilter();
                     })
                     .catch(err => {
                         console.error(err);
@@ -249,7 +244,7 @@
                         '启用状态'
                     ];
                     const filterVal = [
-                        'role_id',
+                        'article_id',
                         'role_name',
                         'created_time',
                         'is_check'

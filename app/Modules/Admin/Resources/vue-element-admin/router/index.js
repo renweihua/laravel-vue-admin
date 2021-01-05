@@ -107,7 +107,6 @@ export const constantRoutes = [
             }
         ]
     },
-    {path: '*', redirect: '/404', hidden: true},
 
     componentsRouter,
     chartsRouter
@@ -160,6 +159,7 @@ export const asyncRoutes = [
             }
         ]
     },
+    {path: '*', redirect: '/404', hidden: true},
     // 404 page must be placed at the end !!!
 ]
 

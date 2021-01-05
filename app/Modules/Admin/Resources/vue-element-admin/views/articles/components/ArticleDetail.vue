@@ -92,7 +92,6 @@
     import {getUploadUrl} from '@/api/common';
 
     import {detail, create, update} from '@/api/articles'
-    import {searchUser} from '@/api/remote-search'
     import {getCategorySelect} from "@/api/article_categories";
 
     const defaultForm = {
@@ -256,12 +255,6 @@
                         console.log('error submit!!');
                         return false;
                     }
-                })
-            },
-            getRemoteUserList(query) {
-                searchUser(query).then(response => {
-                    if (!response.data.items) return;
-                    this.userListOptions = response.data.items.map(v => v.name);
                 })
             },
             cropSuccess(imgDataUrl, field) {

@@ -57,21 +57,21 @@
 </template>
 
 <script>
-    import {create, update} from '@/api/banners'
-    import {getUploadUrl} from '@/api/common'
-    import {isUrl} from '@/utils/validate'
-
-    import myUpload from '@/components/Uploads/image/index'
-    import PanThumb from '@/components/PanThumb'
+    import {create, update} from '@/api/banners';
+    import {getUploadUrl} from '@/api/common';
+    import {isUrl} from '@/utils/validate';
+    import myUpload from '@/components/Uploads/image/index';
+    import PanThumb from '@/components/PanThumb';
 
     // 定义一个全局的变量，谁用谁知道
     var validUrl = (rule, value, callback) => {
+        if (value == null || value.length <= 0) callback();
         if (!isUrl(value)) {
-            callback(new Error('请输入正确的网址'))
+            callback(new Error('请输入正确的网址'));
         } else {
-            callback()
+            callback();
         }
-    }
+    };
 
     export default {
         name: '',
