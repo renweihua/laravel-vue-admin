@@ -59,6 +59,6 @@ class AuthController extends BaseController
     public function getRabcList()
     {
         // 临时测试数据
-        return $this->successJson(list_to_tree(AdminMenu::getAllMenus()->toArray()));
+        return $this->successJson(list_to_tree(AdminMenu::getInstance()->getAllMenus()->toArray()));
     }
 }

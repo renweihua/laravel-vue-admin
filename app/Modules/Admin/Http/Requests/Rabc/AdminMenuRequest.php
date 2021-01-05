@@ -7,6 +7,11 @@ use App\Modules\Admin\Http\Requests\BaseRequest;
 
 class AdminMenuRequest extends BaseRequest
 {
+    public function setInstance()
+    {
+        $this->instance = AdminMenu::getInstance();
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -14,15 +19,11 @@ class AdminMenuRequest extends BaseRequest
      */
     public function rules()
     {
-        $instance = AdminMenu::getInstance();
-        $primarykey = $instance->getKeyName();
-        $validate_id = ',' . request()->input($primarykey, 0) . ',' .  $primarykey;
-
         return [
             'menu_name' => [
                 'required',
                 'max:256',
-                'unique:' . $instance->getTable() . ',menu_name' . $validate_id
+                'unique:' . $this->instance->getTable() . ',menu_name' . $this->validate_id
             ],
         ];
     }

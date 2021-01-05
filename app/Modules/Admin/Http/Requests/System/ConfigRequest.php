@@ -7,6 +7,11 @@ use App\Modules\Admin\Http\Requests\BaseRequest;
 
 class ConfigRequest extends BaseRequest
 {
+    public function setInstance()
+    {
+        $this->instance = Config::getInstance();
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -14,10 +19,6 @@ class ConfigRequest extends BaseRequest
      */
     public function rules()
     {
-        $instance = Config::getInstance();
-        $primarykey = $instance->getKeyName();
-        $validate_id = ',' . request()->input($primarykey, 0) . ',' .  $primarykey;
-
         return [
             'config_title' => [
                 'required',
@@ -26,7 +27,7 @@ class ConfigRequest extends BaseRequest
             'config_name' => [
                 'required',
                 'max:256',
-                'unique:' . $instance->getTable() . ',config_name' . $validate_id
+                'unique:' . $this->instance->getTable() . ',config_name' . $this->validate_id
             ]
         ];
     }

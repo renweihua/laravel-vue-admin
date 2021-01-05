@@ -2,14 +2,14 @@ import request from '@/utils/request'
 
 export function getCategorySelect() {
     return request({
-        url: '/article_categorys/getSelectLists',
+        url: '/article_categories/getSelectLists',
         method: 'get'
     })
 }
 
 export function getList(params) {
     return request({
-        url: 'article_categorys',
+        url: 'article_categories',
         method: 'get',
         params
     })
@@ -17,7 +17,7 @@ export function getList(params) {
 
 export function create(data) {
     return request({
-        url: '/article_categorys',
+        url: '/article_categories/create',
         method: 'post',
         data
     })
@@ -25,7 +25,7 @@ export function create(data) {
 
 export function update(data) {
     return request({
-        url: `/article_categorys`,
+        url: `/article_categories/update`,
         method: 'put',
         data
     })
@@ -33,7 +33,7 @@ export function update(data) {
 
 export function setDel(data) {
     return request({
-        url: `/article_categorys`,
+        url: `/article_categories/delete`,
         method: 'delete',
         data
     })
@@ -41,7 +41,7 @@ export function setDel(data) {
 
 export function changeFiledStatus(data) {
     return request({
-        url: `/article_categorys/changeFiledStatus`,
+        url: `/article_categories/changeFiledStatus`,
         method: 'put',
         data
     })

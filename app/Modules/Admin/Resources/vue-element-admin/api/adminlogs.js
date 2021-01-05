@@ -10,7 +10,7 @@ export function getList(params) {
 
 export function setDel(data) {
     return request({
-        url: `/adminlogs`,
+        url: `/adminlogs/delete`,
         method: 'delete',
         data
     })

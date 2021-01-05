@@ -7,6 +7,11 @@ use App\Modules\Admin\Http\Requests\BaseRequest;
 
 class VersionRequest extends BaseRequest
 {
+    public function setInstance()
+    {
+        $this->instance = Version::getInstance();
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -14,15 +19,11 @@ class VersionRequest extends BaseRequest
      */
     public function rules()
     {
-        $instance = Version::getInstance();
-        $primarykey = $instance->getKeyName();
-        $validate_id = ',' . request()->input($primarykey, 0) . ',' .  $primarykey;
-
         return [
             'version_name' => [
                 'required',
                 'max:256',
-                'unique:' . $instance->getTable() . ',version_name' . $validate_id
+                'unique:' . $this->instance->getTable() . ',version_name' . $this->validate_id
             ],
             'version_number' => [
                 'required',

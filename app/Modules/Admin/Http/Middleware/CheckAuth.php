@@ -24,12 +24,11 @@ class CheckAuth
      */
     public function handle(Request $request, Closure $next)
     {
-        return $next($request);
-
         $this->guard = 'admin';
-
+        // Auth认证
+        $auth = Auth()->guard($this->guard);
         try {
-            if ( !Auth()->guard($this->guard)->check() ) { //未登录踢回，给予错误返回提示
+            if ( !$auth->check() ) { //未登录踢回，给予错误返回提示
                 return $this->errorJson('认证失败，请重新登录！');
             }
         } catch (TokenExpiredException $e) {

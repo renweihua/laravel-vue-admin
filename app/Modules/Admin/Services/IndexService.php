@@ -7,6 +7,7 @@ use App\Modules\Admin\Entities\Log\AdminLog;
 use App\Modules\Admin\Entities\Rabc\Admin;
 use App\Modules\Admin\Entities\System\Banner;
 use App\Modules\Admin\Entities\System\Friendlink;
+use Illuminate\Support\Facades\Cache;
 
 class IndexService extends BaseService
 {
@@ -58,73 +59,82 @@ class IndexService extends BaseService
      */
     public function logsStatistics()
     {
-        $default_data = [
-            'xAxis'      => [
-                'data' => [
-
+        $default_time_interval = 300;
+        // 时段间隔：5分钟，自己调整
+        $time_interval_key = "logs-statistics's-time-interval";
+        $time_interval = Cache::get($time_interval_key, $default_time_interval);
+        // 通过缓存进行读写
+        return Cache::remember('logs-statistics', $time_interval, function() use ($time_interval, $time_interval_key){
+            $default_data = [
+                'xAxis'      => [
+                    'data' => [],
                 ],
-            ],
-            'list_name'  => [
-                // 'GET',
-                'POST',
-                'PUT',
-                'DELETE',
-            ],
-            'data_lists' => [
-                // 'GET'    => [],
-                'POST'   => [
-
+                'list_name'  => [
+                    // 'GET',
+                    'POST',
+                    'PUT',
+                    'DELETE',
                 ],
-                'PUT'    => [
-
+                'data_lists' => [
+                    // 'GET'    => [],
+                    'POST'   => [],
+                    'PUT'    => [],
+                    'DELETE' => [],
                 ],
-                'DELETE' => [
+            ];
+            $adminLogInstance = AdminLog::getInstance();
+            $interval_nums = 100; // 时段次数：100个时间段，自己调整
+            $hours = ceil($time_interval / 3600); // 时间间隔设置，超过几小时：查询时的开始时间需要加上才有意义
+            $time = strtotime(date('Y-m-d H:i', strtotime('+' . $hours . ' hour')) . ':00');
 
-                ],
-            ],
-        ];
-        $adminLogInstance = AdminLog::getInstance();
-        $interval_nums = 100; // 时段次数：100个时间段，自己调整
-        $time_interval = 300; // 时段间隔：5分钟，自己调整
-        $hours = ceil($time_interval / 3600); // 时间间隔设置，超过几小时：查询时的开始时间需要加上才有意义
-        $time = strtotime(date('Y-m-d H:i', strtotime('+' . $hours . ' hour')) . ':00');
+            // 数据查询
+            $list = $adminLogInstance->whereBetWeen('created_time', [
+                $time - $interval_nums * $time_interval,
+                $time,
+            ])->get();
 
-        // 数据查询
-        $list = $adminLogInstance->whereBetWeen('created_time', [
-            $time - $interval_nums * $time_interval,
-            $time,
-        ])->get();
-        for ($i = 0; $i < $interval_nums; $i++) {
-            $end_time = $time - $time_interval;
-            // 默认X轴的时段
-            $default_data['xAxis']['data'][$i] = date('Y-m-d H:i', $end_time);
+            // 是否存在区间有效的日志记录
+            $has_records = false;
 
-            // $default_data['data_lists']['GET'][$i] =
-            $default_data['data_lists']['POST'][$i]
-                = $default_data['data_lists']['PUT'][$i]
-                = $default_data['data_lists']['DELETE'][$i]
-                = 0;
+            for ($i = 0; $i < $interval_nums; $i++) {
+                $end_time = $time - $time_interval;
+                // 默认X轴的时段
+                $default_data['xAxis']['data'][$i] = date('Y-m-d H:i', $end_time);
 
-            if ( $list ) {
-                foreach ($list as $v) {
-                    if ($v->created_time >= $end_time && $v->created_time <= $time){
-                        if ( $v->log_method == 'GET' ) {
-                            // ++$default_data['data_lists']['GET'][$i];
-                        } elseif ( $v->log_method == 'POST' ) {
-                            ++$default_data['data_lists']['POST'][$i];
-                        } elseif ( $v->log_method == 'PUT' ) {
-                            ++$default_data['data_lists']['PUT'][$i];
-                        } elseif ( $v->log_method == 'DELETE' ) {
-                            ++$default_data['data_lists']['DELETE'][$i];
+                // $default_data['data_lists']['GET'][$i] =
+                $default_data['data_lists']['POST'][$i]
+                    = $default_data['data_lists']['PUT'][$i]
+                    = $default_data['data_lists']['DELETE'][$i]
+                    = 0;
+
+                if ( $list ) {
+                    foreach ($list as $v) {
+                        if ($v->created_time >= $end_time && $v->created_time <= $time){
+                            $has_records = true;
+                            if ( $v->log_method == 'GET' ) {
+                                // ++$default_data['data_lists']['GET'][$i];
+                            } elseif ( $v->log_method == 'POST' ) {
+                                ++$default_data['data_lists']['POST'][$i];
+                            } elseif ( $v->log_method == 'PUT' ) {
+                                ++$default_data['data_lists']['PUT'][$i];
+                            } elseif ( $v->log_method == 'DELETE' ) {
+                                ++$default_data['data_lists']['DELETE'][$i];
+                            }
                         }
                     }
                 }
+
+                // 把当前的结束时间设置为下一次的开始时间
+                $time = $end_time;
             }
 
-            // 把当前的结束时间设置为下一次的开始时间
-            $time = $end_time;
-        }
-        return (array)$default_data;
+            // 当没有记录是，时间间隔慢慢往上扩大两倍，实现统计图效果
+            if (!$has_records){
+                Cache::put($time_interval_key, $time_interval * 2);
+            }
+
+            return (array)$default_data;
+        });
     }
 
     /**

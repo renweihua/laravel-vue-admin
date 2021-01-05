@@ -7,6 +7,11 @@ use App\Modules\Admin\Http\Requests\BaseRequest;
 
 class ArticleRequest extends BaseRequest
 {
+    public function setInstance()
+    {
+        $this->instance = Article::getInstance();
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -14,15 +19,11 @@ class ArticleRequest extends BaseRequest
      */
     public function rules()
     {
-        $instance = Article::getInstance();
-        $primarykey = $instance->getKeyName();
-        $validate_id = ',' . request()->input($primarykey, 0) . ',' . $primarykey;
-
         return [
             'article_title' => [
                 'required',
                 'max:256',
-                'unique:' . $instance->getTable() . ',article_title' . $validate_id,
+                'unique:' . $this->instance->getTable() . ',article_title' . $this->validate_id,
             ],
             'category_id'   => [
                 'required',

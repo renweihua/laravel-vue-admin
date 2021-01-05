@@ -26,7 +26,7 @@ export function getList(params) {
 
 export function create(data) {
     return request({
-        url: '/admins',
+        url: '/admins/create',
         method: 'post',
         data
     })
@@ -34,7 +34,7 @@ export function create(data) {
 
 export function update(data) {
     return request({
-        url: `/admins`,
+        url: `/admins/update`,
         method: 'put',
         data
     })
@@ -42,7 +42,7 @@ export function update(data) {
 
 export function setDel(data) {
     return request({
-        url: `/admins`,
+        url: `/admins/delete`,
         method: 'delete',
         data
     })

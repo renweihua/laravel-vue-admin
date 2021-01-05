@@ -25,6 +25,11 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+
+        // var_dump('schedule：' . date('Y-m-d H:i:s'));
+
+        // 每月1号调用：按月分表自动生成
+        $schedule->command('autotablebuild')->monthlyOn();
     }
 
     /**

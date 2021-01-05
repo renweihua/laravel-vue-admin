@@ -7,6 +7,11 @@ use App\Modules\Admin\Http\Requests\BaseRequest;
 
 class AdminRoleRequest extends BaseRequest
 {
+    public function setInstance()
+    {
+        $this->instance = AdminRole::getInstance();
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -14,15 +19,11 @@ class AdminRoleRequest extends BaseRequest
      */
     public function rules()
     {
-        $instance = AdminRole::getInstance();
-        $primarykey = $instance->getKeyName();
-        $validate_id = ',' . request()->input($primarykey, 0) . ',' .  $primarykey;
-
         return [
             'role_name' => [
                 'required',
                 'max:256',
-                'unique:' . $instance->getTable() . ',role_name' . $validate_id
+                'unique:' . $this->instance->getTable() . ',role_name' . $this->validate_id
             ],
             'is_check' => [
                 'required',

@@ -10,7 +10,7 @@ export function getList(params) {
 
 export function create(data) {
     return request({
-        url: '/friendlinks',
+        url: '/friendlinks/create',
         method: 'post',
         data
     })
@@ -19,7 +19,7 @@ export function create(data) {
 export function update(data) {
     console.log(data)
     return request({
-        url: '/friendlinks',
+        url: '/friendlinks/update',
         method: 'put',
         data
     })
@@ -27,7 +27,7 @@ export function update(data) {
 
 export function setDel(data) {
     return request({
-        url: '/friendlinks',
+        url: '/friendlinks/delete',
         method: 'delete',
         data
     })
