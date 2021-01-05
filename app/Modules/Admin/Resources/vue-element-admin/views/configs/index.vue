@@ -28,7 +28,7 @@
                 style="margin-left: 10px;"
                 type="primary"
                 icon="el-icon-plus"
-                @click="handleCreate"
+                @click="handleEdit"
             >
                 {{ $t('table.add') }}
             </el-button>
@@ -151,15 +151,13 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
         />
-        <edit ref="edit" @fetchData="getList"/>
     </div>
 </template>
 
 <script>
     import {getList, setDel, changeFiledStatus} from '@/api/configs'
     import waves from '@/directive/waves' // waves directive
-    import Edit from './components/detail'
-    import {parseTime} from '@/utils/index'
+    import {parseTime} from '@/utils/index';
 
     const calendarCheckOptions = [
         {key: '-1', display_name: '全部'},
@@ -174,7 +172,7 @@
 
     export default {
         name: 'UserManagement',
-        components: {Edit},
+        components: {},
         directives: {waves},
         filters: {
             parseTime: parseTime,
@@ -225,10 +223,6 @@
                 },
                 dialogFormVisible: false,
                 dialogStatus: '',
-                textMap: {
-                    update: 'Edit',
-                    create: 'Create'
-                },
                 rules: {
                     type: [{required: true, message: 'type is required', trigger: 'change'}],
                     timestamp: [{type: 'date', required: true, message: 'timestamp is required', trigger: 'change'}],
@@ -290,12 +284,15 @@
                 this.selectRows = val;
                 this.is_batch = 1;
             },
+            // 新增与编辑
             handleEdit(row) {
-                if (row) {
-                    this.$refs['edit'].showEdit(row)
-                } else {
-                    this.$refs['edit'].showEdit()
-                }
+                var query = {};
+                if (row.config_id) query.config_id = row.config_id;
+                console.log(query);
+                this.$router.push({
+                    'path':`/configs/detail`,
+                    'query': query,
+                });
             },
             handleDelete(row) {
                 var ids = '';
