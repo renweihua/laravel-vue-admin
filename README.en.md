@@ -1,7 +1,7 @@
 # laravel-vue-admin
 
 #### Description
-{**When you're done, you can delete the content in this README and update the file with details for others getting started with your repository**}
+<a href="https://gitee.com/clown-passerby-community/laravel-vue-admin">laravel+vue-element-admin</a>
 
 #### Software Architecture
 Software architecture description
@@ -13,6 +13,7 @@ Software architecture description
 * 命令行，生成 APP_KEY：`php artisan key:generate`
 * 命令行，JWT的key：`php artisan jwt:secret`
 * 导入根目录sql：laravel-vue-admin.sql
+* 任务调度：`php artisan schedule:run`
 
 #### Instructions
 

@@ -1,14 +1,12 @@
 # laravel-vue-admin
 
 #### 介绍
-{**以下是 Gitee 平台说明，您可以替换此简介**
-Gitee 是 OSCHINA 推出的基于 Git 的代码托管平台（同时支持 SVN）。专为开发者提供稳定、高效、安全的云端软件开发协作平台
-无论是个人、团队、或是企业，都能够用 Gitee 实现代码托管、项目管理、协作开发。企业项目请看 [https://gitee.com/enterprises](https://gitee.com/enterprises)}
+<a href="https://gitee.com/clown-passerby-community/laravel-vue-admin">laravel+vue-element-admin</a>
 
 #### 软件架构
 软件架构说明
 
-文档地址（无文档，自己对接）：https://docs.apipost.cn/view/680a60d8e13e4745
+文档地址（无需文档，自己对接）：https://docs.apipost.cn/view/680a60d8e13e4745
 
 #### 安装教程
 
@@ -17,6 +15,7 @@ Gitee 是 OSCHINA 推出的基于 Git 的代码托管平台（同时支持 SVN�
 * 命令行，生成 APP_KEY：`php artisan key:generate`
 * 命令行，JWT的key：`php artisan jwt:secret`
 * 导入根目录sql：laravel-vue-admin.sql
+* 任务调度：`php artisan schedule:run`
 
 #### 使用说明
 
