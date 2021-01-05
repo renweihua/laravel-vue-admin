@@ -2,7 +2,6 @@
     <div class="createPost-container">
         <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
             <sticky :z-index="10" :class-name="'sub-navbar publish'">
-                <SourceUrlDropdown v-model="postForm.article_link"/>
                 <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">
                     Publish
                 </el-button>
@@ -28,7 +27,7 @@
                 </el-form-item>
 
                 <el-form-item prop="article_cover" label="文章封面">
-                    <pan-thumb :image="image_url" :borderRadius="borderRadius" @click="show=true"/>
+                    <pan-thumb :image="image_url" @click="show=true"/>
 
                     <el-button
                         id="img-btn"
@@ -74,38 +73,8 @@
                 </el-form-item>
 
                 <el-form-item label="排序" prop="article_sort">
-                    <el-input v-model.trim="postForm.article_sort" type="number" autocomplete="off"/>
+                    <el-input v-model.trim="postForm.article_sort" autocomplete="off"/>
                 </el-form-item>
-
-                <el-form-item label="是否置顶" prop="set_top">
-                    <el-radio-group v-model="postForm.set_top">
-                        <el-radio :label="0" :checked="postForm.set_top == 0 ? 'checked' : ''">否</el-radio>
-                        <el-radio :label="1" :checked="postForm.set_top == 1 ? 'checked' : ''">是</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-
-                <el-form-item label="是否推荐" prop="is_recommend">
-                    <el-radio-group v-model="postForm.is_recommend">
-                        <el-radio :label="0" :checked="postForm.is_recommend == 0 ? 'checked' : ''">否</el-radio>
-                        <el-radio :label="1" :checked="postForm.is_recommend == 1 ? 'checked' : ''">是</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-
-                <el-form-item label="是否公开" prop="is_public">
-                    <el-radio-group v-model="postForm.is_public">
-                        <el-radio :label="0" :checked="postForm.is_public == 0 ? 'checked' : ''">否</el-radio>
-                        <el-radio :label="1" :checked="postForm.is_public == 1 ? 'checked' : ''">是</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-
-                <el-form-item label="文章来源" prop="article_origin">
-                    <el-input v-model.trim="postForm.article_origin" type="url" autocomplete="off"/>
-                </el-form-item>
-
-                <el-form-item label="文章作者" prop="article_author">
-                    <el-input v-model.trim="postForm.article_author" autocomplete="off"/>
-                </el-form-item>
-
             </div>
         </el-form>
     </div>
@@ -118,11 +87,8 @@
     import MDinput from '@/components/MDinput'
     import Sticky from '@/components/Sticky' // 粘性header组件
     import {validURL} from '@/utils/validate'
-    import {SourceUrlDropdown} from './Dropdown';
     import {getUploadUrl} from '@/api/common';
-
-    import {detail, create, update} from '@/api/articles'
-    import {getCategorySelect} from "@/api/article_categories";
+    import {detail, create, update} from '@/api/configs';
 
     const defaultForm = {
         article_id: 0,
@@ -134,16 +100,11 @@
         article_cover: '', // 封面图
         article_link: '', // 文章外链
         article_sort: 99, // 排序
-        set_top:0, // 是否置顶
-        is_recommend:0, // 是否推荐
-        is_public:0, // 是否公开
-        article_origin:'', // 文章来源
-        article_author:'', // 文章作者
     };
 
     export default {
         name: 'ArticleDetail',
-        components: {MDinput, Sticky, SourceUrlDropdown,
+        components: {MDinput, Sticky,
             'my-upload': myUpload,
             PanThumb,
             MarkdownEditor
@@ -201,14 +162,13 @@
                 // 图片上传
                 upload_url: '',
                 image_url: '',
-                borderRadius:'initial',
 
                 category:[], // 分类
             }
         },
         computed: {
             contentShortLength() {
-                return this.postForm.article_description?.length;
+                return this.postForm.article_description.length;
             },
             lang() {
                 return this.$store.getters.language;
@@ -352,5 +312,10 @@
             border-radius: 0px;
             border-bottom: 1px solid #bfcbd9;
         }
+    }
+
+    // 封面图
+    .pan-item, .pan-info, .pan-thumb{
+        border-radius: 0;
     }
 </style>

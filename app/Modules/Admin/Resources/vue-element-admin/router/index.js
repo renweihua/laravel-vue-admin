@@ -111,8 +111,7 @@ export const constantRoutes = [
     componentsRouter,
     chartsRouter
 ];
-console.log('---componentsRouter---');
-console.log(componentsRouter);
+
 
 /**
  * asyncRoutes
@@ -122,7 +121,6 @@ export const asyncRoutes = [
     /** when your routing map is too long, you can split it into small modules **/
     // componentsRouter,
     // chartsRouter,
-
 
     // {
     //     path: 'external-link',

@@ -83,30 +83,82 @@
                 </template>
             </el-table-column>
 
-            <el-table-column width="120px" align="center" label="是否置顶">
+            <el-table-column align="center" label="是否置顶">
                 <template slot-scope="{row}">
-                    <span>{{ row.set_top }}</span>
+                    <el-tag :type="row.set_top | statusFilter">
+                        <i :class="row.set_top == 1 ? 'el-icon-top' : 'el-icon-bottom'" />
+                        {{ row.set_top == 1 ? '是' : '否' }}
+                    </el-tag>
                 </template>
             </el-table-column>
 
-            <el-table-column width="120px" align="center" label="是否推荐">
+            <el-table-column align="center" label="是否推荐">
                 <template slot-scope="{row}">
-                    <span>{{ row.is_recommend }}</span>
+                    <el-tag :type="row.is_recommend | statusFilter">
+                        <i :class="row.is_recommend == 1 ? 'el-icon-info' : 'el-icon-remove'" />
+                        {{ row.is_recommend == 1 ? '是' : '否' }}
+                    </el-tag>
                 </template>
             </el-table-column>
 
-            <el-table-column class-name="status-col" label="Status" width="110">
+            <el-table-column align="center" label="是否公开">
                 <template slot-scope="{row}">
-                    <el-tag :type="row.is_check | statusFilter">
-                        {{ row.is_check }}
+                    <el-tag :type="row.is_public | statusFilter">
+                        <i :class="row.is_public == 1 ? 'el-icon-unlock' : 'el-icon-lock'" />
+                        {{ row.is_public == 1 ? '是' : '否' }}
                     </el-tag>
                 </template>
             </el-table-column>
 
             <el-table-column align="center"
-                             label="操作"
-                             width="230">
+                             label="操作">
                 <template slot-scope="scope">
+                    <!-- 是否置顶 -->
+                    <el-button v-if="scope.row.set_top == 0" type="text"
+                               @click="changeStatus(scope.row, 1, 'set_top')">
+                        <el-tag :type="1 | statusFilter">
+                            <i class="el-icon-top" />
+                            置顶
+                        </el-tag>
+                    </el-button>
+                    <el-button v-else-if="scope.row.set_top == 1" type="text"
+                               @click="changeStatus(scope.row, 0, 'set_top')">
+                        <el-tag :type="0 | statusFilter">
+                            <i class="el-icon-bottom" />
+                            取消’置顶‘
+                        </el-tag>
+                    </el-button>
+                    <!-- 是否推荐 -->
+                    <el-button v-if="scope.row.is_recommend == 0" type="text"
+                               @click="changeStatus(scope.row, 1, 'is_recommend')">
+                        <el-tag :type="1 | statusFilter">
+                            <i class="el-icon-info" />
+                            推荐
+                        </el-tag>
+                    </el-button>
+                    <el-button v-else-if="scope.row.is_recommend == 1" type="text"
+                               @click="changeStatus(scope.row, 0, 'is_recommend')">
+                        <el-tag :type="0 | statusFilter">
+                            <i class="el-icon-remove" />
+                            取消’推荐‘
+                        </el-tag>
+                    </el-button>
+                    <!-- 状态变更 -->
+                    <el-button v-if="scope.row.is_public == 0" type="text"
+                               @click="changeStatus(scope.row, 1, 'is_public')">
+                        <el-tag :type="1 | statusFilter">
+                            <i class="el-icon-unlock" />
+                            公开
+                        </el-tag>
+                    </el-button>
+                    <el-button v-else-if="scope.row.is_public == 1" type="text"
+                               @click="changeStatus(scope.row, 0, 'is_public')">
+                        <el-tag :type="0 | statusFilter">
+                            <i class="el-icon-lock" />
+                            私密
+                        </el-tag>
+                    </el-button>
+                    <!-- 编辑与删除 -->
                     <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row)"> 编辑 </el-button>
                     <el-button type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"> 删除 </el-button>
                 </template>
@@ -124,7 +176,7 @@
 </template>
 
 <script>
-    import {getList, setDel} from '@/api/articles';
+    import {getList, setDel, changeFiledStatus} from '@/api/articles';
     import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
     import waves from '@/directive/waves';
     import {getFormatDate, parseTime} from "@/utils"; // waves directive
@@ -147,9 +199,9 @@
         filters: {
             statusFilter(status) {
                 const statusMap = {
-                    published: 'success',
-                    draft: 'info',
-                    deleted: 'danger',
+                    1: 'success',
+                    2: 'info',
+                    0: 'danger',
                 };
                 return statusMap[status];
             },
@@ -274,6 +326,23 @@
                         }
                     })
                 )
+            },
+            // 状态变更
+            async changeStatus(row, value, filed) {
+                const {data, msg, status} = await changeFiledStatus({
+                    'article_id': row.article_id,
+                    'change_field': filed,
+                    'change_value': value
+                });
+
+                // 设置成功之后，同步到当前列表数据
+                if (status == 1){
+                    row[filed] = value;
+                }
+                this.$message({
+                    message: msg,
+                    type: status == 1 ? 'success' : 'error',
+                });
             },
         }
     }

@@ -8,6 +8,14 @@ export function getList(query) {
     })
 }
 
+export function detail(id) {
+    return request({
+        url: '/configs/detail',
+        method: 'get',
+        params: { config_id:id }
+    })
+}
+
 export function create(data) {
     return request({
         url: '/configs/create',
