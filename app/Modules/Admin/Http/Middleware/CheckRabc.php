@@ -37,9 +37,11 @@ class CheckRabc
 
     private function checkRabc($request, int $admin_id, &$load_error = ''):bool
     {
-        // if ($admin_id == 1) return true;
+        // 超级管理员账户无需验证
+        if ($admin_id == 1) return true;
 
         $roles = Admin::getInstance()->detail($admin_id)->roles->toArray();
+        if (empty($roles)) return false;
         $role_ids = array_column($roles, 'role_id');
         if (empty($role_ids)) return false;
         $menu_ids = AdminRoleWithMenu::getInstance()->getMenuIdsByRoles($role_ids);

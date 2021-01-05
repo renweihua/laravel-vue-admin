@@ -7,6 +7,11 @@ use App\Modules\Admin\Http\Requests\BaseRequest;
 
 class ProtocolRequest extends BaseRequest
 {
+    public function setInstance()
+    {
+        $this->instance = Protocol::getInstance();
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -14,15 +19,11 @@ class ProtocolRequest extends BaseRequest
      */
     public function rules()
     {
-        $instance = Protocol::getInstance();
-        $primarykey = $instance->getKeyName();
-        $validate_id = ',' . request()->input($primarykey, 0) . ',' .  $primarykey;
-
         return [
             'protocol_name' => [
                 'required',
                 'max:256',
-                'unique:' . $instance->getTable() . ',protocol_name' . $validate_id
+                'unique:' . $this->instance->getTable() . ',protocol_name' . $this->validate_id
             ],
             'protocol_type' => [
                 'required',

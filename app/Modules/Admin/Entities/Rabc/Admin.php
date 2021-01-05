@@ -19,6 +19,16 @@ class Admin extends Authenticatable implements JWTSubject
     protected $is_delete = 0; //是否开启删除（1.开启删除，就是直接删除；0.假删除）
     protected $delete_field = 'is_delete'; //删除字段
 
+    public function getIsDelete()
+    {
+        return $this->is_delete;
+    }
+
+    public function getDeleteField()
+    {
+        return $this->delete_field;
+    }
+
     /**
      * 是否主动维护时间戳
      *

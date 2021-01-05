@@ -7,6 +7,11 @@ use App\Modules\Admin\Http\Requests\BaseRequest;
 
 class BannerRequest extends BaseRequest
 {
+    public function setInstance()
+    {
+        $this->instance = Banner::getInstance();
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -14,15 +19,11 @@ class BannerRequest extends BaseRequest
      */
     public function rules()
     {
-        $instance = Banner::getInstance();
-        $primarykey = $instance->getKeyName();
-        $validate_id = ',' . request()->input($primarykey, 0) . ',' .  $primarykey;
-
         return [
             'banner_title' => [
                 'required',
                 'max:256',
-                'unique:' . $instance->getTable() . ',banner_title' . $validate_id
+                'unique:' . $this->instance->getTable() . ',banner_title' . $this->validate_id
             ],
             'banner_cover' => [
                 'required',

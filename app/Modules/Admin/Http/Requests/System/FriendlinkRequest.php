@@ -7,6 +7,11 @@ use App\Modules\Admin\Http\Requests\BaseRequest;
 
 class FriendlinkRequest extends BaseRequest
 {
+    public function setInstance()
+    {
+        $this->instance = Friendlink::getInstance();
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -14,15 +19,11 @@ class FriendlinkRequest extends BaseRequest
      */
     public function rules()
     {
-        $instance = Friendlink::getInstance();
-        $primarykey = $instance->getKeyName();
-        $validate_id = ',' . request()->input($primarykey, 0) . ',' .  $primarykey;
-
         return [
             'link_name' => [
                 'required',
                 'max:256',
-                'unique:' . $instance->getTable() . ',link_name' . $validate_id
+                'unique:' . $this->instance->getTable() . ',link_name' . $this->validate_id
             ],
             'link_url' => [
                 'url',

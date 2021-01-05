@@ -7,6 +7,11 @@ use App\Modules\Admin\Http\Requests\BaseRequest;
 
 class AdminRequest extends BaseRequest
 {
+    public function setInstance()
+    {
+        $this->instance = Admin::getInstance();
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -14,15 +19,11 @@ class AdminRequest extends BaseRequest
      */
     public function rules()
     {
-        $instance = Admin::getInstance();
-        $primarykey = $instance->getKeyName();
-        $validate_id = ',' . request()->input($primarykey, 0) . ',' .  $primarykey;
-
         return [
             'admin_name' => [
                 'required',
                 'max:256',
-                'unique:' . $instance->getTable() . ',admin_name' . $validate_id
+                'unique:' . $this->instance->getTable() . ',admin_name' . $this->validate_id
             ],
             'admin_email' => [
                 'required',
