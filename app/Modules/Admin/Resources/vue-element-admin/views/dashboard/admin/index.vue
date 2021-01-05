@@ -4,11 +4,15 @@
 
         <panel-group @handleSetLineChartData="handleSetLineChartData" :data="data"/>
 
-        <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-            <line-chart :chart-data="lineChartData"/>
+        <el-row :gutter="32" style="background:#fff;margin-bottom:32px;">
+            <el-col :xs="24" :sm="24" :lg="24">
+                <div class="chart-wrapper chart-container">
+                    <chart height="100%" width="100%" />
+                </div>
+            </el-col>
         </el-row>
 
-        <el-row :gutter="32">
+        <el-row :gutter="32" style="background:#fff;margin-bottom:32px;">
             <el-col :xs="24" :sm="24" :lg="10">
                 <div class="chart-wrapper">
                     <box-card :skill="skill"/>
@@ -21,12 +25,8 @@
             </el-col>
         </el-row>
 
-        <el-row :gutter="32">
-            <el-col :xs="24" :sm="24" :lg="24">
-                <div class="chart-wrapper chart-container">
-                    <chart height="100%" width="100%" />
-                </div>
-            </el-col>
+        <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+            <line-chart :chart-data="lineChartData"/>
         </el-row>
     </div>
 </template>

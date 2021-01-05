@@ -47,10 +47,10 @@
                 console.log('initChart');
                 this.logsStatistics();
 
-                // 定时60秒触发一次
+                // 定时多少秒触发一次：默认3分钟
                 window.setInterval(() => {
                     setTimeout(this.logsStatistics, 0);
-                }, 60000);
+                }, 1000 * 60 * 3);
             },
             async logsStatistics() {
                 console.log('load - logsStatistics');

@@ -12,6 +12,7 @@ class AdminRoleService extends BaseService
     public function __construct(AdminRole $adminRole)
     {
         $this->model = $adminRole;
+        $this->with = ['menus'];
     }
 
     public function lists(array $params) : array
