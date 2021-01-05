@@ -872,8 +872,8 @@
                         }
                     }
                     client.upload.addEventListener('progress', uploadProgress, false) // 监听进度
-                    console.log(headers)
-                    console.log(getToken())
+                    // console.log(headers)
+                    // console.log(getToken())
                     // 设置header
                     if (typeof headers === 'object' && headers) {
                         Object.keys(headers).forEach((k) => {
@@ -881,7 +881,7 @@
                         })
                     }
                     headers['Authorization'] = getToken();
-                    console.log(headers)
+                    // console.log(headers)
                     client.send(fmData)
                 }).then(
                     // 上传成功
