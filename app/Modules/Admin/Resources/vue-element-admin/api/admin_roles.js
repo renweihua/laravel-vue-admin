@@ -17,7 +17,7 @@ export function getList(params) {
 
 export function create(data) {
     return request({
-        url: '/admin_roles',
+        url: '/admin_roles/create',
         method: 'post',
         data
     })
@@ -25,7 +25,7 @@ export function create(data) {
 
 export function update(data) {
     return request({
-        url: `/admin_roles`,
+        url: `/admin_roles/update`,
         method: 'put',
         data
     })
@@ -33,7 +33,7 @@ export function update(data) {
 
 export function setDel(data) {
     return request({
-        url: `/admin_roles`,
+        url: `/admin_roles/delete`,
         method: 'delete',
         data
     })

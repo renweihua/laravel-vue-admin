@@ -13,6 +13,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Modules\Admin\Http\Middleware\CheckAuth;
+use App\Modules\Admin\Http\Middleware\CheckRabc;
 use App\Modules\Admin\Http\Middleware\AdminLog;
 
 Route::prefix('admin')->group(function() {
@@ -39,107 +40,110 @@ Route::prefix('admin')->group(function() {
         Route::get('logsStatistics', 'IndexController@logsStatistics');
         // 月份表列表
         Route::get('get_month_lists', 'IndexController@getMonthList');
-
         // 文件上传
         Route::post('upload_file', 'UploadController@file');
 
-        Route::prefix('banners')->group(function() {
-            Route::get('/', 'System\BannerController@index');
-            Route::post('/', 'System\BannerController@create');
-            Route::put('/', 'System\BannerController@update');
-            Route::delete('/', 'System\BannerController@delete');
-            Route::put('/changeFiledStatus', 'System\BannerController@changeFiledStatus');
-        });
+        // 权限中间件
+        Route::middleware([CheckRabc::class])->group(function () {
+            Route::prefix('banners')->group(function() {
+                Route::get('/', 'System\BannerController@index');
+                Route::post('/create', 'System\BannerController@create');
+                Route::put('/update', 'System\BannerController@update');
+                Route::delete('/delete', 'System\BannerController@delete');
+                Route::put('/changeFiledStatus', 'System\BannerController@changeFiledStatus');
+            });
 
-        // 配置管理
-        Route::prefix('configs')->group(function() {
-            Route::get('/', 'System\ConfigController@index');
-            Route::post('/', 'System\ConfigController@create');
-            Route::put('/', 'System\ConfigController@update');
-            Route::delete('/', 'System\ConfigController@delete');
-            Route::put('/changeFiledStatus', 'System\ConfigController@changeFiledStatus');
-        });
+            // 配置管理
+            Route::prefix('configs')->group(function() {
+                Route::get('/', 'System\ConfigController@index');
+                Route::post('/create', 'System\ConfigController@create');
+                Route::put('/update', 'System\ConfigController@update');
+                Route::delete('/delete', 'System\ConfigController@delete');
+                Route::put('/changeFiledStatus', 'System\ConfigController@changeFiledStatus');
+            });
 
-        // 友情链接
-        Route::prefix('friendlinks')->group(function() {
-            Route::get('/', 'System\FriendlinkController@index');
-            Route::post('/', 'System\FriendlinkController@create');
-            Route::put('/', 'System\FriendlinkController@update');
-            Route::delete('/', 'System\FriendlinkController@delete');
-            Route::put('/changeFiledStatus', 'System\FriendlinkController@changeFiledStatus');
-        });
+            // 友情链接
+            Route::prefix('friendlinks')->group(function() {
+                Route::get('/', 'System\FriendlinkController@index');
+                Route::post('/create', 'System\FriendlinkController@create');
+                Route::put('/update', 'System\FriendlinkController@update');
+                Route::delete('/delete', 'System\FriendlinkController@delete');
+                Route::put('/changeFiledStatus', 'System\FriendlinkController@changeFiledStatus');
+            });
 
-        Route::prefix('protocols')->group(function() {
-            Route::get('/', 'System\ProtocolController@index');
-            Route::post('/', 'System\ProtocolController@create');
-            Route::put('/', 'System\ProtocolController@update');
-            Route::delete('/', 'System\ProtocolController@delete');
-        });
+            Route::prefix('protocols')->group(function() {
+                Route::get('/', 'System\ProtocolController@index');
+                Route::post('/create', 'System\ProtocolController@create');
+                Route::put('/update', 'System\ProtocolController@update');
+                Route::delete('/delete', 'System\ProtocolController@delete');
+            });
 
-        Route::prefix('versions')->group(function() {
-            Route::get('/', 'System\VersionController@index');
-            Route::post('/', 'System\VersionController@create');
-            Route::put('/', 'System\VersionController@update');
-            Route::delete('/', 'System\VersionController@delete');
-            Route::put('/changeFiledStatus', 'System\VersionController@changeFiledStatus');
-        });
+            Route::prefix('versions')->group(function() {
+                Route::get('/', 'System\VersionController@index');
+                Route::post('/create', 'System\VersionController@create');
+                Route::put('/update', 'System\VersionController@update');
+                Route::delete('/delete', 'System\VersionController@delete');
+                Route::put('/changeFiledStatus', 'System\VersionController@changeFiledStatus');
+            });
 
-        Route::prefix('admins')->group(function() {
-            Route::get('/', 'Rabc\AdminController@index');
-            Route::post('/', 'Rabc\AdminController@create');
-            Route::put('/', 'Rabc\AdminController@update');
-            Route::delete('/', 'Rabc\AdminController@delete');
-            Route::get('/getSelectLists', 'Rabc\AdminController@getSelectLists');
-            Route::put('/changeFiledStatus', 'Rabc\AdminController@changeFiledStatus');
-        });
+            Route::prefix('admins')->group(function() {
+                Route::get('/', 'Rabc\AdminController@index');
+                Route::post('/create', 'Rabc\AdminController@create');
+                Route::put('/update', 'Rabc\AdminController@update');
+                Route::delete('/delete', 'Rabc\AdminController@delete');
+                Route::get('/getSelectLists', 'Rabc\AdminController@getSelectLists');
+                Route::put('/changeFiledStatus', 'Rabc\AdminController@changeFiledStatus');
+            });
 
-        Route::prefix('admin_roles')->group(function() {
-            Route::get('/', 'Rabc\AdminRoleController@index');
-            Route::post('/', 'Rabc\AdminRoleController@create');
-            Route::put('/', 'Rabc\AdminRoleController@update');
-            Route::delete('/', 'Rabc\AdminRoleController@delete');
-            Route::get('/getSelectLists', 'Rabc\AdminRoleController@getSelectLists');
-            Route::put('/changeFiledStatus', 'Rabc\AdminRoleController@changeFiledStatus');
-        });
+            Route::prefix('admin_roles')->group(function() {
+                Route::get('/', 'Rabc\AdminRoleController@index');
+                Route::post('/create', 'Rabc\AdminRoleController@create');
+                Route::put('/update', 'Rabc\AdminRoleController@update');
+                Route::delete('/delete', 'Rabc\AdminRoleController@delete');
+                Route::get('/getSelectLists', 'Rabc\AdminRoleController@getSelectLists');
+                Route::put('/changeFiledStatus', 'Rabc\AdminRoleController@changeFiledStatus');
+            });
 
-        Route::prefix('admin_menus')->group(function() {
-            Route::get('/', 'Rabc\AdminMenuController@index');
-            Route::post('/', 'Rabc\AdminMenuController@create');
-            Route::put('/', 'Rabc\AdminMenuController@update');
-            Route::delete('/', 'Rabc\AdminMenuController@delete');
-            Route::get('/getSelectLists', 'Rabc\AdminMenuController@getSelectLists');
-            Route::put('/changeFiledStatus', 'Rabc\AdminMenuController@changeFiledStatus');
-        });
+            Route::prefix('admin_menus')->group(function() {
+                Route::get('/', 'Rabc\AdminMenuController@index');
+                Route::post('/create', 'Rabc\AdminMenuController@create');
+                Route::put('/update', 'Rabc\AdminMenuController@update');
+                Route::delete('/delete', 'Rabc\AdminMenuController@delete');
+                Route::get('/getSelectLists', 'Rabc\AdminMenuController@getSelectLists');
+                Route::put('/changeFiledStatus', 'Rabc\AdminMenuController@changeFiledStatus');
+            });
 
-        // 管理员日志
-        Route::prefix('adminlogs')->group(function() {
-            Route::get('/', 'Log\AdminLogController@index');
-            Route::delete('/', 'Log\AdminLogController@delete');
-        });
+            // 管理员日志
+            Route::prefix('adminlogs')->group(function() {
+                Route::get('/', 'Log\AdminLogController@index');
+                Route::delete('/delete', 'Log\AdminLogController@delete');
+            });
 
-        // 管理员登录日志
-        Route::prefix('adminloginlogs')->group(function() {
-            Route::get('/', 'Log\AdminLoginLogController@index');
-            Route::delete('/', 'Log\AdminLoginLogController@delete');
-        });
+            // 管理员登录日志
+            Route::prefix('adminloginlogs')->group(function() {
+                Route::get('/', 'Log\AdminLoginLogController@index');
+                Route::delete('/delete', 'Log\AdminLoginLogController@delete');
+            });
 
-        // 文章分类
-        Route::prefix('article_categorys')->group(function() {
-            Route::get('/', 'Article\ArticleCategoryController@index');
-            Route::post('/', 'Article\ArticleCategoryController@create');
-            Route::put('/', 'Article\ArticleCategoryController@update');
-            Route::delete('/', 'Article\ArticleCategoryController@delete');
-            Route::get('/getSelectLists', 'Article\ArticleCategoryController@getSelectLists');
-            Route::put('/changeFiledStatus', 'Article\ArticleCategoryController@changeFiledStatus');
-        });
+            // 文章分类
+            Route::prefix('article_categories')->group(function() {
+                Route::get('/', 'Article\ArticleCategoryController@index');
+                Route::post('/create', 'Article\ArticleCategoryController@create');
+                Route::put('/update', 'Article\ArticleCategoryController@update');
+                Route::delete('/delete', 'Article\ArticleCategoryController@delete');
+                Route::get('/getSelectLists', 'Article\ArticleCategoryController@getSelectLists');
+                Route::put('/changeFiledStatus', 'Article\ArticleCategoryController@changeFiledStatus');
+            });
 
-        // 文章管理
-        Route::prefix('articles')->group(function() {
-            Route::get('/', 'Article\ArticleController@index');
-            Route::get('/detail', 'Article\ArticleController@detail');
-            Route::post('/', 'Article\ArticleController@create');
-            Route::put('/', 'Article\ArticleController@update');
-            Route::delete('/', 'Article\ArticleController@delete');
+            // 文章管理
+            Route::prefix('articles')->group(function() {
+                Route::get('/', 'Article\ArticleController@index');
+                Route::get('/detail', 'Article\ArticleController@detail');
+                Route::post('/create', 'Article\ArticleController@create');
+                Route::put('/update', 'Article\ArticleController@update');
+                Route::delete('/delete', 'Article\ArticleController@delete');
+                Route::put('/changeFiledStatus', 'Article\ArticleController@changeFiledStatus');
+            });
         });
     });
 });

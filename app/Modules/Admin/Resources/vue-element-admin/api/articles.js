@@ -25,7 +25,7 @@ export function detail(id) {
 
 export function create(data) {
     return request({
-        url: '/articles',
+        url: '/articles/create',
         method: 'post',
         data
     })
@@ -33,7 +33,7 @@ export function create(data) {
 
 export function update(data) {
     return request({
-        url: `/articles`,
+        url: `/articles/update`,
         method: 'put',
         data
     })
@@ -41,7 +41,7 @@ export function update(data) {
 
 export function setDel(data) {
     return request({
-        url: `/articles`,
+        url: `/articles/delete`,
         method: 'delete',
         data
     })

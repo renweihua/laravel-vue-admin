@@ -10,7 +10,7 @@ export function getList(query) {
 
 export function create(data) {
     return request({
-        url: '/configs',
+        url: '/configs/create',
         method: 'post',
         data
     })
@@ -18,7 +18,7 @@ export function create(data) {
 
 export function update(data) {
     return request({
-        url: '/configs',
+        url: '/configs/update',
         method: 'put',
         data
     })
@@ -26,7 +26,7 @@ export function update(data) {
 
 export function setDel(data) {
     return request({
-        url: '/configs',
+        url: '/configs/delete',
         method: 'delete',
         data
     })
