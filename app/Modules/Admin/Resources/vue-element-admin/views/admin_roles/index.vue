@@ -98,7 +98,7 @@
                             禁用
                         </el-tag>
                     </el-button>
-
+                    <!-- 编辑与删除 -->
                     <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
                     <el-button type="text" icon="el-icon-delete" v-if="scope.row.role_id > 1" @click="handleDelete(scope.row)">删除</el-button>
                 </template>

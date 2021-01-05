@@ -1,6 +1,6 @@
 <template>
-  <div :style="{zIndex:zIndex,height:height,width:width}" class="pan-item">
-    <div class="pan-info">
+  <div :style="{zIndex:zIndex,height:height,width:width,borderRadius:borderRadius}" class="pan-item">
+    <div class="pan-info" :style="{borderRadius:borderRadius}">
       <div class="pan-info-roles-container">
         <slot />
       </div>
@@ -29,6 +29,10 @@ export default {
     height: {
       type: String,
       default: '150px'
+    },
+    borderRadius: {
+      type: String,
+      default: '50%'
     }
   }
 }

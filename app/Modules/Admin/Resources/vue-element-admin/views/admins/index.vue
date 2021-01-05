@@ -82,9 +82,10 @@
                 </template>
             </el-table-column>
             <el-table-column align="center" prop="is_check" label="启用状态">
-                <template slot-scope="scope">
-                    <el-tag :type="scope.row.is_check | statusFilter">
-                        {{ scope.row.is_check | checkFilter }}
+                <template slot-scope="{row}">
+                    <el-tag :type="row.is_check | statusFilter">
+                        <i :class="row.is_check == 1 ? 'el-icon-unlock' : 'el-icon-lock'" />
+                        {{ row.is_check | checkFilter }}
                     </el-tag>
                 </template>
             </el-table-column>
@@ -97,19 +98,21 @@
             >
                 <template v-slot="scope">
                     <!-- 状态变更 -->
-                    <el-button v-if="scope.row.admin_id > 1 && scope.row.is_check == 0" type="text" icon="el-icon-unlock"
+                    <el-button v-if="scope.row.admin_id > 1 && scope.row.is_check == 0" type="text"
                                @click="changeStatus(scope.row, 1)">
                         <el-tag :type="1 | statusFilter">
+                            <i class="el-icon-unlock" />
                             启用
                         </el-tag>
                     </el-button>
-                    <el-button v-else-if="scope.row.admin_id > 1 && scope.row.is_check == 1" type="text" icon="el-icon-lock"
+                    <el-button v-else-if="scope.row.admin_id > 1 && scope.row.is_check == 1" type="text"
                                @click="changeStatus(scope.row, 0)">
                         <el-tag :type="0 | statusFilter">
+                            <i class="el-icon-lock" />
                             禁用
                         </el-tag>
                     </el-button>
-
+                    <!-- 编辑与删除 -->
                     <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
                     <el-button type="text" icon="el-icon-delete" v-if="scope.row.admin_id != 1"
                                @click="handleDelete(scope.row)">删除
