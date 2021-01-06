@@ -1,6 +1,6 @@
 <template>
     <div class="createPost-container">
-        <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
+        <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container" label-width="90px">
             <sticky :z-index="10" :class-name="'sub-navbar publish'">
                 <SourceUrlDropdown v-model="postForm.article_link"/>
                 <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">
@@ -9,7 +9,7 @@
             </sticky>
 
             <div class="createPost-main-container">
-                <el-form-item prop="article_title" label-width="70px" label="文章标题:">
+                <el-form-item prop="article_title" label="文章标题">
                     <MDinput v-model="postForm.article_title" :maxlength="100" name="name" required>
                         Title
                     </MDinput>
@@ -158,10 +158,10 @@
             const validateRequire = (rule, value, callback) => {
                 if (value === '') {
                     this.$message({
-                        message: rule.field + '为必传项',
+                        message: rule.field + '为必填项',
                         type: 'error'
                     })
-                    callback(new Error(rule.field + '为必传项'))
+                    callback(new Error(rule.field + '为必填项'))
                 } else {
                     callback();
                 }

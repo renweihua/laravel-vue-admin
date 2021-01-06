@@ -90,10 +90,8 @@
                 </template>
             </el-table-column>
             <el-table-column
-                show-overflow-tooltip
                 fixed="right"
                 label="操作"
-                width="230"
                 align="center"
             >
                 <template v-slot="scope">

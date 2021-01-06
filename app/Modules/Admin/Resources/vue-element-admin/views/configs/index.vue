@@ -107,18 +107,17 @@
             </el-table-column>
 
             <el-table-column align="center" prop="is_check" label="启用状态">
-                <template slot-scope="scope">
-                    <el-tag :type="scope.row.is_check | statusFilter">
-                        {{ scope.row.is_check | checkFilter }}
+                <template slot-scope="{row}">
+                    <el-tag :type="row.is_check | statusFilter">
+                        <i :class="row.is_check == 1 ? 'el-icon-unlock' : 'el-icon-lock'" />
+                        {{ row.is_check | checkFilter }}
                     </el-tag>
                 </template>
             </el-table-column>
 
             <el-table-column
-                show-overflow-tooltip
                 fixed="right"
                 label="操作"
-                width="230"
                 align="center"
             >
                 <template v-slot="scope">

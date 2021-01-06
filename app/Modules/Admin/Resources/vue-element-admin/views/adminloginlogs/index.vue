@@ -45,12 +45,14 @@
             class="margin-buttom-10"
         >
             <el-table-column show-overflow-tooltip type="selection"/>
+
             <el-table-column
                 show-overflow-tooltip
                 prop="log_id"
                 label="Id"
                 align="center"
             />
+
             <el-table-column align="center" prop="admin" label="管理员">
                 <template slot-scope="{ row }">
                     <span v-if="row.admin">
@@ -60,18 +62,21 @@
                     </span>
                 </template>
             </el-table-column>
+
             <el-table-column
                 show-overflow-tooltip
                 prop="log_method"
                 label="请求方式"
                 align="center"
             />
+
             <el-table-column
                 show-overflow-tooltip
                 prop="log_action"
                 label="请求地址"
                 align="center"
             />
+
             <el-table-column
                 show-overflow-tooltip
                 prop="log_duration"
@@ -82,32 +87,37 @@
                     {{ row.log_duration }} s
                 </template>
             </el-table-column>
+
             <el-table-column
                 show-overflow-tooltip
                 prop="created_ip"
                 label="IP"
                 align="center"
             />
+
             <el-table-column align="center" prop="log_status" label="登录状态">
-                <template slot-scope="scope">
-                    <el-tag :type="scope.row.log_status | statusFilter">
-                        {{ scope.row.log_status | checkFilter }}
+                <template slot-scope="{row}">
+                    <el-tag :type="row.log_status | statusFilter">
+                        <i :class="row.log_status == 1 ? 'el-icon-success' : 'el-icon-error'" />
+                        {{ row.log_status | checkFilter }}
                     </el-tag>
                 </template>
             </el-table-column>
+
             <el-table-column
                 show-overflow-tooltip
                 prop="description"
                 label="描述"
                 align="center"
             />
+
             <el-table-column label="登录时间" show-overflow-tooltip align="center">
                 <template slot-scope="{ row }">
                     {{ row.created_time | parseTime("{y}-{m}-{d} {h}:{i}") }}
                 </template>
             </el-table-column>
+
             <el-table-column
-                show-overflow-tooltip
                 label="操作"
                 align="center"
             >

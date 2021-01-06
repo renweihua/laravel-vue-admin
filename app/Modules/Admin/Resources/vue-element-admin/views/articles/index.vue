@@ -46,8 +46,8 @@
 
         <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
             <el-table-column align="center" label="Id">
-                <template slot-scope="scope">
-                    <span>{{ scope.row.article_id }}</span>
+                <template slot-scope="{row}">
+                    <span>{{ row.article_id }}</span>
                 </template>
             </el-table-column>
 
@@ -112,55 +112,55 @@
 
             <el-table-column align="center"
                              label="操作">
-                <template slot-scope="scope">
+                <template slot-scope="{row}">
                     <!-- 是否置顶 -->
-                    <el-button v-if="scope.row.set_top == 0" type="text"
-                               @click="changeStatus(scope.row, 1, 'set_top')">
+                    <el-button v-if="row.set_top == 0" type="text"
+                               @click="changeStatus(row, 1, 'set_top')">
                         <el-tag :type="1 | statusFilter">
                             <i class="el-icon-top" />
                             置顶
                         </el-tag>
                     </el-button>
-                    <el-button v-else-if="scope.row.set_top == 1" type="text"
-                               @click="changeStatus(scope.row, 0, 'set_top')">
+                    <el-button v-else-if="row.set_top == 1" type="text"
+                               @click="changeStatus(row, 0, 'set_top')">
                         <el-tag :type="0 | statusFilter">
                             <i class="el-icon-bottom" />
                             取消’置顶‘
                         </el-tag>
                     </el-button>
                     <!-- 是否推荐 -->
-                    <el-button v-if="scope.row.is_recommend == 0" type="text"
-                               @click="changeStatus(scope.row, 1, 'is_recommend')">
+                    <el-button v-if="row.is_recommend == 0" type="text"
+                               @click="changeStatus(row, 1, 'is_recommend')">
                         <el-tag :type="1 | statusFilter">
                             <i class="el-icon-info" />
                             推荐
                         </el-tag>
                     </el-button>
-                    <el-button v-else-if="scope.row.is_recommend == 1" type="text"
-                               @click="changeStatus(scope.row, 0, 'is_recommend')">
+                    <el-button v-else-if="row.is_recommend == 1" type="text"
+                               @click="changeStatus(row, 0, 'is_recommend')">
                         <el-tag :type="0 | statusFilter">
                             <i class="el-icon-remove" />
                             取消’推荐‘
                         </el-tag>
                     </el-button>
                     <!-- 状态变更 -->
-                    <el-button v-if="scope.row.is_public == 0" type="text"
-                               @click="changeStatus(scope.row, 1, 'is_public')">
+                    <el-button v-if="row.is_public == 0" type="text"
+                               @click="changeStatus(row, 1, 'is_public')">
                         <el-tag :type="1 | statusFilter">
                             <i class="el-icon-unlock" />
                             公开
                         </el-tag>
                     </el-button>
-                    <el-button v-else-if="scope.row.is_public == 1" type="text"
-                               @click="changeStatus(scope.row, 0, 'is_public')">
+                    <el-button v-else-if="row.is_public == 1" type="text"
+                               @click="changeStatus(row, 0, 'is_public')">
                         <el-tag :type="0 | statusFilter">
                             <i class="el-icon-lock" />
                             私密
                         </el-tag>
                     </el-button>
                     <!-- 编辑与删除 -->
-                    <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row)"> 编辑 </el-button>
-                    <el-button type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"> 删除 </el-button>
+                    <el-button type="text" icon="el-icon-edit" @click="handleEdit(row)"> 编辑 </el-button>
+                    <el-button type="text" icon="el-icon-delete" @click="handleDelete(row)"> 删除 </el-button>
                 </template>
             </el-table-column>
         </el-table>
