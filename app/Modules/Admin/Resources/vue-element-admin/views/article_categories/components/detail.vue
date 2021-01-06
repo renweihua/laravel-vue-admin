@@ -4,7 +4,7 @@
         :visible.sync="dialogFormVisible"
         @close="close"
     >
-        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form ref="form" :model="form" :rules="rules" label-width="90px">
             <el-form-item label="父级菜单" prop="parent_id">
                 <el-select v-model="form.parent_id" placeholder="请选择父级" autocomplete="off">
                     <el-option
@@ -28,7 +28,7 @@
             <el-form-item label="排序" prop="category_sort">
                 <el-input v-model="form.category_sort" autocomplete="off" value="99"></el-input>
             </el-form-item>
-            <el-form-item label="是否启用：" prop="is_check">
+            <el-form-item label="是否启用" prop="is_check">
                 <el-radio-group v-model="form.is_check">
                     <el-radio :label="0" :checked="form.is_check == 0 ? 'checked' : ''">禁用</el-radio>
                     <el-radio :label="1" :checked="form.is_check == 1 ? 'checked' : ''">启用</el-radio>

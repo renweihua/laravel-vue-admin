@@ -4,12 +4,12 @@
         :visible.sync="dialogFormVisible"
         @close="close"
     >
-        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form ref="form" :model="form" :rules="rules" label-width="105px">
             <el-form-item label="父级菜单" prop="parent_id">
                 <el-select v-model="form.parent_id" placeholder="请选择父级" autocomplete="off">
                     <el-option
                         key="0"
-                        :checked="0 == form.parent_id"
+                        :checked="0 == form.parent_id || undefined == form.parent_id"
                         label="默认顶级"
                         value="0"
                     />

@@ -89,9 +89,10 @@
                 align="center"
             />
             <el-table-column align="center" prop="log_status" label="请求状态">
-                <template slot-scope="scope">
-                    <el-tag :type="scope.row.log_status | statusFilter">
-                        {{ scope.row.log_status | checkFilter }}
+                <template slot-scope="{row}">
+                    <el-tag :type="row.log_status | statusFilter">
+                        <i :class="row.log_status == 1 ? 'el-icon-success' : 'el-icon-error'" />
+                        {{ row.log_status | checkFilter }}
                     </el-tag>
                 </template>
             </el-table-column>
@@ -101,12 +102,11 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    show-overflow-tooltip
                     label="操作"
                     align="center"
             >
-                <template v-slot="scope">
-                    <el-button type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
+                <template v-slot="{row}">
+                    <el-button type="text" icon="el-icon-delete" @click="handleDelete(row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>

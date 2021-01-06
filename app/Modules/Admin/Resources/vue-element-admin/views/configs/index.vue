@@ -107,37 +107,36 @@
             </el-table-column>
 
             <el-table-column align="center" prop="is_check" label="启用状态">
-                <template slot-scope="scope">
-                    <el-tag :type="scope.row.is_check | statusFilter">
-                        {{ scope.row.is_check | checkFilter }}
+                <template slot-scope="{row}">
+                    <el-tag :type="row.is_check | statusFilter">
+                        <i :class="row.is_check == 1 ? 'el-icon-unlock' : 'el-icon-lock'" />
+                        {{ row.is_check | checkFilter }}
                     </el-tag>
                 </template>
             </el-table-column>
 
             <el-table-column
-                show-overflow-tooltip
                 fixed="right"
                 label="操作"
-                width="230"
                 align="center"
             >
-                <template v-slot="scope">
+                <template v-slot="{row}">
                     <!-- 状态变更 -->
-                    <el-button v-if="scope.row.is_check == 0" type="text" icon="el-icon-unlock"
-                               @click="changeStatus(scope.row, 1)">
+                    <el-button v-if="row.is_check == 0" type="text" icon="el-icon-unlock"
+                               @click="changeStatus(row, 1)">
                         <el-tag :type="1 | statusFilter">
                             启用
                         </el-tag>
                     </el-button>
-                    <el-button v-else-if="scope.row.is_check == 1" type="text" icon="el-icon-lock"
-                               @click="changeStatus(scope.row, 0)">
+                    <el-button v-else-if="row.is_check == 1" type="text" icon="el-icon-lock"
+                               @click="changeStatus(row, 0)">
                         <el-tag :type="0 | statusFilter">
                             禁用
                         </el-tag>
                     </el-button>
                     <!-- 编辑与删除 -->
-                    <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
-                    <el-button type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
+                    <el-button type="text" icon="el-icon-edit" @click="handleEdit(row)">编辑</el-button>
+                    <el-button type="text" icon="el-icon-delete" @click="handleDelete(row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>

@@ -4,7 +4,7 @@
             :visible.sync="dialogFormVisible"
             @close="close"
     >
-        <el-form ref="form" :model="form" :rules="rules">
+        <el-form ref="form" :model="form" :rules="rules" label-width="90px">
             <el-form-item label="账户：">
                 <el-input
                         v-model.trim="form.admin_name"
