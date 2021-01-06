@@ -121,8 +121,8 @@
                 label="操作"
                 align="center"
             >
-                <template v-slot="scope">
-                    <el-button type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
+                <template v-slot="{row}">
+                    <el-button type="text" icon="el-icon-delete" @click="handleDelete(row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>

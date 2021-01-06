@@ -46,9 +46,9 @@
 
             <el-table-column show-overflow-tooltip label="是否隐藏" align="center">
                 <template slot-scope="{row}">
-                    <el-tag :type="row.is_hidden | statusFilter">
-                        <svg-icon :icon-class="row.is_hidden == 0 ? 'eye' : 'eye-open'" />
-                        {{ row.is_hidden == 1 ? "是" : "否" }}
+                    <el-tag :type="row.is_hidden == 1 ? 'danger' : 'success'">
+                        <svg-icon :icon-class="row.is_hidden == 1 ? 'eye' : 'eye-open'" />
+                        {{ row.is_hidden == 1 ? "隐藏" : "展示" }}
                     </el-tag>
                 </template>
             </el-table-column>
@@ -80,26 +80,25 @@
                 align="center"
                 label="操作"
             >
-                show-overflow-tooltip
-                <template v-slot="scope">
+                <template v-slot="{row}">
                     <!-- 状态变更 -->
-                    <el-button v-if="scope.row.is_hidden == 0" type="text"
-                               @click="changeStatus(scope.row, 1, 'is_hidden')">
-                        <el-tag :type="1 | statusFilter">
-                            <i class="el-icon-unlock" />
-                            展示
-                        </el-tag>
-                    </el-button>
-                    <el-button v-else-if="scope.row.is_hidden == 1" type="text"
-                               @click="changeStatus(scope.row, 0, 'is_hidden')">
+                    <el-button v-if="row.is_hidden == 0" type="text"
+                               @click="changeStatus(row, 1, 'is_hidden')">
                         <el-tag :type="0 | statusFilter">
-                            <i class="el-icon-lock" />
+                            <svg-icon icon-class="eye" />
                             隐藏
                         </el-tag>
                     </el-button>
+                    <el-button v-else-if="row.is_hidden == 1" type="text"
+                               @click="changeStatus(row, 0, 'is_hidden')">
+                        <el-tag :type="1 | statusFilter">
+                            <svg-icon icon-class="eye-open" />
+                            展示
+                        </el-tag>
+                    </el-button>
                     <!-- 编辑与删除 -->
-                    <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
-                    <el-button type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
+                    <el-button type="text" icon="el-icon-edit" @click="handleEdit(row)">编辑</el-button>
+                    <el-button type="text" icon="el-icon-delete" @click="handleDelete(row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>

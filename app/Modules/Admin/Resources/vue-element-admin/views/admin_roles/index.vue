@@ -83,25 +83,25 @@
                 label="操作"
                 align="center"
             >
-                <template v-slot="scope">
+                <template v-slot="{row}">
                     <!-- 状态变更 -->
-                    <el-button v-if="scope.row.role_id > 1 && scope.row.is_check == 0" type="text"
-                               @click="changeStatus(scope.row, 1)">
+                    <el-button v-if="row.role_id > 1 && row.is_check == 0" type="text"
+                               @click="changeStatus(row, 1)">
                         <el-tag :type="1 | statusFilter">
                             <i class="el-icon-unlock" />
                             启用
                         </el-tag>
                     </el-button>
-                    <el-button v-else-if="scope.row.role_id > 1 && scope.row.is_check == 1" type="text"
-                               @click="changeStatus(scope.row, 0)">
+                    <el-button v-else-if="row.role_id > 1 && row.is_check == 1" type="text"
+                               @click="changeStatus(row, 0)">
                         <el-tag :type="0 | statusFilter">
                             <i class="el-icon-lock" />
                             禁用
                         </el-tag>
                     </el-button>
                     <!-- 编辑与删除 -->
-                    <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
-                    <el-button type="text" icon="el-icon-delete" v-if="scope.row.role_id > 1" @click="handleDelete(scope.row)">删除</el-button>
+                    <el-button type="text" icon="el-icon-edit" @click="handleEdit(row)">编辑</el-button>
+                    <el-button type="text" icon="el-icon-delete" v-if="row.role_id > 1" @click="handleDelete(row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
