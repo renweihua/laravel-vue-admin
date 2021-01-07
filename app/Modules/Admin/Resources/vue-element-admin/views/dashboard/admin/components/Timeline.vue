@@ -10,7 +10,7 @@
                 <el-card>
                     <h4>{{ item.version_name }}[{{ item.version_number }}]</h4>
                     <!-- 直接解析 markdown 语法 -->
-                    <vue-markdown>{{ item.version_content }}</vue-markdown>
+                    <vue-markdown class="markdown-body">{{ item.version_content }}</vue-markdown>
                 </el-card>
             </el-timeline-item>
         </el-timeline>
@@ -18,7 +18,10 @@
 </template>
 
 <script>
+    // md解析器
     import VueMarkdown from 'vue-markdown';
+    // markdown 样式引入
+    import 'github-markdown-css';
     export default {
         components:{
             VueMarkdown
