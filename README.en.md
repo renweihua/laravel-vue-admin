@@ -3,6 +3,12 @@
 #### Description
 <a href="https://gitee.com/clown-passerby-community/laravel-vue-admin">laravel+vue-element-admin</a>
 
+![版本历史记录](public/demo/版本历史记录.png)
+
+![西班牙语](public/demo/西班牙语.png)
+
+![请求日志统计](public/demo/请求日志统计.png)
+
 #### Software Architecture
 Software architecture description
 
@@ -27,6 +33,11 @@ Software architecture description
 2.  Create Feat_xxx branch
 3.  Commit your code
 4.  Create Pull Request
+
+#### 捐助
+
+![支付宝收款码](https://images.gitee.com/uploads/images/2020/1112/091130_811b3a6c_790553.jpeg "alipay-400.jpg")
+![微信收款码](https://images.gitee.com/uploads/images/2020/1112/091305_2592a352_790553.jpeg "wechat-400-width(1).jpg")
 
 
 #### Gitee Feature
