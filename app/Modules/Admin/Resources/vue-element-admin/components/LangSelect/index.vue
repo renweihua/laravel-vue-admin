@@ -8,10 +8,10 @@
         中文
       </el-dropdown-item>
       <el-dropdown-item :disabled="language==='en'" command="en">
-        English
+        英语|English
       </el-dropdown-item>
       <el-dropdown-item :disabled="language==='es'" command="es">
-        Español
+        西班牙语|Español
       </el-dropdown-item>
       <el-dropdown-item :disabled="language==='ja'" command="ja">
         日本語

@@ -63,7 +63,7 @@ export function generaMenu(routes, data) {
         // console.log(item);
         if (item.vue_path != '/') menu.meta = {
             icon: item.vue_icon,
-            title: item.menu_name,
+            title: item.vue_name,
             id: item.menu_id
         };
 

@@ -7,7 +7,7 @@
                 </div>
                 <div class="card-panel-description">
                     <div class="card-panel-text">
-                        管理员数量
+                        {{ $t('admin') + $t('number') }}
                     </div>
                     <router-link :to="'/rabc/admins'">
                         <count-to :start-val="0" :end-val="data.admins_count" :duration="data.admins_count" class="card-panel-num"/>
@@ -22,7 +22,7 @@
                 </div>
                 <div class="card-panel-description">
                     <div class="card-panel-text">
-                        文章数量
+                        {{ $t('article') + $t('number') }}
                     </div>
                     <count-to :start-val="0" :end-val="data.articles_count" :duration="data.articles_count" class="card-panel-num"/>
                 </div>
@@ -35,7 +35,7 @@
                 </div>
                 <div class="card-panel-description">
                     <div class="card-panel-text">
-                        Banner数量
+                        {{ $t('banner') + $t('number') }}
                     </div>
                     <router-link :to="'/articles'">
                         <count-to :start-val="0" :end-val="data.banners_count" :duration="data.banners_count" class="card-panel-num"/>
@@ -50,7 +50,7 @@
                 </div>
                 <div class="card-panel-description">
                     <div class="card-panel-text">
-                        友情链接数量
+                        {{ $t('friendlinks') + $t('number') }}
                     </div>
                     <count-to :start-val="0" :end-val="data.friendlinks_count" :duration="data.friendlinks_count" class="card-panel-num"/>
                 </div>
