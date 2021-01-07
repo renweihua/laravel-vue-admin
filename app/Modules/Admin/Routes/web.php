@@ -38,6 +38,8 @@ Route::prefix('admin')->group(function() {
         Route::put('updateAdmin', 'IndexController@update');
         // 按照日志类型的统计图数据
         Route::get('logsStatistics', 'IndexController@logsStatistics');
+        // 版本的历史记录
+        Route::get('versionLogs', 'IndexController@versionLogs');
         // 月份表列表
         Route::get('get_month_lists', 'IndexController@getMonthList');
         // 文件上传

@@ -7,6 +7,7 @@ use App\Modules\Admin\Entities\Log\AdminLog;
 use App\Modules\Admin\Entities\Rabc\Admin;
 use App\Modules\Admin\Entities\System\Banner;
 use App\Modules\Admin\Entities\System\Friendlink;
+use App\Modules\Admin\Entities\System\Version;
 use Illuminate\Support\Facades\Cache;
 
 class IndexService extends BaseService
@@ -64,7 +65,7 @@ class IndexService extends BaseService
         $time_interval_key = "logs-statistics's-time-interval";
         $time_interval = Cache::get($time_interval_key, $default_time_interval);
         // 通过缓存进行读写
-        return Cache::remember('logs-statistics', $time_interval, function() use ($time_interval, $time_interval_key){
+        return Cache::remember('logs-statistics', $time_interval, function() use ($time_interval, $time_interval_key) {
             $default_data = [
                 'xAxis'      => [
                     'data' => [],
@@ -102,14 +103,11 @@ class IndexService extends BaseService
                 $default_data['xAxis']['data'][$i] = date('Y-m-d H:i', $end_time);
 
                 // $default_data['data_lists']['GET'][$i] =
-                $default_data['data_lists']['POST'][$i]
-                    = $default_data['data_lists']['PUT'][$i]
-                    = $default_data['data_lists']['DELETE'][$i]
-                    = 0;
+                $default_data['data_lists']['POST'][$i] = $default_data['data_lists']['PUT'][$i] = $default_data['data_lists']['DELETE'][$i] = 0;
 
                 if ( $list ) {
                     foreach ($list as $v) {
-                        if ($v->created_time >= $end_time && $v->created_time <= $time){
+                        if ( $v->created_time >= $end_time && $v->created_time <= $time ) {
                             $has_records = true;
                             if ( $v->log_method == 'GET' ) {
                                 // ++$default_data['data_lists']['GET'][$i];
@@ -129,7 +127,7 @@ class IndexService extends BaseService
             }
 
             // 当没有记录是，时间间隔慢慢往上扩大两倍，实现统计图效果
-            if (!$has_records){
+            if ( !$has_records ) {
                 Cache::put($time_interval_key, $time_interval * 2);
             }
 
@@ -148,9 +146,19 @@ class IndexService extends BaseService
     {
         $update['admin_name'] = $request->input('admin_name');
         $password = $request->input('password', '');
-        if (!empty($password)){
+        if ( !empty($password) ) {
             $update['password'] = $password;
         }
         return $request->user()->update($update);
+    }
+
+    /**
+     * 版本历史记录
+     *
+     * @return mixed
+     */
+    public function versionLogs()
+    {
+        return Version::getInstance()->select('version_name', 'version_number', 'version_content', 'publish_date')->orderBy('version_sort', 'ASC')->orderBy('version_id', 'ASC')->get();
     }
 }

@@ -5,7 +5,7 @@
 <script>
     import echarts from 'echarts';
     import resize from './mixins/resize';
-    import {logsStatistics, statistics} from "@/api/indexs";
+    import {logsStatistics} from "@/api/indexs";
 
     export default {
         mixins: [resize],
@@ -24,7 +24,7 @@
             },
             height: {
                 type: String,
-                default: '200px'
+                default: '150px'
             }
         },
         data() {

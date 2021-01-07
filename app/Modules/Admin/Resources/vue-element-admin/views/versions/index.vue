@@ -112,7 +112,7 @@
 </template>
 
 <script>
-    import {getList, setDel, changeFiledStatus} from '@/api/versions';
+    import {getList, setDel} from '@/api/versions';
     import waves from '@/directive/waves' // waves directive
     import Edit from './components/detail'
     import {parseTime, getFormatDate} from '@/utils/index';
@@ -148,29 +148,25 @@
         },
         methods: {
             handleDownload() {
-                this.downloadLoading = true
+                this.downloadLoading = true;
                 import('@/vendor/Export2Excel').then((excel) => {
                     const tHeader = [
                         'Id',
-                        'Banner标题',
-                        '封面',
-                        '外链（URL）',
-                        '创建时间',
-                        '启用状态'
+                        '版本名称',
+                        '版本号',
+                        '发布时间',
                     ];
                     const filterVal = [
                         'version_id',
                         'version_name',
-                        'version_cover',
-                        'version_link',
-                        'created_time',
-                        'is_check'
+                        'version_number',
+                        'publish_date',
                     ];
                     const data = this.formatJson(filterVal);
                     excel.export_json_to_excel({
                         header: tHeader,
                         data,
-                        filename: 'Banner列表-' + getFormatDate()
+                        filename: '版本列表-' + getFormatDate()
                     });
                     this.downloadLoading = false;
                 })
@@ -179,12 +175,6 @@
                 return this.list.map((v) =>
                     filterVal.map((j) => {
                         switch (j) {
-                            case 'created_time':
-                                return parseTime(v[j]);
-                                break;
-                            case 'version_cover':
-                                return v.cover.file_path;
-                                break;
                             default:
                                 return v[j];
                                 break;
@@ -212,7 +202,7 @@
                         ids = this.selectRows.map((item) => item.version_id).join();
                     } else {
                         this.$message('未选中任何行', 'error');
-                        return false
+                        return false;
                     }
                 }
 
@@ -230,7 +220,6 @@
 
                         switch (status) {
                             case 1:
-                                // this.list.splice($index, 1);
                                 this.getList();
 
                                 this.$message({
@@ -248,7 +237,7 @@
 
                     })
                     .catch(err => {
-                        console.error(err)
+                        console.error(err);
                     })
             },
             handleSizeChange(val) {
@@ -256,37 +245,22 @@
                 this.getList();
             },
             handleCurrentChange(val) {
-                this.listQuery.page = val
-                this.getList()
+                this.listQuery.page = val;
+                this.getList();
             },
             handleFilter() {
-                this.listQuery.page = 1
-                this.getList()
+                this.listQuery.page = 1;
+                this.getList();
             },
             async getList() {
-                this.listLoading = true
-                const {data} = await getList(this.listQuery)
-                this.list = data.data
-                console.log(data)
-                this.total = data.total
+                this.listLoading = true;
+                const {data} = await getList(this.listQuery);
+                this.list = data.data;
+                // console.log(data);
+                this.total = data.total;
                 setTimeout(() => {
-                    this.listLoading = false
-                }, 300)
-            },
-            // 状态变更
-            async changeStatus(row, value) {
-                const {data, msg, status} = await changeFiledStatus({
-                    'version_id': row.version_id,
-                    'change_field': 'is_check',
-                    'change_value': value
-                });
-
-                // 设置成功之后，同步到当前列表数据
-                if (status == 1) row.is_check = value;
-                this.$message({
-                    message: msg,
-                    type: status == 1 ? 'success' : 'error',
-                });
+                    this.listLoading = false;
+                }, 300);
             },
         }
     }
