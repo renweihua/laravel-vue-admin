@@ -19,6 +19,9 @@
     min-width: 500px;
 }
 // 表单 下拉框 100%宽度占比
-.el-form .el-select{
-    width: 100%;
+.el-form{
+    .el-select,
+    .el-input{
+        width: 100%;
+    }
 }

@@ -3,7 +3,7 @@
 namespace App\Modules\Admin\Http\Controllers\System;
 
 use App\Modules\Admin\Http\Controllers\BaseController;
-use App\Modules\Admin\Http\Requests\System\FriendlinkRequest;
+use App\Modules\Admin\Http\Requests\System\VersionRequest;
 use App\Modules\Admin\Services\VersionService;
 
 class VersionController extends BaseController
@@ -13,12 +13,12 @@ class VersionController extends BaseController
         $this->service = $versionService;
     }
 
-    public function create(FriendlinkRequest $request)
+    public function create(VersionRequest $request)
     {
         return $this->createService($request);
     }
 
-    public function update(FriendlinkRequest $request)
+    public function update(VersionRequest $request)
     {
         return $this->updateService($request);
     }
