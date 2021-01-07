@@ -22,6 +22,10 @@ import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
 
+// 日期格式转换
+import Moment from "moment"
+Vue.prototype.moment = Moment;
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

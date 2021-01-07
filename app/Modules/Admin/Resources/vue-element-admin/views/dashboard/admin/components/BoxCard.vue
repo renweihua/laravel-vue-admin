@@ -5,7 +5,7 @@
         </div>
         <div style="position:relative;">
             <pan-thumb :image="avatar" class="panThumb"/>
-            <mallki class-name="mallki-text" text="vue-element-admin"/>
+            <mallki class-name="mallki-text" text="小丑路人"/>
             <!-- 技能百分比 -->
             <div class="progress-item" v-for="(item, key) in skill" :style="key == 0 ? 'padding-top:35px;' : ''">
                 <span>{{item.name}}</span>

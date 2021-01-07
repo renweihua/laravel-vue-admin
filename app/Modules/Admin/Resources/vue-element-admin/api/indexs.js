@@ -24,3 +24,13 @@ export function updateAdmin(data) {
         data,
     })
 }
+
+
+// 版本历史记录
+export function versionLogs(data) {
+    return request({
+        url: '/versionLogs',
+        method: 'get',
+        data,
+    })
+}

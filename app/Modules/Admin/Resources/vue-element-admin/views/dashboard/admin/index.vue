@@ -13,14 +13,19 @@
         </el-row>
 
         <el-row :gutter="32" style="background:#fff;margin-bottom:32px;">
-            <el-col :xs="24" :sm="24" :lg="10">
+            <el-col :xs="24" :sm="24" :lg="8">
                 <div class="chart-wrapper">
                     <box-card :skill="skill"/>
                 </div>
             </el-col>
-            <el-col :xs="24" :sm="24" :lg="14">
+            <el-col :xs="24" :sm="24" :lg="8">
                 <div class="chart-wrapper">
                     <bar-chart/>
+                </div>
+            </el-col>
+            <el-col :xs="24" :sm="24" :lg="8">
+                <div class="chart-wrapper">
+                    <timeline :logs="version_logs"/>
                 </div>
             </el-col>
         </el-row>
@@ -32,13 +37,14 @@
 </template>
 
 <script>
-    import GithubCorner from '@/components/GithubCorner'
-    import PanelGroup from './components/PanelGroup'
-    import LineChart from './components/LineChart'
-    import BarChart from './components/BarChart'
-    import BoxCard from './components/BoxCard'
-    import Chart from './components/LineMarker'
-    import {statistics} from "@/api/indexs";
+    import GithubCorner from '@/components/GithubCorner';
+    import PanelGroup from './components/PanelGroup';
+    import LineChart from './components/LineChart';
+    import BarChart from './components/BarChart';
+    import BoxCard from './components/BoxCard';
+    import Chart from './components/LineMarker';
+    import Timeline from './components/Timeline';
+    import {statistics, versionLogs} from "@/api/indexs";
 
     const lineChartData = {
         newVisitis: {
@@ -67,26 +73,32 @@
             LineChart,
             BarChart,
             BoxCard,
-            Chart
+            Chart,
+            Timeline
         },
         data() {
             return {
                 lineChartData: lineChartData.newVisitis,
                 skill:[], // 技能组
                 data:{},
+                version_logs: [], // 版本记录
             }
         },
         created() {
             console.log('index-created');
+
             this.statistics();
+
+            this.versionLogs();
         },
         methods: {
+            // 统计信息
             async statistics() {
                 this.listLoading = true;
                 const {data} = await statistics();
+                this.data = data;
 
                 // console.log(data);
-                this.data = data;
                 // console.log(this.data);
 
                 // 技能
@@ -96,9 +108,14 @@
                     this.listLoading = false;
                 }, 300);
             },
+            // 版本记录
+            async versionLogs(){
+                const {data} = await versionLogs();
+                this.version_logs = data;
+            },
             handleSetLineChartData(type) {
                 this.lineChartData = lineChartData[type];
-            }
+            },
         }
     }
 </script>

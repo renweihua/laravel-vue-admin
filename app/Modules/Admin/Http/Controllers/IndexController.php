@@ -47,11 +47,22 @@ class IndexController extends BaseController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request){
-        if ($this->service->updateAdmin($request)){
+    public function update(Request $request)
+    {
+        if ( $this->service->updateAdmin($request) ) {
             return $this->successJson([], $this->service->getError());
-        }else{
+        } else {
             return $this->errorJson($this->service->getError());
         }
+    }
+
+    /**
+     * 版本历史记录
+     *
+     * @return mixed
+     */
+    public function versionLogs()
+    {
+        return $this->successJson($this->service->versionLogs());
     }
 }
