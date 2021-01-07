@@ -32,7 +32,7 @@
                 {{ $t('table.search') }}
             </el-button>
             <el-button v-waves class="filter-item" type="danger" icon="el-icon-delete" @click="handleDelete">
-                批量删除
+                {{ $t('table.batchDelete') }}
             </el-button>
         </div>
 
