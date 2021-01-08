@@ -159,6 +159,6 @@ class IndexService extends BaseService
      */
     public function versionLogs()
     {
-        return Version::getInstance()->select('version_name', 'version_number', 'version_content', 'publish_date')->orderBy('version_sort', 'ASC')->orderBy('version_id', 'ASC')->get();
+        return Version::getInstance()->select('version_name', 'version_number', 'version_content', 'publish_date')->orderBy('version_sort', 'DESC')->orderBy('publish_date', 'DESC')->orderBy('version_id', 'ASC')->get();
     }
 }
