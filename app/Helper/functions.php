@@ -1,4 +1,17 @@
 <?php
+
+if ( !function_exists('get_last_month') ) {
+    /**
+     * 是否为windows系统
+     *
+     * @return bool
+     */
+    function is_windows() : bool
+    {
+        return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? true : false;
+    }
+}
+
 if ( !function_exists('get_last_month') ) {
     /**
      * 上个月份的年月

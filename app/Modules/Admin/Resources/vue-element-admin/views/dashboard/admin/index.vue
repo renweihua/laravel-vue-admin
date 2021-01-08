@@ -4,7 +4,47 @@
 
         <panel-group @handleSetLineChartData="handleSetLineChartData" :data="data"/>
 
-        <el-row :gutter="32" style="background:#fff;margin-bottom:32px;">
+        <!-- 数据加载完毕之后，自动展示 -->
+        <h2 :style="server_data.php_os ? 'display:block' : 'display:none'"> 服务器状态信息（<span style="color: red"> 延迟 3 秒获取 </span>） </h2>
+        <el-row :gutter="32" :style="server_data.php_os ? 'display:block' : 'display:none'">
+            <el-col :xs="24" :sm="24" :lg="8">
+                <el-card shadow="never">
+                    <div slot="header">
+                        <span>CPU使用率（%）</span>
+                        <p v-if="server_data.system == 1">
+                            <small style="color: red;"> windows系统，CPU获取极为不准确！ </small>
+                        </p>
+                    </div>
+                    <pie-chart select_type="cpu" :server_data="server_data"/>
+                </el-card>
+            </el-col>
+            <el-col :xs="24" :sm="24" :lg="8">
+                <el-card shadow="never">
+                    <div slot="header">
+                        <span>磁盘使用率（G）</span>
+                        <p v-if="server_data.disk_info">
+                            <span>共计：</span>
+                            <small style="color: green;"> {{ server_data.disk_info.total }} G </small>
+                        </p>
+                    </div>
+                    <pie-chart select_type="disk" :server_data="server_data"/>
+                </el-card>
+            </el-col>
+            <el-col :xs="24" :sm="24" :lg="8">
+                <el-card shadow="never">
+                    <div slot="header">
+                        <span>内存使用率（MB）</span>
+                        <p v-if="server_data.memory_info">
+                            <span>共计：</span>
+                            <small style="color: blue;"> {{ server_data.memory_info.total }} MB </small>
+                        </p>
+                    </div>
+                    <pie-chart select_type="memory" :server_data="server_data"/>
+                </el-card>
+            </el-col>
+        </el-row>
+
+        <el-row :gutter="32" style="background:#fff;">
             <el-col :xs="24" :sm="24" :lg="24">
                 <div class="chart-wrapper chart-container">
                     <chart height="100%" width="100%" />
@@ -30,7 +70,7 @@
             </el-col>
         </el-row>
 
-        <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+        <el-row style="background:#fff;padding:16px 16px 0;">
             <line-chart :chart-data="lineChartData"/>
         </el-row>
     </div>
@@ -44,7 +84,8 @@
     import BoxCard from './components/BoxCard';
     import Chart from './components/LineMarker';
     import Timeline from './components/Timeline';
-    import {statistics, versionLogs} from "@/api/indexs";
+    import PieChart from './components/PieChart';
+    import {statistics, versionLogs, getServerStatus} from "@/api/indexs";
 
     const lineChartData = {
         newVisitis: {
@@ -74,7 +115,15 @@
             BarChart,
             BoxCard,
             Chart,
-            Timeline
+            Timeline,
+            PieChart,
+        },
+        // 监听
+        watch: {
+            //当  属性的值发生改变时会执行下面的代码
+            server_data: function (newValue, oldValue) {
+                this.server_data = newValue;
+            },
         },
         data() {
             return {
@@ -82,17 +131,26 @@
                 skill:[], // 技能组
                 data:{},
                 version_logs: [], // 版本记录
+                server_data: {}, // 服务器状态信息
             }
         },
         created() {
             console.log('index-created');
 
+            // 首页 - 统计信息
             this.statistics();
 
+            // 版本记录
             this.versionLogs();
+
+            // 服务器状态信息
+            setTimeout(() => {
+                this.getServerStatus();
+                this.timedRequestServerStatus();
+            }, 3000);
         },
         methods: {
-            // 统计信息
+            // 首页 - 统计信息
             async statistics() {
                 this.listLoading = true;
                 const {data} = await statistics();
@@ -113,6 +171,19 @@
                 const {data} = await versionLogs();
                 this.version_logs = data;
             },
+            // 服务器状态信息
+            async getServerStatus(){
+                const {data} = await getServerStatus();
+                this.server_data = data;
+                console.log(this.server_data);
+            },
+            // 定时：服务器状态信息
+            timedRequestServerStatus(){
+                // 定时多少秒触发一次：默认60秒【服务器状态信息】
+                window.setInterval(() => {
+                    setTimeout(this.getServerStatus, 0);
+                }, 1000 * 60);
+            },
             handleSetLineChartData(type) {
                 this.lineChartData = lineChartData[type];
             },
@@ -125,6 +196,10 @@
         padding: 32px;
         background-color: rgb(240, 242, 245);
         position: relative;
+
+        .el-row{
+            margin-bottom:30px;
+        }
 
         .github-corner {
             position: absolute;

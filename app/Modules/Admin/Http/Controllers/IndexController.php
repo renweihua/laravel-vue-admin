@@ -65,4 +65,14 @@ class IndexController extends BaseController
     {
         return $this->successJson($this->service->versionLogs());
     }
+
+    /**
+     * 获取服务器状态
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getServerStatus()
+    {
+        return $this->successJson($this->service->getServerStatus());
+    }
 }

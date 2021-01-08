@@ -25,12 +25,18 @@ export function updateAdmin(data) {
     })
 }
 
-
 // 版本历史记录
-export function versionLogs(data) {
+export function versionLogs() {
     return request({
         url: '/versionLogs',
         method: 'get',
-        data,
+    })
+}
+
+// 服务器状态
+export function getServerStatus() {
+    return request({
+        url: '/getServerStatus',
+        method: 'get',
     })
 }
