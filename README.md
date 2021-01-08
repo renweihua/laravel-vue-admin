@@ -3,6 +3,8 @@
 #### 介绍
 <a href="https://gitee.com/clown-passerby-community/laravel-vue-admin">laravel+vue-element-admin</a>
 
+![首页](public/demo/home.png)
+
 ![版本历史记录](public/demo/版本历史记录.png)
 
 ![西班牙语](public/demo/西班牙语.png)

@@ -5,7 +5,7 @@
         <panel-group @handleSetLineChartData="handleSetLineChartData" :data="data"/>
 
         <!-- 数据加载完毕之后，自动展示 -->
-        <h2 :style="server_data.php_os ? 'display:block' : 'display:none'"> 服务器状态信息（<span style="color: red"> 延迟 3 秒获取 </span>） </h2>
+        <h2 :style="server_data.php_os ? 'display:block' : 'display:none'"> 服务器状态信息 </h2>
         <el-row :gutter="32" :style="server_data.php_os ? 'display:block' : 'display:none'">
             <el-col :xs="24" :sm="24" :lg="8">
                 <el-card shadow="never">
@@ -44,35 +44,48 @@
             </el-col>
         </el-row>
 
-        <el-row :gutter="32" style="background:#fff;">
-            <el-col :xs="24" :sm="24" :lg="24">
-                <div class="chart-wrapper chart-container">
-                    <chart height="100%" width="100%" />
-                </div>
-            </el-col>
-        </el-row>
-
-        <el-row :gutter="32" style="background:#fff;margin-bottom:32px;">
-            <el-col :xs="24" :sm="24" :lg="8">
-                <div class="chart-wrapper">
+        <el-row :gutter="32" style="margin-bottom:32px;">
+            <el-col :xs="24" :sm="24" :lg="10">
+                <el-card shadow="never">
+                    <div slot="header">
+                        <span>技能</span>
+                    </div>
                     <box-card :skill="skill"/>
-                </div>
+                </el-card>
             </el-col>
+            <!--
             <el-col :xs="24" :sm="24" :lg="8">
                 <div class="chart-wrapper">
                     <bar-chart/>
                 </div>
             </el-col>
-            <el-col :xs="24" :sm="24" :lg="8">
-                <div class="chart-wrapper">
+            -->
+            <el-col :xs="24" :sm="24" :lg="14">
+                <el-card shadow="never">
+                    <div slot="header">
+                        <span>版本历史记录</span>
+                    </div>
                     <timeline :logs="version_logs"/>
-                </div>
+                </el-card>
             </el-col>
         </el-row>
 
+        <el-row :gutter="32">
+            <el-col :xs="24" :sm="24" :lg="24">
+                <el-card shadow="never">
+                    <div slot="header">
+                        <span>请求日志统计</span>
+                    </div>
+                    <chart height="400px" width="100%" />
+                </el-card>
+            </el-col>
+        </el-row>
+
+        <!--
         <el-row style="background:#fff;padding:16px 16px 0;">
             <line-chart :chart-data="lineChartData"/>
         </el-row>
+        -->
     </div>
 </template>
 
