@@ -45,4 +45,15 @@ class ConfigController extends BaseController
             'config_type_list' => $config_type_list,
         ]);
     }
+
+    /**
+     * 同步配置
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function pushRefreshConfig()
+    {
+        $this->service->pushRefreshConfig();
+        return $this->successJson([], '配置文件已同步成功！');
+    }
 }

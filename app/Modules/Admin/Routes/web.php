@@ -66,6 +66,7 @@ Route::prefix('admin')->group(function() {
                 Route::delete('/delete', 'System\ConfigController@delete');
                 Route::put('/changeFiledStatus', 'System\ConfigController@changeFiledStatus');
                 Route::get('/getConfigGroupType', 'System\ConfigController@getConfigGroupType')->withoutMiddleware([CheckRabc::class]);
+                Route::put('/pushRefreshConfig', 'System\ConfigController@pushRefreshConfig');
             });
 
             // 友情链接

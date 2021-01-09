@@ -36,11 +36,21 @@
                 v-waves
                 :loading="downloadLoading"
                 class="filter-item"
-                type="primary"
+                type="success"
                 icon="el-icon-download"
                 @click="handleDownload"
             >
                 {{ $t('table.export') }}
+            </el-button>
+            <el-button
+                v-waves
+                :loading="downloadLoading"
+                class="filter-item"
+                type="warning"
+                icon="el-icon-refresh"
+                @click="pushRefresh"
+            >
+                同步配置文件
             </el-button>
         </div>
 
@@ -153,7 +163,7 @@
 </template>
 
 <script>
-    import {getList, setDel, changeFiledStatus} from '@/api/configs'
+    import {getList, setDel, changeFiledStatus, pushRefreshConfig} from '@/api/configs'
     import waves from '@/directive/waves' // waves directive
     import {parseTime} from '@/utils/index';
 
@@ -376,6 +386,20 @@
                     message: msg,
                     type: status == 1 ? 'success' : 'error',
                 });
+            },
+            // 同步配置到文件中
+            async pushRefresh() {
+                this.listLoading = true;
+                const {msg, status} = await pushRefreshConfig();
+
+                this.$message({
+                    message: msg,
+                    type: status == 1 ? 'success' : 'error',
+                });
+
+                setTimeout(() => {
+                    this.listLoading = false;
+                }, 300);
             },
         }
     }

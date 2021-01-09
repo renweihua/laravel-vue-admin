@@ -8,6 +8,7 @@ export function getList(query) {
     })
 }
 
+// 获取配置分组与配置类型
 export function getConfigGroupType() {
     return request({
         url: '/configs/getConfigGroupType',
@@ -52,5 +53,13 @@ export function changeFiledStatus(data) {
         url: '/configs/changeFiledStatus',
         method: 'put',
         data
+    })
+}
+
+// 同步配置文件
+export function pushRefreshConfig() {
+    return request({
+        url: '/configs/pushRefreshConfig',
+        method: 'put',
     })
 }
