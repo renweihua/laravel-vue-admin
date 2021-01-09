@@ -10,7 +10,7 @@
 
             <div class="createPost-main-container">
                 <el-form-item prop="article_title" label="文章标题">
-                    <MDinput v-model="postForm.article_title" :maxlength="100" name="name" required>
+                    <MDinput v-model="postForm.article_title" :maxlength="100" required>
                         Title
                     </MDinput>
                 </el-form-item>

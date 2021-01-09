@@ -2,7 +2,7 @@
     <el-dialog
             :title="title"
             :visible.sync="dialogFormVisible"
-            width="500px"
+            width="800px"
             @close="close"
     >
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
