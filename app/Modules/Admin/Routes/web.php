@@ -40,6 +40,8 @@ Route::prefix('admin')->group(function() {
         Route::get('logsStatistics', 'IndexController@logsStatistics');
         // 版本的历史记录
         Route::get('versionLogs', 'IndexController@versionLogs');
+        // 获取服务器状态
+        Route::get('getServerStatus', 'IndexController@getServerStatus');
         // 月份表列表
         Route::get('get_month_lists', 'IndexController@getMonthList');
         // 文件上传

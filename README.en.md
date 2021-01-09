@@ -3,11 +3,13 @@
 #### Description
 <a href="https://gitee.com/clown-passerby-community/laravel-vue-admin">laravel+vue-element-admin</a>
 
-![版本历史记录](public/demo/版本历史记录.png)
+![Home](public/demo/home.png)
 
-![西班牙语](public/demo/西班牙语.png)
+![Version history](public/demo/版本历史记录.png)
 
-![请求日志统计](public/demo/请求日志统计.png)
+![Spanish](public/demo/西班牙语.png)
+
+![Request log statistics](public/demo/请求日志统计.png)
 
 #### Software Architecture
 Software architecture description

@@ -2,6 +2,7 @@
 
 namespace App\Modules\Admin\Services;
 
+use App\Library\SystemInfo;
 use App\Modules\Admin\Entities\Article\Article;
 use App\Modules\Admin\Entities\Log\AdminLog;
 use App\Modules\Admin\Entities\Rabc\Admin;
@@ -159,6 +160,70 @@ class IndexService extends BaseService
      */
     public function versionLogs()
     {
-        return Version::getInstance()->select('version_name', 'version_number', 'version_content', 'publish_date')->orderBy('version_sort', 'ASC')->orderBy('version_id', 'ASC')->get();
+        return Version::getInstance()->select('version_name', 'version_number', 'version_content', 'publish_date')->orderBy('version_sort', 'DESC')->orderBy('publish_date', 'DESC')->orderBy('version_id', 'ASC')->get();
+    }
+
+    /**
+     * 获取服务器状态信息
+     *
+     * @return array
+     */
+    public function getServerStatus()
+    {
+        $systemInfo = new SystemInfo;
+        $disk_info = $systemInfo->getDisk();
+        $disk = [
+            'chart_legend' => ['used', 'free'],
+            'chart_series' => [
+                [
+                    'name' => 'used',
+                    'value' => $disk_info['used'],
+                ],
+                [
+                    'name' => 'free',
+                    'value' => $disk_info['free'],
+                ],
+            ],
+        ];
+
+
+        $memory_info = $systemInfo->getMemory();
+        $memory = [
+            'chart_legend' => ['used', 'free'],
+            'chart_series' => [
+                [
+                    'name' => 'used',
+                    'value' => $memory_info['used'],
+                ],
+                [
+                    'name' => 'free',
+                    'value' => $memory_info['free'],
+                ],
+            ],
+        ];
+
+        $cpu_info = $systemInfo->getCpu();
+        $cpu = [
+            'chart_legend' => ['used', 'free'],
+            'chart_series' => [
+                [
+                    'name' => 'used',
+                    'value' => $cpu_info['usage_ratio'],
+                ],
+                [
+                    'name' => 'free',
+                    'value' => 100 - $cpu_info['usage_ratio'],
+                ],
+            ],
+        ];
+        return [
+            'php_os' => PHP_OS, // 服务器系统
+            'system' => is_windows() ? 1 : 0, // 1.windows;0.Linux
+            'disk' => $disk, // chart数据
+            'disk_info' => $disk_info, // 默认数据
+            'memory' => $memory,
+            'memory_info' => $memory_info, // 默认数据
+            'cpu' => $cpu,
+        ];
     }
 }
