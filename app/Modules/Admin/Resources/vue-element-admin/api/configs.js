@@ -8,6 +8,13 @@ export function getList(query) {
     })
 }
 
+export function getConfigGroupType() {
+    return request({
+        url: '/configs/getConfigGroupType',
+        method: 'get',
+    })
+}
+
 export function detail(id) {
     return request({
         url: '/configs/detail',

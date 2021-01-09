@@ -22,4 +22,27 @@ class ConfigController extends BaseController
     {
         return $this->updateService($request);
     }
+
+    public function getConfigGroupType()
+    {
+        $config_type_list = $config_group_list = [];
+        $config_group = cnpscy_config('config_group_list');
+        foreach ($config_group as $key => $value){
+            $config_group_list[] = [
+                'value' =>  $key,
+                'name' =>  $value,
+            ];
+        }
+        $config_type = cnpscy_config('config_type_list');
+        foreach ($config_type as $key => $value){
+            $config_type_list[] = [
+                'value' =>  $key,
+                'name' =>  $value,
+            ];
+        }
+        return $this->successJson([
+            'config_group_list' => $config_group_list,
+            'config_type_list' => $config_type_list,
+        ]);
+    }
 }

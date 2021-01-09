@@ -60,10 +60,12 @@ Route::prefix('admin')->group(function() {
             // 配置管理
             Route::prefix('configs')->group(function() {
                 Route::get('/', 'System\ConfigController@index');
+                Route::get('/detail', 'System\ConfigController@detail');
                 Route::post('/create', 'System\ConfigController@create');
                 Route::put('/update', 'System\ConfigController@update');
                 Route::delete('/delete', 'System\ConfigController@delete');
                 Route::put('/changeFiledStatus', 'System\ConfigController@changeFiledStatus');
+                Route::get('/getConfigGroupType', 'System\ConfigController@getConfigGroupType')->withoutMiddleware([CheckRabc::class]);
             });
 
             // 友情链接
