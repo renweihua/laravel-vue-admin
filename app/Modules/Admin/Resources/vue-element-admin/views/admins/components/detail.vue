@@ -56,14 +56,17 @@
                 </span>
             </el-form-item>
             <el-form-item label="授权角色：" prop="role_id" v-if="form.admin_id != 1">
-                <el-radio-group >
-                    <el-checkbox v-for="(role, index) in roles"
-                                 :key="index"
-                                 @change="selectRoles(index, role.role_id)"
-                                 :label="role.role_id"
-                                 :checked="form.role_ids.indexOf(role.role_id) == -1 ? false : true"
-                    >{{ role.role_name }}</el-checkbox>
-                </el-radio-group>
+                <el-select
+                    v-model="form.role_ids"
+                    multiple
+                    placeholder="请选择">
+                    <el-option
+                        v-for="role in roles"
+                        :key="role.role_id"
+                        :label="role.role_name"
+                        :value="role.role_id">
+                    </el-option>
+                </el-select>
             </el-form-item>
             <el-form-item label="授权角色：" prop="role_id" v-else>
                 <span class="danger-text">超管无需设置角色</span>
@@ -163,14 +166,6 @@
             async getRolesSelect() {
                 const res = await getRolesSelect();
                 this.roles = res.data;
-            },
-            // 管理员授权角色
-            selectRoles(index, role_id){
-                if (this.form.role_ids.indexOf(role_id) == -1){
-                    this.form.role_ids.push(role_id);
-                }else{
-                    this.form.role_ids.splice(this.form.role_ids.indexOf(role_id), 1);
-                }
             },
             toggleShow() {
                 this.show = !this.show
