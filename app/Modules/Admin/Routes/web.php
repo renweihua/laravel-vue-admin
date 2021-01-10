@@ -16,8 +16,7 @@ use App\Modules\Admin\Http\Middleware\CheckAuth;
 use App\Modules\Admin\Http\Middleware\CheckRabc;
 use App\Modules\Admin\Http\Middleware\AdminLog;
 
-Route::middleware([\App\Modules\Admin\Http\Middleware\ConvertEmptyStringsToNull::class])
-    ->prefix('admin')
+Route::prefix('admin')
     ->group(function() {
 //    Route::get('/', 'AdminController@index');
     //后台管理路由
@@ -142,6 +141,15 @@ Route::middleware([\App\Modules\Admin\Http\Middleware\ConvertEmptyStringsToNull:
                 Route::delete('/delete', 'Article\ArticleCategoryController@delete');
                 Route::get('/getSelectLists', 'Article\ArticleCategoryController@getSelectLists');
                 Route::put('/changeFiledStatus', 'Article\ArticleCategoryController@changeFiledStatus');
+            });
+
+            // 文章标签
+            Route::prefix('article_labels')->group(function() {
+                Route::get('/', 'Article\ArticleLabelController@index');
+                Route::post('/create', 'Article\ArticleLabelController@create');
+                Route::put('/update', 'Article\ArticleLabelController@update');
+                Route::delete('/delete', 'Article\ArticleLabelController@delete');
+                Route::get('/getSelectLists', 'Article\ArticleLabelController@getSelectLists');
             });
 
             // 文章管理

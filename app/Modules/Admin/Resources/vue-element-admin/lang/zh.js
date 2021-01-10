@@ -2,8 +2,11 @@ export default {
     admin: '管理员',
     banner: 'Banner',
     article: '文章',
+    friendlinks: '友情链接',
     number: '数量',
     route: {
+        articleLabels: '文章标签',
+        articleLabelDetail: '标签详情',
         systemSettings: '系统设置',
         bannerManage: 'Banner管理',
         permissionManage: '权限管理',
