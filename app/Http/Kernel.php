@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\ConvertEmptyStringsToNull;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -20,8 +21,12 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
+
         // 空字符串自动转换为null的中间件
         // \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+
+        // 自定义的：空字符串自动转换为null的中间件
+        ConvertEmptyStringsToNull::class,
     ];
 
     /**
