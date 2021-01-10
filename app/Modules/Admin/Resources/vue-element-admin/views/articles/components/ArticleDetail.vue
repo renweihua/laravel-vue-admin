@@ -123,6 +123,7 @@
 
     import {detail, create, update} from '@/api/articles'
     import {getCategorySelect} from "@/api/article_categories";
+    import {getArticleLabelSelect} from "@/api/article_labels";
 
     const defaultForm = {
         article_id: 0,
@@ -204,6 +205,7 @@
                 borderRadius:'initial',
 
                 category:[], // 分类
+                labels: [], // 标签
             }
         },
         computed: {
@@ -231,8 +233,14 @@
             this.upload_url = getUploadUrl();
             // 文章分类列表
             this.getCategorySelect();
+            // 文章标签列表
         },
         methods: {
+            // 获取文章标签列表
+            async getArticleLabelSelect(){
+                const res = await getArticleLabelSelect();
+                this.labels = res.data;
+            },
             // 获取菜单列表
             async getCategorySelect() {
                 const res = await getCategorySelect();

@@ -1,5 +1,13 @@
 import request from '@/utils/request'
 
+export function getArticleLabelSelect(params) {
+    return request({
+        url: '/admins/article_labels',
+        method: 'get',
+        params
+    });
+}
+
 export function getList(params) {
     return request({
         url: '/article_labels',
