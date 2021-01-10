@@ -16,7 +16,9 @@ use App\Modules\Admin\Http\Middleware\CheckAuth;
 use App\Modules\Admin\Http\Middleware\CheckRabc;
 use App\Modules\Admin\Http\Middleware\AdminLog;
 
-Route::prefix('admin')->group(function() {
+Route::middleware([\App\Modules\Admin\Http\Middleware\ConvertEmptyStringsToNull::class])
+    ->prefix('admin')
+    ->group(function() {
 //    Route::get('/', 'AdminController@index');
     //后台管理路由
     Route::get('/', function(){
