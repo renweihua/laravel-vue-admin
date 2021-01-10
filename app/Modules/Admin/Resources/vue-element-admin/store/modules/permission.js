@@ -57,7 +57,7 @@ export function generaMenu(routes, data) {
             path: item.vue_path,
             component: (item.vue_component === 'Layout') ? Layout : (resolve) => require([`@/views/${item.vue_component}`], resolve),
             children: [],
-            // name: item.vue_name,
+            name: item.vue_name,
         };
 
         // console.log(item);
