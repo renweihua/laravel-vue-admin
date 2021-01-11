@@ -297,7 +297,6 @@
             handleEdit(row) {
                 var query = {};
                 if (row.config_id) query.config_id = row.config_id;
-                console.log(query);
                 this.$router.push({
                     'path':`/configs/detail`,
                     'query': query,
@@ -367,7 +366,6 @@
                 this.listLoading = true
                 const {data} = await getList(this.queryForm)
                 this.list = data.data
-                console.log(data)
                 this.total = data.total
                 setTimeout(() => {
                     this.listLoading = false

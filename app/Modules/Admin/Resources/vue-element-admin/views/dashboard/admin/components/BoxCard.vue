@@ -55,7 +55,7 @@
             }
         },
         created() {
-            console.log(this.skill);
+
         },
         computed: {
             ...mapGetters([

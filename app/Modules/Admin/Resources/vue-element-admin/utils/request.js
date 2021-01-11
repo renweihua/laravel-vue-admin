@@ -8,13 +8,13 @@ import {
     getToken
 } from '@/utils/auth';
 
-console.log(process);
-console.log(process.env);
-console.log(process.env.VUE_APP_BASE_API);
+// console.log(process);
+// console.log(process.env);
+// console.log(process.env.VUE_APP_BASE_API);
 
 // process失效了，默认为当前URL为请求地址
 process.env.VUE_APP_BASE_API = window.location.origin + window.location.pathname;
-console.log(process.env.VUE_APP_BASE_API);
+// console.log(process.env.VUE_APP_BASE_API);
 
 // create an axios instance
 const service = axios.create({
@@ -97,8 +97,6 @@ service.interceptors.response.use(
     },
     error => {
         console.log('err' + error); // for debug
-        console.log(error);
-        console.log(error.response); // for debug
         let msg = error.msg;
         if (error.response == undefined){
             msg = '超时 5000ms，请刷新！';

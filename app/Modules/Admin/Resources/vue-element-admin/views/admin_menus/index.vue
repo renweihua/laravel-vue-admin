@@ -171,7 +171,6 @@
             async getMenus() {
                 this.listLoading = true;
                 const {data} = await getMenus();
-                console.log(data);
 
                 this.list = data;
                 setTimeout(() => {

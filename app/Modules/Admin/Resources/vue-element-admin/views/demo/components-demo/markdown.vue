@@ -85,7 +85,6 @@ export default {
   methods: {
     getHtml() {
       this.html = this.$refs.markdownEditor.getHtml()
-      console.log(this.html)
     }
   }
 }

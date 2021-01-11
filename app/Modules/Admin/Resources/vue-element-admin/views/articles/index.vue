@@ -269,7 +269,6 @@
                 this.listLoading = true;
                 const {data} = await getList(this.listQuery);
                 this.list = data.data;
-                console.log(data)
                 this.total = data.total;
                 this.listQuery.page = parseInt(data.current_page) + 1;
                 this.listQuery.limit = data.per_page || 10;
@@ -334,7 +333,6 @@
             handleEdit(row) {
                 var query = {};
                 if (row.article_id) query.article_id = row.article_id;
-                console.log(query);
                 this.$router.push({
                     'path':`/articles/detail`,
                     'query': query,

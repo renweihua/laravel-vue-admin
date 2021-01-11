@@ -48,7 +48,6 @@ export function filterAsyncRoutes(routes, roles) {
  * @param routes
  */
 export function generaMenu(routes, data) {
-    // console.log('generaMenu');
     data.forEach(item => {
         // 如果不存在路由页面，那么不追究到路由中
         if (item.vue_component.length <= 0) return;
@@ -60,7 +59,6 @@ export function generaMenu(routes, data) {
             name: item.vue_name,
         };
 
-        // console.log(item);
         if (item.vue_path != '/') menu.meta = {
             icon: item.vue_icon,
             title: item.vue_name,
@@ -104,13 +102,9 @@ const actions = {
                 const {
                     data
                 } = response;
-                // console.log(data);
 
                 var pushRouter = [];
                 generaMenu(pushRouter, data);
-                // console.log('---pushRouter---');
-                // console.log(pushRouter);
-                // console.log('---pushRouter---');
                 commit('SET_ROUTES', pushRouter);
                 resolve(pushRouter);
             }).catch(error => {

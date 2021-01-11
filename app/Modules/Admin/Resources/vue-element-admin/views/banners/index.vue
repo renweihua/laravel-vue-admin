@@ -320,7 +320,6 @@
                 this.listLoading = true
                 const {data} = await getList(this.listQuery)
                 this.list = data.data
-                console.log(data)
                 this.total = data.total
                 setTimeout(() => {
                     this.listLoading = false

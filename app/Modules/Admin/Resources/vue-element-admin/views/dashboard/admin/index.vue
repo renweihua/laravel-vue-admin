@@ -148,8 +148,6 @@
             }
         },
         created() {
-            console.log('index-created');
-
             // 首页 - 统计信息
             this.statistics();
 
@@ -169,9 +167,6 @@
                 const {data} = await statistics();
                 this.data = data;
 
-                // console.log(data);
-                // console.log(this.data);
-
                 // 技能
                 this.skill = data.skill;
 
@@ -188,7 +183,6 @@
             async getServerStatus(){
                 const {data} = await getServerStatus();
                 this.server_data = data;
-                console.log(this.server_data);
             },
             // 定时：服务器状态信息
             timedRequestServerStatus(){

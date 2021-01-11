@@ -17,7 +17,6 @@ export function create(data) {
 }
 
 export function update(data) {
-    console.log(data)
     return request({
         url: '/friendlinks/update',
         method: 'put',

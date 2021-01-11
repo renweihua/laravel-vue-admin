@@ -93,7 +93,6 @@
                     this.title = '编辑';
                     this.form = Object.assign(this.form, detail);
                 }
-                console.log(this.form);
                 this.dialogFormVisible = true
             },
             close() {
@@ -103,7 +102,6 @@
             },
             save() {
                 this.$refs['form'].validate(async (valid) => {
-                    console.log(valid);
                     if (valid) {
                         const {msg, status} = this.form.version_id ? await update(this.form) : await create(this.form);
                         this.$message({

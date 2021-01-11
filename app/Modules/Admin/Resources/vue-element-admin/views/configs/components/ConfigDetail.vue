@@ -205,8 +205,6 @@
             },
         },
         created() {
-            console.log('Article-detail');
-            console.log(this.$route);
             if (this.isEdit) {
                 const config_id = this.$route.query && this.$route.query.config_id;
                 if (config_id > 0) this.getDetail(config_id);
@@ -225,14 +223,12 @@
             // 获取 配置分组与类型
             async getConfigGroupType(){
                 const {data} = await getConfigGroupType();
-                console.log(data);
                 this.config_group_list = data.config_group_list;
                 this.config_type_list = data.config_type_list;
             },
             // 获取文章详情
             getDetail(config_id) {
                 detail(config_id).then(response => {
-                    console.log(response);
 
                     this.postForm = response.data;
                     // 默认展示的封面图、文本、数字、富文本
@@ -252,7 +248,6 @@
                 document.title = `${title} - ${this.postForm.config_id}`;
             },
             submitForm() {
-                // console.log(this.postForm);
                 this.$refs.postForm.validate(async valid => {
                     if (valid) {
                         this.loading = true;
@@ -299,7 +294,7 @@
                 })
             },
             cropSuccess(imgDataUrl, field) {
-                console.log('-------- crop success --------', imgDataUrl, field);
+                // console.log('-------- crop success --------', imgDataUrl, field);
             },
             // 上传成功回调
             cropUploadSuccess(result, field) {
