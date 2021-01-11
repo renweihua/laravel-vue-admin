@@ -13,9 +13,7 @@ class ArticleCategoryService extends BaseService
 
     public function lists(array $params) : array
     {
-        $lists = $this->model->orderBy('category_sort', 'ASC')->get();
-
-        return list_to_tree($lists->toArray(), 'category_id');
+        return $this->model->getSelectLists();
     }
 
     public function getSelectLists($request)

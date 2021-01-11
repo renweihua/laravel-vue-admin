@@ -16,8 +16,6 @@
                 </el-form-item>
 
                 <el-form-item label="文章分类">
-                    {{postForm.category_id}}
-                    {{this.checkCategories}}
                     <el-select
                         v-model="postForm.category_id"
                         clearable
@@ -263,7 +261,7 @@
                                 }
                             });
                         }catch (e) {
-                            console.log(e);
+                            // console.log(e);
                         }
                     });
                 });

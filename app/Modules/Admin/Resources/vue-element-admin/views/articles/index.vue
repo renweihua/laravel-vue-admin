@@ -8,6 +8,26 @@
                 class="filter-item"
                 @keyup.enter.native="handleFilter"
             />
+
+            <el-select
+                class="filter-item"
+                v-model="listQuery.category_id"
+                clearable
+                :placeholder="select_category_name"
+                @clear="handleClear"
+                ref="selectUpCategoryId"
+            >
+                <el-option hidden key="CategoryId" :value="listQuery.category_id" :label="select_category_name"></el-option>
+                <el-tree
+                    :data="category"
+                    :props="defaultProps"
+                    :expand-on-click-node="false"
+                    :check-on-click-node="true"
+                    @node-click="handleNodeClick"
+                >
+                </el-tree>
+            </el-select>
+
             <el-select v-model="listQuery.is_check" placeholder="请选择启用状态" clearable class="filter-item">
                 <el-option
                     v-for="item in calendarCheckOptions"
@@ -17,6 +37,7 @@
                     :value="item.key"
                 />
             </el-select>
+
             <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
                 {{ $t('table.search') }}
             </el-button>
@@ -25,7 +46,6 @@
             </el-button>
             <el-button
                 class="filter-item"
-                style="margin-left: 10px;"
                 type="primary"
                 icon="el-icon-plus"
                 @click="handleEdit"
@@ -177,9 +197,10 @@
 
 <script>
     import {getList, setDel, changeFiledStatus} from '@/api/articles';
+    import {getCategorySelect} from "@/api/article_categories"; // waves directive
     import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
     import waves from '@/directive/waves';
-    import {getFormatDate, parseTime} from "@/utils"; // waves directive
+    import {getFormatDate, parseTime} from "@/utils";
 
     const calendarCheckOptions = [
         {key: '-1', display_name: '全部'},
@@ -215,21 +236,35 @@
                 total: 0,
                 listLoading: true,
                 listQuery: {
+                    search: '',
+                    is_check: -1,
+                    category_id: -1,
                     page: 1,
                     limit: 20,
                 },
                 downloadLoading: false,
                 calendarCheckOptions,
+
+                category:[], // 分类
+                select_category_name: '请选择文章分类',
+                defaultProps: {
+                    children: '_child',
+                    label: 'category_name'
+                },
             }
         },
         created() {
+            // 文章列表
             this.getList();
+            // 文章分类列表
+            this.getCategorySelect();
         },
         methods: {
             handleFilter() {
                 this.listQuery.page = 1;
                 this.getList();
             },
+            // 文章列表
             async getList() {
                 this.listLoading = true;
                 const {data} = await getList(this.listQuery);
@@ -241,6 +276,26 @@
                 setTimeout(() => {
                     this.listLoading = false;
                 }, 300);
+            },
+            // 获取文章分类列表
+            async getCategorySelect() {
+                const res = await getCategorySelect();
+                this.category = res.data;
+            },
+            // 节点点击事件
+            handleNodeClick(data) {
+                // 这里主要配置树形组件点击节点后，设置选择器的值；自己配置的数据，仅供参考
+                this.select_category_name = data.category_name;
+                this.listQuery.category_id = data.category_id;
+
+                // 选择器执行完成后，使其失去焦点隐藏下拉框的效果
+                this.$refs.selectUpCategoryId.blur();
+            },
+            // 选择器配置可以清空选项，用户点击清空按钮时触发
+            handleClear() {
+                // 将选择器的值置空
+                this.select_category_name = '请选择文章分类';
+                this.listQuery.category_id = -1;
             },
             handleDelete(row) {
                 var ids = '';
@@ -285,6 +340,23 @@
                     'query': query,
                 });
             },
+            // 状态变更
+            async changeStatus(row, value, filed) {
+                const {data, msg, status} = await changeFiledStatus({
+                    'article_id': row.article_id,
+                    'change_field': filed,
+                    'change_value': value
+                });
+
+                // 设置成功之后，同步到当前列表数据
+                if (status == 1){
+                    row[filed] = value;
+                }
+                this.$message({
+                    message: msg,
+                    type: status == 1 ? 'success' : 'error',
+                });
+            },
             // 下载
             handleDownload() {
                 this.downloadLoading = true
@@ -326,23 +398,6 @@
                         }
                     })
                 )
-            },
-            // 状态变更
-            async changeStatus(row, value, filed) {
-                const {data, msg, status} = await changeFiledStatus({
-                    'article_id': row.article_id,
-                    'change_field': filed,
-                    'change_value': value
-                });
-
-                // 设置成功之后，同步到当前列表数据
-                if (status == 1){
-                    row[filed] = value;
-                }
-                this.$message({
-                    message: msg,
-                    type: status == 1 ? 'success' : 'error',
-                });
             },
         }
     }
