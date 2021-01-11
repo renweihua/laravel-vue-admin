@@ -68,6 +68,7 @@
                 show-overflow-tooltip
                 prop="config_id"
                 label="Id"
+                align="center"
             />
 
             <el-table-column

@@ -57,6 +57,7 @@
                     show-overflow-tooltip
                     prop="link_id"
                     label="Id"
+                    align="center"
             />
             <el-table-column
                     show-overflow-tooltip

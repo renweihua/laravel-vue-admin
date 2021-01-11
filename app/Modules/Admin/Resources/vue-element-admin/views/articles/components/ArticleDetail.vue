@@ -15,7 +15,7 @@
                     </MDinput>
                 </el-form-item>
 
-                <el-form-item label="父级菜单">
+                <el-form-item label="文章分类">
                     <el-select v-model="postForm.category_id" placeholder="请选择文章分类" autocomplete="off" class="article-textarea">
                         <el-option
                             v-for="item in category"
@@ -23,6 +23,17 @@
                             :checked="item.category_id == postForm.category_id"
                             :label="item.category_name"
                             :value="item.category_id"
+                        />
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item label="文章标签">
+                    <el-select v-model="postForm.label_ids" placeholder="请选择文章标签" multiple>
+                        <el-option
+                            v-for="item in labels"
+                            :key="item.label_id"
+                            :label="item.label_name"
+                            :value="item.label_id"
                         />
                     </el-select>
                 </el-form-item>
@@ -140,6 +151,7 @@
         is_public:0, // 是否公开
         article_origin:'', // 文章来源
         article_author:'', // 文章作者
+        label_ids: [], // 文章标签
     };
 
     export default {
@@ -234,6 +246,7 @@
             // 文章分类列表
             this.getCategorySelect();
             // 文章标签列表
+            this.getArticleLabelSelect();
         },
         methods: {
             // 获取文章标签列表
@@ -249,11 +262,16 @@
             // 获取文章详情
             getDetail(article_id) {
                 detail(article_id).then(response => {
-                    console.log(response);
-
-                    this.postForm = response.data;
+                    this.postForm = Object.assign(this.postForm, response.data);
                     // 默认展示的封面图
                     this.image_url = this.postForm.article_cover;
+
+                    if (this.postForm.labels){
+                        this.postForm.label_ids = [];
+                        for (const key in this.postForm.labels) {
+                            this.postForm.label_ids.push(this.postForm.labels[key].label_id);
+                        }
+                    }
 
                     // set page title
                     this.setPageTitle();

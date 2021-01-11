@@ -10,6 +10,7 @@ class BaseService extends Service
     protected $model;
     protected $with = [];
     protected $detail;
+    protected $detailWith = [];
 
     /**
      * 列表分页数据
@@ -48,7 +49,7 @@ class BaseService extends Service
     public function detail($request)
     {
         $id = $request->input($this->model->getKeyName(), 0);
-        return $this->model->detail($id);
+        return $this->model->detail($id, '*', false, $this->detailWith);
     }
 
     /**

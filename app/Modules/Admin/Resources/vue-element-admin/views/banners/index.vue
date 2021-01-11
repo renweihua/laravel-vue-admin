@@ -57,6 +57,7 @@
                     show-overflow-tooltip
                     prop="banner_id"
                     label="Id"
+                    align="center"
             />
             <el-table-column
                     show-overflow-tooltip

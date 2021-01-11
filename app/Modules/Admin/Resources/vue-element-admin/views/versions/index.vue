@@ -48,6 +48,7 @@
                     show-overflow-tooltip
                     prop="version_id"
                     label="Id"
+                    align="center"
             />
 
             <el-table-column

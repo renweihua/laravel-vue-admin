@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getArticleLabelSelect(params) {
     return request({
-        url: '/admins/article_labels',
+        url: '/article_labels/getSelectLists',
         method: 'get',
         params
     });

@@ -44,14 +44,14 @@
             </el-button>
         </div>
 
-        <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
+        <el-table v-loading="listLoading" :data="list" border fit highlight-current-row>
             <el-table-column align="center" label="Id">
                 <template slot-scope="{row}">
                     <span>{{ row.article_id }}</span>
                 </template>
             </el-table-column>
 
-            <el-table-column label="标题" min-width="150px" max-width="300px">
+            <el-table-column label="标题" align="center" min-width="150px" max-width="300px">
                 <template slot-scope="{row}">
                     <router-link :to="'./edit/'+row.article_id" class="link-type">
                         <span>{{ row.article_title }}</span>
