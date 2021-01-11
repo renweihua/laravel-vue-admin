@@ -45,7 +45,7 @@
             }
         },
         created() {
-            console.log(this.logs);
+
         },
     }
 </script>

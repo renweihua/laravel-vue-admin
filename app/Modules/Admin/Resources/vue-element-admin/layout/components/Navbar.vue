@@ -7,7 +7,6 @@
 
         <div class="right-menu">
             <template v-if="device!=='mobile'">
-                <search id="header-search" class="right-menu-item"/>
 
                 <error-log class="errLog-container right-menu-item hover-effect"/>
 
@@ -54,7 +53,6 @@
     import Screenfull from '@/components/Screenfull'
     import SizeSelect from '@/components/SizeSelect'
     import LangSelect from '@/components/LangSelect'
-    import Search from '@/components/HeaderSearch'
 
     export default {
         components: {
@@ -64,7 +62,6 @@
             Screenfull,
             SizeSelect,
             LangSelect,
-            Search
         },
         computed: {
             ...mapGetters([

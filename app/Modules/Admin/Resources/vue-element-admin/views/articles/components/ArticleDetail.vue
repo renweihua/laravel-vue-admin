@@ -10,19 +10,39 @@
 
             <div class="createPost-main-container">
                 <el-form-item prop="article_title" label="文章标题">
-                    <MDinput v-model="postForm.article_title" :maxlength="100" name="name" required>
+                    <MDinput v-model="postForm.article_title" :maxlength="100" required>
                         Title
                     </MDinput>
                 </el-form-item>
 
-                <el-form-item label="父级菜单">
-                    <el-select v-model="postForm.category_id" placeholder="请选择文章分类" autocomplete="off" class="article-textarea">
+                <el-form-item label="文章分类">
+                    <el-select
+                        v-model="postForm.category_id"
+                        clearable
+                        :placeholder="select_category_name"
+                        @clear="handleClear"
+                        ref="selectUpCategoryId"
+                    >
+                        <el-option hidden key="CategoryId" :value="postForm.category_id" :label="select_category_name"></el-option>
+                        <!-- show-checkbox -->
+                        <el-tree
+                            node-key="category_id"
+                            :default-checked-keys="[postForm.category_id]"
+                            :data="category"
+                            :props="defaultProps"
+                            @node-click="handleNodeClick"
+                        >
+                        </el-tree>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item label="文章标签">
+                    <el-select v-model="postForm.label_ids" placeholder="请选择文章标签" multiple>
                         <el-option
-                            v-for="item in category"
-                            :key="item.category_id"
-                            :checked="item.category_id == postForm.category_id"
-                            :label="item.category_name"
-                            :value="item.category_id"
+                            v-for="item in labels"
+                            :key="item.label_id"
+                            :label="item.label_name"
+                            :value="item.label_id"
                         />
                     </el-select>
                 </el-form-item>
@@ -123,6 +143,7 @@
 
     import {detail, create, update} from '@/api/articles'
     import {getCategorySelect} from "@/api/article_categories";
+    import {getArticleLabelSelect} from "@/api/article_labels";
 
     const defaultForm = {
         article_id: 0,
@@ -139,6 +160,7 @@
         is_public:0, // 是否公开
         article_origin:'', // 文章来源
         article_author:'', // 文章作者
+        label_ids: [], // 文章标签
     };
 
     export default {
@@ -203,7 +225,16 @@
                 image_url: '',
                 borderRadius:'initial',
 
+                labels: [], // 标签
+
+                checkCategories:[], // 默认选中的分类
+                default_select_category_name : '请选择文章分类',
+                select_category_name: '请选择文章分类',
                 category:[], // 分类
+                defaultProps: {
+                    children: '_child',
+                    label: 'category_name'
+                },
             }
         },
         computed: {
@@ -215,11 +246,28 @@
             },
         },
         created() {
-            console.log('Article-detail');
-            console.log(this.$route);
+            let _this = this;
+            // 因为下拉tree是需要先获取数据，进行数据对比，拿到当前选中的值，所以需要：获取文章详情之后，再去获取文章分类。
             if (this.isEdit) {
                 const article_id = this.$route.query && this.$route.query.article_id;
-                if (article_id > 0) this.getDetail(article_id);
+                if (article_id > 0) this.getDetail(article_id, function () {
+                    // 文章分类列表
+                    _this.getCategorySelect(function () {
+                        try{
+                            _this.category.forEach(item => {
+                                if(item.category_id == _this.postForm.category_id){
+                                    _this.select_category_name = item.category_name;
+                                    throw new Error("end……对比成功");//报错，就跳出循环
+                                }
+                            });
+                        }catch (e) {
+                            // console.log(e);
+                        }
+                    });
+                });
+            }else{
+                // 文章分类列表
+                this.getCategorySelect();
             }
 
             // Why need to make a copy of this.$route here?
@@ -229,29 +277,61 @@
 
             // 图片上传路径
             this.upload_url = getUploadUrl();
-            // 文章分类列表
-            this.getCategorySelect();
+            // 文章标签列表
+            this.getArticleLabelSelect();
         },
         methods: {
-            // 获取菜单列表
-            async getCategorySelect() {
-                const res = await getCategorySelect();
-                this.category = res.data;
+            // 获取文章标签列表
+            async getArticleLabelSelect(){
+                const res = await getArticleLabelSelect();
+                this.labels = res.data;
             },
             // 获取文章详情
-            getDetail(article_id) {
+            getDetail(article_id, callback) {
                 detail(article_id).then(response => {
-                    console.log(response);
+                    this.postForm = Object.assign(this.postForm, response.data);
 
-                    this.postForm = response.data;
+                    if (callback) callback();
+
                     // 默认展示的封面图
                     this.image_url = this.postForm.article_cover;
+
+                    if (this.postForm.labels){
+                        this.postForm.label_ids = [];
+                        for (const key in this.postForm.labels) {
+                            this.postForm.label_ids.push(this.postForm.labels[key].label_id);
+                        }
+                    }
+
+                    // 选中的分类
+                    this.checkCategories.push(this.postForm.category_id);
 
                     // set page title
                     this.setPageTitle();
                 }).catch(err => {
-                    console.log(err);
+                    // console.log(err);
                 })
+            },
+            // 获取文章分类列表
+            async getCategorySelect(callback) {
+                const res = await getCategorySelect();
+                this.category = res.data;
+                if (callback) callback();
+            },
+            // 节点点击事件
+            handleNodeClick(data) {
+                // 这里主要配置树形组件点击节点后，设置选择器的值；自己配置的数据，仅供参考
+                this.select_category_name = data.category_name;
+                this.postForm.category_id = data.category_id;
+
+                // 选择器执行完成后，使其失去焦点隐藏下拉框的效果
+                this.$refs.selectUpCategoryId.blur();
+            },
+            // 选择器配置可以清空选项，用户点击清空按钮时触发
+            handleClear() {
+                // 将选择器的值置空
+                this.select_category_name = this.default_select_category_name;
+                this.listQuery.category_id = -1;
             },
             setTagsViewTitle() {
                 const title = this.lang === 'zh' ? '编辑文章' : 'Edit Article';
@@ -263,7 +343,6 @@
                 document.title = `${title} - ${this.postForm.article_id}`;
             },
             submitForm() {
-                // console.log(this.postForm);
                 this.$refs.postForm.validate(async valid => {
                     if (valid) {
                         this.loading = true;
@@ -294,7 +373,7 @@
                 })
             },
             cropSuccess(imgDataUrl, field) {
-                console.log('-------- crop success --------', imgDataUrl, field);
+                // console.log('-------- crop success --------', imgDataUrl, field);
             },
             // 上传成功回调
             cropUploadSuccess(result, field) {
@@ -303,8 +382,8 @@
             },
             // 上传失败回调
             cropUploadFail(status, field) {
-                console.log('上传失败状态' + status);
-                console.log('field: ' + field);
+                // console.log('上传失败状态' + status);
+                // console.log('field: ' + field);
             },
         }
     }

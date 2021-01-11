@@ -44,7 +44,6 @@
         },
         methods: {
             initChart(){
-                console.log('initChart');
                 this.logsStatistics();
 
                 // 定时多少秒触发一次：默认3分钟
@@ -53,13 +52,7 @@
                 }, 1000 * 60 * 3);
             },
             async logsStatistics() {
-                console.log('load - logsStatistics');
                 const {data} = await logsStatistics();
-
-                // console.log(data);
-                // console.log('data.list_name' + data.list_name);
-                // console.log('data.xAxis.data' + data.xAxis.data);
-                // console.log('data.data_lists' + data.data_lists);
 
                 this.chart = echarts.init(document.getElementById(this.id));
                 this.chart.setOption({

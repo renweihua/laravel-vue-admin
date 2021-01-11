@@ -3,7 +3,7 @@
         <div class="filter-container">
             <el-input
                     v-model="listQuery.search"
-                    placeholder="请输入 版本名称|版本号"
+                    placeholder="请输入标签名称"
                     style="width: 200px;"
                     class="filter-item"
                     @keyup.enter.native="handleFilter"
@@ -23,16 +23,6 @@
             >
                 {{ $t('table.add') }}
             </el-button>
-            <el-button
-                    v-waves
-                    :loading="downloadLoading"
-                    class="filter-item"
-                    type="primary"
-                    icon="el-icon-download"
-                    @click="handleDownload"
-            >
-                {{ $t('table.export') }}
-            </el-button>
         </div>
 
         <el-table
@@ -46,45 +36,21 @@
             <el-table-column show-overflow-tooltip type="selection"/>
             <el-table-column
                     show-overflow-tooltip
-                    prop="version_id"
+                    prop="label_id"
                     label="Id"
                     align="center"
             />
-
             <el-table-column
                     show-overflow-tooltip
-                    prop="version_name"
-                    label="版本名称"
+                    prop="label_name"
+                    label="标签名称"
                     align="center"
             />
-
-            <el-table-column
-                show-overflow-tooltip
-                prop="version_number"
-                label="版本号"
-                align="center"
-            />
-
-            <el-table-column
-                    show-overflow-tooltip
-                    prop="version_sort"
-                    label="排序"
-                    align="center"
-            />
-
-            <el-table-column
-                show-overflow-tooltip
-                prop="publish_date"
-                label="版本发布时间"
-                align="center"
-            />
-
             <el-table-column label="创建时间" show-overflow-tooltip align="center">
                 <template slot-scope="{ row }">
                     {{ row.created_time | parseTime("{y}-{m}-{d} {h}:{i}") }}
                 </template>
             </el-table-column>
-
             <el-table-column
                     fixed="right"
                     label="操作"
@@ -113,13 +79,13 @@
 </template>
 
 <script>
-    import {getList, setDel} from '@/api/versions';
+    import {getList, setDel} from '@/api/article_labels';
     import waves from '@/directive/waves' // waves directive
     import Edit from './components/detail'
     import {parseTime, getFormatDate} from '@/utils/index';
 
     export default {
-        name: 'Versions',
+        name: 'articleLabels',
         components: {Edit},
         directives: {waves},
         filters: {
@@ -148,41 +114,6 @@
             this.getList();
         },
         methods: {
-            handleDownload() {
-                this.downloadLoading = true;
-                import('@/vendor/Export2Excel').then((excel) => {
-                    const tHeader = [
-                        'Id',
-                        '版本名称',
-                        '版本号',
-                        '发布时间',
-                    ];
-                    const filterVal = [
-                        'version_id',
-                        'version_name',
-                        'version_number',
-                        'publish_date',
-                    ];
-                    const data = this.formatJson(filterVal);
-                    excel.export_json_to_excel({
-                        header: tHeader,
-                        data,
-                        filename: '版本列表-' + getFormatDate()
-                    });
-                    this.downloadLoading = false;
-                })
-            },
-            formatJson(filterVal) {
-                return this.list.map((v) =>
-                    filterVal.map((j) => {
-                        switch (j) {
-                            default:
-                                return v[j];
-                                break;
-                        }
-                    })
-                )
-            },
             setSelectRows(val) {
                 this.selectRows = val;
                 this.is_batch = 1;
@@ -196,14 +127,14 @@
             },
             handleDelete(row) {
                 var ids = '';
-                if (row.version_id) {
-                    ids = row.version_id;
+                if (row.label_id) {
+                    ids = row.label_id;
                 } else {
                     if (this.selectRows.length > 0) {
-                        ids = this.selectRows.map((item) => item.version_id).join();
+                        ids = this.selectRows.map((item) => item.label_id).join();
                     } else {
                         this.$message('未选中任何行', 'error');
-                        return false;
+                        return false
                     }
                 }
 
@@ -217,7 +148,7 @@
                         type: 'warning'
                     })
                     .then(async () => {
-                        const {status, msg} = await setDel({version_id: ids, 'is_batch' : this.is_batch});
+                        const {status, msg} = await setDel({label_id: ids, 'is_batch' : this.is_batch});
 
                         switch (status) {
                             case 1:
@@ -246,12 +177,12 @@
                 this.getList();
             },
             handleCurrentChange(val) {
-                this.listQuery.page = val;
-                this.getList();
+                this.listQuery.page = val
+                this.getList()
             },
             handleFilter() {
-                this.listQuery.page = 1;
-                this.getList();
+                this.listQuery.page = 1
+                this.getList()
             },
             async getList() {
                 this.listLoading = true;

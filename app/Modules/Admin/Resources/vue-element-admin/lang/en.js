@@ -3,8 +3,11 @@ export default {
     admin: 'Admin',
     banner: 'Banner',
     article: 'Article',
+    friendlinks: 'Friendly link',
     number: 'Number',
     route: {
+        articleLabels: '文章标签',
+        articleLabelDetail: '标签详情',
         systemSettings: 'System settings',
         bannerManage: 'Banner Manage',
         permissionManage: 'Permission Manage',

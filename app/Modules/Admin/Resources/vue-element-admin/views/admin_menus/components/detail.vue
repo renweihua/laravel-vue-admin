@@ -83,14 +83,12 @@
                 this.menus = res.data;
             },
             showEdit(row) {
-                console.log(row);
                 if (!row) {
                     this.title = "添加";
                 } else {
                     this.title = "编辑";
                     this.form = Object.assign({}, row);
                 }
-                console.log(this.form);
                 this.dialogFormVisible = true;
             },
             close() {

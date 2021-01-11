@@ -36,11 +36,21 @@
                 v-waves
                 :loading="downloadLoading"
                 class="filter-item"
-                type="primary"
+                type="success"
                 icon="el-icon-download"
                 @click="handleDownload"
             >
                 {{ $t('table.export') }}
+            </el-button>
+            <el-button
+                v-waves
+                :loading="downloadLoading"
+                class="filter-item"
+                type="warning"
+                icon="el-icon-refresh"
+                @click="pushRefresh"
+            >
+                同步配置文件
             </el-button>
         </div>
 
@@ -58,6 +68,7 @@
                 show-overflow-tooltip
                 prop="config_id"
                 label="Id"
+                align="center"
             />
 
             <el-table-column
@@ -153,7 +164,7 @@
 </template>
 
 <script>
-    import {getList, setDel, changeFiledStatus} from '@/api/configs'
+    import {getList, setDel, changeFiledStatus, pushRefreshConfig} from '@/api/configs'
     import waves from '@/directive/waves' // waves directive
     import {parseTime} from '@/utils/index';
 
@@ -286,7 +297,6 @@
             handleEdit(row) {
                 var query = {};
                 if (row.config_id) query.config_id = row.config_id;
-                console.log(query);
                 this.$router.push({
                     'path':`/configs/detail`,
                     'query': query,
@@ -356,7 +366,6 @@
                 this.listLoading = true
                 const {data} = await getList(this.queryForm)
                 this.list = data.data
-                console.log(data)
                 this.total = data.total
                 setTimeout(() => {
                     this.listLoading = false
@@ -376,6 +385,20 @@
                     message: msg,
                     type: status == 1 ? 'success' : 'error',
                 });
+            },
+            // 同步配置到文件中
+            async pushRefresh() {
+                this.listLoading = true;
+                const {msg, status} = await pushRefreshConfig();
+
+                this.$message({
+                    message: msg,
+                    type: status == 1 ? 'success' : 'error',
+                });
+
+                setTimeout(() => {
+                    this.listLoading = false;
+                }, 300);
             },
         }
     }

@@ -123,11 +123,10 @@
                 this.show = !this.show
             },
             cropSuccess(imgDataUrl, field) {
-                console.log('-------- crop success --------', imgDataUrl, field)
+                // console.log('-------- crop success --------', imgDataUrl, field)
             },
             // 上传成功回调
             cropUploadSuccess(result, field) {
-                console.log(result);
                 this.image_url = result.path_url;
                 this.form.link_cover = result.data;
             },
@@ -148,7 +147,6 @@
                     // 设置展示的图标
                     this.image_url = this.form.link_cover;
                 }
-                console.log(this.form);
                 this.dialogFormVisible = true
             },
             close() {
@@ -158,7 +156,6 @@
             },
             save() {
                 this.$refs['form'].validate(async (valid) => {
-                    console.log(valid);
                     if (valid) {
                         const {msg, status} = this.form.link_id ? await update(this.form) : await create(this.form);
                         this.$message({

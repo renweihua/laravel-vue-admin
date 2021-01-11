@@ -44,9 +44,6 @@
             //当 skill 属性的值发生改变时会执行下面的代码
             server_data: function (newValue, oldValue) {
                 this.server_data = newValue;
-                console.log('watch - server_data');
-                console.log(this.server_data);
-                console.log(this.server_data[this.select_type]);
 
                 this.changeData();
             },

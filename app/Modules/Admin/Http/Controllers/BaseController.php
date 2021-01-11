@@ -40,7 +40,11 @@ class BaseController extends Controller
         if (!isset($this->service)){
             return $this->successJson([], '请先设置Service或者重写方法！');
         }
-        return $this->successJson($this->service->detail($request));
+        if ($detail = $this->service->detail($request)){
+            return $this->successJson($detail);
+        }else{
+            return $this->errorJson('数据不存在！');
+        }
     }
 
     /**

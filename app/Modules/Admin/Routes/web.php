@@ -16,7 +16,8 @@ use App\Modules\Admin\Http\Middleware\CheckAuth;
 use App\Modules\Admin\Http\Middleware\CheckRabc;
 use App\Modules\Admin\Http\Middleware\AdminLog;
 
-Route::prefix('admin')->group(function() {
+Route::prefix('admin')
+    ->group(function() {
 //    Route::get('/', 'AdminController@index');
     //后台管理路由
     Route::get('/', function(){
@@ -60,10 +61,13 @@ Route::prefix('admin')->group(function() {
             // 配置管理
             Route::prefix('configs')->group(function() {
                 Route::get('/', 'System\ConfigController@index');
+                Route::get('/detail', 'System\ConfigController@detail');
                 Route::post('/create', 'System\ConfigController@create');
                 Route::put('/update', 'System\ConfigController@update');
                 Route::delete('/delete', 'System\ConfigController@delete');
                 Route::put('/changeFiledStatus', 'System\ConfigController@changeFiledStatus');
+                Route::get('/getConfigGroupType', 'System\ConfigController@getConfigGroupType')->withoutMiddleware([CheckRabc::class]);
+                Route::put('/pushRefreshConfig', 'System\ConfigController@pushRefreshConfig');
             });
 
             // 友情链接
@@ -137,6 +141,15 @@ Route::prefix('admin')->group(function() {
                 Route::delete('/delete', 'Article\ArticleCategoryController@delete');
                 Route::get('/getSelectLists', 'Article\ArticleCategoryController@getSelectLists');
                 Route::put('/changeFiledStatus', 'Article\ArticleCategoryController@changeFiledStatus');
+            });
+
+            // 文章标签
+            Route::prefix('article_labels')->group(function() {
+                Route::get('/', 'Article\ArticleLabelController@index');
+                Route::post('/create', 'Article\ArticleLabelController@create');
+                Route::put('/update', 'Article\ArticleLabelController@update');
+                Route::delete('/delete', 'Article\ArticleLabelController@delete');
+                Route::get('/getSelectLists', 'Article\ArticleLabelController@getSelectLists');
             });
 
             // 文章管理

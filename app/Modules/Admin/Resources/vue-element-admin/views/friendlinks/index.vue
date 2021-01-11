@@ -57,6 +57,7 @@
                     show-overflow-tooltip
                     prop="link_id"
                     label="Id"
+                    align="center"
             />
             <el-table-column
                     show-overflow-tooltip
@@ -193,7 +194,6 @@
         },
         methods: {
             handleDownload() {
-                console.log(getFormatDate());
                 this.downloadLoading = true;
                 import('@/vendor/Export2Excel').then((excel) => {
                     const tHeader = [
@@ -232,7 +232,6 @@
                                 return this.checkFilter(v[j]);
                                 break;
                             case 'link_cover':
-                                console.log(v.cover);
                                 return v.cover.file_path;
                                 break;
                             default:
@@ -320,7 +319,6 @@
                 this.listLoading = true;
                 const {data} = await getList(this.listQuery);
                 this.list = data.data;
-                console.log(data);
                 this.total = data.total;
                 setTimeout(() => {
                     this.listLoading = false;

@@ -9,7 +9,7 @@ export default {
   name: 'EditForm',
   components: { ConfigDetail },
     created() {
-        console.log('config-detail');
+
     },
 }
 </script>
