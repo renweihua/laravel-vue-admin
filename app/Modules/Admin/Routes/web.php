@@ -108,7 +108,7 @@ Route::prefix('admin')
                 Route::post('/create', 'Rabc\AdminRoleController@create');
                 Route::put('/update', 'Rabc\AdminRoleController@update');
                 Route::delete('/delete', 'Rabc\AdminRoleController@delete');
-                Route::get('/getSelectLists', 'Rabc\AdminRoleController@getSelectLists');
+                Route::get('/getSelectLists', 'Rabc\AdminRoleController@getSelectLists')->withoutMiddleware([CheckRabc::class]);
                 Route::put('/changeFiledStatus', 'Rabc\AdminRoleController@changeFiledStatus');
             });
 
@@ -117,7 +117,7 @@ Route::prefix('admin')
                 Route::post('/create', 'Rabc\AdminMenuController@create');
                 Route::put('/update', 'Rabc\AdminMenuController@update');
                 Route::delete('/delete', 'Rabc\AdminMenuController@delete');
-                Route::get('/getSelectLists', 'Rabc\AdminMenuController@getSelectLists');
+                Route::get('/getSelectLists', 'Rabc\AdminMenuController@getSelectLists')->withoutMiddleware([CheckRabc::class]);
                 Route::put('/changeFiledStatus', 'Rabc\AdminMenuController@changeFiledStatus');
             });
 
@@ -139,7 +139,7 @@ Route::prefix('admin')
                 Route::post('/create', 'Article\ArticleCategoryController@create');
                 Route::put('/update', 'Article\ArticleCategoryController@update');
                 Route::delete('/delete', 'Article\ArticleCategoryController@delete');
-                Route::get('/getSelectLists', 'Article\ArticleCategoryController@getSelectLists');
+                Route::get('/getSelectLists', 'Article\ArticleCategoryController@getSelectLists')->withoutMiddleware([CheckRabc::class]);
                 Route::put('/changeFiledStatus', 'Article\ArticleCategoryController@changeFiledStatus');
             });
 
@@ -149,7 +149,7 @@ Route::prefix('admin')
                 Route::post('/create', 'Article\ArticleLabelController@create');
                 Route::put('/update', 'Article\ArticleLabelController@update');
                 Route::delete('/delete', 'Article\ArticleLabelController@delete');
-                Route::get('/getSelectLists', 'Article\ArticleLabelController@getSelectLists');
+                Route::get('/getSelectLists', 'Article\ArticleLabelController@getSelectLists')->withoutMiddleware([CheckRabc::class]);
             });
 
             // 文章管理
