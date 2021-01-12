@@ -11,7 +11,7 @@ const mix = require('laravel-mix');
  |
  */
 
-require(`${__dirname}\\webpack.admin.js`);
+require(`${__dirname}/webpack.admin.js`);
 
 
 

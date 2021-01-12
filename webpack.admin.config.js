@@ -2,11 +2,12 @@ const path = require('path');
 const webpack = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const ChunkRenamePlugin = require("webpack-chunk-rename-plugin");
+const vue_dir_path = 'app/Modules/Admin/Resources/vue-element-admin';
 
 function resolve(dir) {
     return path.join(
         __dirname,
-        '/app/Modules/Admin/resources/vue-element-admin',
+        '/' + vue_dir_path,
         dir
     );
 }
@@ -34,7 +35,7 @@ module.exports = {
         extensions: ['.js', '.vue', '.json'],
         alias: {
             vue$: 'vue/dist/vue.esm.js',
-            '@': path.join(__dirname, '/app/Modules/Admin/resources/vue-element-admin'),
+            '@': path.join(__dirname, '/' + vue_dir_path),
         },
     },
     module: {

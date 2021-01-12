@@ -1,4 +1,5 @@
-const config = require('./webpack.config');
+const config = require('./webpack.admin.config');
+const vue_dir_path = 'app/Modules/Admin/Resources/vue-element-admin';
 const mix = require('laravel-mix');
 
 /*
@@ -17,7 +18,7 @@ let vue_path = 'vue-element-admin';
 function resolve(dir) {
     return path.join(
         __dirname,
-        '/app/Modules/Admin/resources/vue-element-admin',
+        '/' + vue_dir_path,
         dir
     );
 }
@@ -36,8 +37,8 @@ mix.webpackConfig(config);
 
 
 mix
-    .js('app/Modules/Admin/resources/vue-element-admin/main.js', 'public/js')
-    .sass('app/Modules/Admin/resources/assets/sass/app.scss', 'public/css')
+    .js(vue_dir_path + '/main.js', 'public/js')
+    .sass('app/Modules/Admin/Resources/assets/sass/app.scss', 'public/css')
     .extract([
         'vue',
         'axios',
@@ -59,11 +60,6 @@ mix
             require('autoprefixer'),
         ],
     });
-
-//
-// console.log(process);
-// console.log(process.env);
-// console.log(process.env.VUE_APP_BASE_API);
 
 if (mix.inProduction()) {
     mix.version();
