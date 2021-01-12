@@ -1,7 +1,8 @@
 # laravel-vue-admin
 
 #### Description
-<a href="https://gitee.com/clown-passerby-community/laravel-vue-admin">laravel+vue-element-admin</a>
+
+[demo](http://laravel-vue-admin.cnpscy.com/admin)
 
 ![Home](public/demo/home.png)
 

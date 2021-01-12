@@ -1,7 +1,8 @@
 # laravel-vue-admin
 
 #### 介绍
-<a href="https://gitee.com/clown-passerby-community/laravel-vue-admin">laravel+vue-element-admin</a>
+
+[demo](http://laravel-vue-admin.cnpscy.com/admin)
 
 ![首页](public/demo/home.png)
 
