@@ -8,7 +8,7 @@
   'START_API_LOGS' => '1',
   'ARTICLE_CACHE_TIME' => '60',
   'WEB_SITE_CLOSE' => '1',
-  'config_group_list' => 
+  'config_group_list' =>
   array (
     0 => '不分组',
     1 => '基本',
@@ -22,7 +22,7 @@
     9 => '小丑社区配置',
     10 => '数据库',
   ),
-  'config_type_list' => 
+  'config_type_list' =>
   array (
     0 => '字符串',
     1 => '文本',
@@ -30,6 +30,7 @@
     3 => '数组',
     4 => '枚举',
     5 => '图片',
+    6 => '富文本',
   ),
   'web_detault_show_img' => '/static/blog.jpg',
   'web_url' => '',
@@ -37,7 +38,7 @@
   'web_admin_title' => '小丑路人博客后台管理',
   'web_admin_keywords' => '小丑路人博客后台',
   'web_admin_description' => '小丑路人博客后台',
-  'menu_type_list' => 
+  'menu_type_list' =>
   array (
     0 => '作为频道页，不可作为栏目发布文章',
     1 => '不直接发布内容，用于跳转页面',

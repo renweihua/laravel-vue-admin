@@ -2,11 +2,12 @@ const path = require('path');
 const webpack = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const ChunkRenamePlugin = require("webpack-chunk-rename-plugin");
+const vue_dir_path = 'Resources/vue-element-admin';
 
 function resolve(dir) {
     return path.join(
         __dirname,
-        '/app/Modules/Admin/resources/vue-element-admin',
+        vue_dir_path,
         dir
     );
 }
@@ -24,17 +25,13 @@ if (report) {
         openAnalyzer: true,
     }));
 }
-// plugins.push(
-//     new webpack.DefinePlugin({
-//         'process.env':config.dev.env,
-//     })
-// );
+
 module.exports = {
     resolve: {
         extensions: ['.js', '.vue', '.json'],
         alias: {
             vue$: 'vue/dist/vue.esm.js',
-            '@': path.join(__dirname, '/app/Modules/Admin/resources/vue-element-admin'),
+            '@': path.join(__dirname, vue_dir_path),
         },
     },
     module: {

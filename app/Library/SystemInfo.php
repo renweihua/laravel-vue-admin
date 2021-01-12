@@ -91,8 +91,6 @@ class SystemInfo
             $fp = popen('top -b -n 2 | grep -E "(Mem)"', "r");
             $rs = fread($fp, 1024);
             $sys_info = explode("\n", $rs);
-            var_dump('进入 Liunx，待测试 --- 内存');
-            var_dump($sys_info);
             $mem_info = explode(",", $sys_info[2]); //内存占有量 数组
             $this->memory['total'] = trim(trim($mem_info[0], 'KiB Mem : '), ' total');
             $this->memory['used'] = trim(trim($mem_info[2], 'used'));

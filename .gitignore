@@ -1,12 +1,9 @@
 /node_modules
-/public/hot
 /public/storage
 /public/fonts
 /public/images
 /public/js
 /public/css
-/public/vue-admin-beautiful
-/public/vue-element-admin
 /storage/*.key
 /vendor
 .env

@@ -11,8 +11,8 @@ const mix = require('laravel-mix');
  |
  */
 
-require(`${__dirname}\\webpack.admin.js`);
-
+// 引入 Admin 模块下的 webpack 配置文件
+require(`${__dirname}/app/Modules/Admin/webpack.admin.js`);
 
 
 // mix.js('resources/js/app.js', 'public/' + vue_path)
