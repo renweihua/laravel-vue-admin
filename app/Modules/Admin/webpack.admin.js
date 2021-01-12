@@ -1,6 +1,6 @@
 const config = require('./webpack.admin.config');
-const vue_dir_path = 'app/Modules/Admin/Resources/vue-element-admin';
 const mix = require('laravel-mix');
+const vue_dir_path = __dirname + '/Resources/vue-element-admin';
 
 /*
  |--------------------------------------------------------------------------
@@ -13,12 +13,10 @@ const mix = require('laravel-mix');
  |
  */
 
-let vue_path = 'vue-element-admin';
-
 function resolve(dir) {
     return path.join(
         __dirname,
-        '/' + vue_dir_path,
+        vue_dir_path,
         dir
     );
 }
@@ -38,7 +36,7 @@ mix.webpackConfig(config);
 
 mix
     .js(vue_dir_path + '/main.js', 'public/js')
-    .sass('app/Modules/Admin/Resources/assets/sass/app.scss', 'public/css')
+    .sass(__dirname + '/Resources/assets/sass/app.scss', 'public/css')
     .extract([
         'vue',
         'axios',
