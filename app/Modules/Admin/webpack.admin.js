@@ -1,6 +1,6 @@
 const config = require('./webpack.admin.config');
 const mix = require('laravel-mix');
-const vue_dir_path = __dirname + '/Resources/vue-element-admin';
+const vue_dir_path = '/Resources/vue-element-admin';
 
 /*
  |--------------------------------------------------------------------------
@@ -33,9 +33,8 @@ Mix.listen('configReady', webpackConfig => {
 
 mix.webpackConfig(config);
 
-
 mix
-    .js(vue_dir_path + '/main.js', 'public/js')
+    .js(__dirname + vue_dir_path + '/main.js', 'public/js')
     .sass(__dirname + '/Resources/assets/sass/app.scss', 'public/css')
     .extract([
         'vue',
