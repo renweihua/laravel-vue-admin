@@ -8,7 +8,7 @@ import {
     getToken
 } from '@/utils/auth';
 
-// console.log(process);
+console.log(process);
 // console.log(process.env);
 // console.log(process.env.VUE_APP_BASE_API);
 
@@ -16,11 +16,13 @@ import {
 process.env.VUE_APP_BASE_API = window.location.origin + window.location.pathname;
 // console.log(process.env.VUE_APP_BASE_API);
 
+let timeout = 15000;
+
 // create an axios instance
 const service = axios.create({
     baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
     // withCredentials: true, // send cookies when cross-domain requests
-    timeout: 10000, // request timeout
+    timeout: timeout, // request timeout
     headers: {
         // 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
         "Content-Type": "application/json;charset=utf-8",
@@ -99,7 +101,7 @@ service.interceptors.response.use(
         console.log('err' + error); // for debug
         let msg = error.msg;
         if (error.response == undefined){
-            msg = '超时 5000ms，请刷新！';
+            msg = '超时 ' + timeout + ' ms，请刷新！';
         }else{
             switch (error.response.status) {
                 case 404:
