@@ -40,7 +40,7 @@
                 <el-input v-model.trim="form.link_url" autocomplete="off"/>
             </el-form-item>
             <el-form-item label="排序" prop="link_sort">
-                <el-input v-model.trim="form.link_sort" autocomplete="off"/>
+                <el-input v-model.trim="form.link_sort" type="number" autocomplete="off"/>
             </el-form-item>
             <el-form-item label="是否启用" prop="is_check">
                 <el-radio-group v-model="form.is_check">
