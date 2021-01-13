@@ -1,5 +1,99 @@
 <?php
 
+if ( !function_exists('get_redirect_url') ) {
+    /**
+     * 通过 301/302 重定向的URL，获取原始的URL
+     * @param  string  $url
+     *
+     * @return bool|string
+     */
+    function get_redirect_url(string $url)
+    {
+        $redirect_url = null;
+
+        $url_parts = parse_url($url);
+        var_dump($url_parts);
+        if ( !$url_parts ) return false;
+        if ( !isset($url_parts['host']) ) return false; //can't process relative URLs
+        if ( !isset($url_parts['path']) ) $url_parts['path'] = '/';
+
+        $sock = fsockopen($url_parts['host'], (isset($url_parts['port']) ? (int)$url_parts['port'] : 80), $errno, $errstr, 30);
+        if ( !$sock ) return false;
+
+        $request = "HEAD " . $url_parts['path'] . (isset($url_parts['query']) ? '?' . $url_parts['query'] : '') . " HTTP/1.1\r\n";
+        $request .= 'Host: ' . $url_parts['host'] . "\r\n";
+        $request .= "Connection: Close\r\n\r\n";
+
+        fwrite($sock, $request);
+        $response = '';
+        while ( !feof($sock) ) $response .= fread($sock, 8192);
+        fclose($sock);
+
+        var_dump($response);
+
+        if ( preg_match('/^location: (.+?)$/m', $response, $matches) ) {
+            if ( substr($matches[1], 0, 1) == "/" ) return $url_parts['scheme'] . "://" . $url_parts['host'] . trim($matches[1]); else
+                return trim($matches[1]);
+        } else {
+            return false;
+        }
+    }
+}
+
+if ( !function_exists('get_cover_by_video') ) {
+    /**
+     * 通过 ffmpeg 获取视频的第一帧，存储为图片
+     *
+     * @param  string  $video_path 视频地址
+     * @param  string  $cover_file_path 图片存储地址
+     * @param          $output 检测失败与成功：0：成功；其它都为失败
+     */
+    /**
+     * @param  string  $video_path 视频地址
+     * @param  string  $cover_file_path 图片存储地址
+     * @param  null    $return_val 0.表示成功
+     * @param  null    $output
+     * @param  string  $ffmpeg_path ffmpeg的环境变量
+     */
+    function get_cover_by_video(string $video_path, string $cover_file_path, &$return_val = null, &$output = null, string $ffmpeg_path = '/usr/local/ffmpeg/bin/ffmpeg')
+    {
+        //  -s 286x160 是设置图片尺寸（放在  -f rawvideo 后面）
+        //-L license
+        //-h 帮助
+        //-fromats 显示可用的格式，编解码的，协议的...
+        //-f fmt 强迫采用格式fmt
+        //-I filename 输入文件
+        //-y 覆盖输出文件
+        //-t duration 设置纪录时间 hh:mm:ss[.xxx]格式的记录时间也支持
+        //-ss position 搜索到指定的时间 [-]hh:mm:ss[.xxx]的格式也支持
+        //-title string 设置标题
+        //-author string 设置作者
+        //-copyright string 设置版权
+        //-comment string 设置评论
+        //-b bitrate 设置比特率，缺省200kb/s
+        //-r fps 设置帧频 缺省25
+        //-s size 设置帧大小 格式为WXH 缺省160X128.下面的简写也可以直接使用：
+        //Sqcif 128X96 qcif 176X144 cif 252X288 4cif 704X576
+        //-aspect aspect 设置横纵比 4:3 16:9 或 1.3333 1.7777
+        //-croptop size 设置顶部切除带大小 像素单位
+        //-cropbottom size –cropleft size –cropright size
+        //-padtop size 设置顶部补齐的大小 像素单位
+        //-padbottom size –padleft size –padright size –padcolor color 设置补齐条颜色(hex,6个16进制的数，红:绿:兰排列，比如 000000代表黑色)
+        //-vn 不做视频记录
+        //-bt tolerance 设置视频码率容忍度kbit/s
+        //-maxrate bitrate设置最大视频码率容忍度
+        //-minrate bitreate 设置最小视频码率容忍度
+        //-bufsize size 设置码率控制缓冲区大小
+        //-vcodec codec 强制使用codec编解码方式。如果用copy表示原始编解码数据必须被拷贝。
+        //-sameq 使用同样视频质量作为源（VBR）
+        //-pass n 选择处理遍数（1或者2）。两遍编码非常有用。第一遍生成统计信息，第二遍生成精确的请求的码率
+        //-passlogfile file 选择两遍的纪录文件名为file
+        $command = $ffmpeg_path . ' -v 0 -y -i "' . $video_path . '" -vframes 1 -ss 1 -vcodec mjpeg -f rawvideo -aspect 16:9 ' . $cover_file_path . ' ';
+
+        exec($command, $output, $return_val);
+    }
+}
+
 if ( !function_exists('get_last_month') ) {
     /**
      * 是否为windows系统
