@@ -25,18 +25,22 @@ class BaseService extends Service
         if ($this->model instanceof MonthModel){
             $this->model = $this->model->setMonthTable($this->getSearchMonth());
         }
-        $lists = $this->model->where($params['where_callback'] ?? [])
+        $model = $this->model->where($params['where_callback'] ?? [])
             ->with($this->with)
-            ->orderBy(empty($params['order']) ? $this->model->getKeyName() : $params['order'], empty($params['order_sort']) ? 'DESC' : $params['order_sort'])
-            ->paginate($this->getLimit($params['limit'] ?? 10));
-
-        return [
-            'current_page' => $lists->currentPage(),
-            'per_page' => $lists->perPage(),
-            'count_page' => $lists->lastPage(),
-            'total' => $lists->total(),
-            'data' => $lists->items(),
-        ];
+            ->orderBy(empty($params['order']) ? $this->model->getKeyName() : $params['order'], empty($params['order_sort']) ? 'DESC' : $params['order_sort']);
+        // 如果是下载，那么数据将不分页。
+        if (isset($params['is_download']) && $params['is_download'] == 1){
+            return $model->get()->toArray() ?? [];
+        }else{
+            $lists = $model->paginate($this->getLimit($params['limit'] ?? 10));
+            return [
+                'current_page' => $lists->currentPage(),
+                'per_page' => $lists->perPage(),
+                'count_page' => $lists->lastPage(),
+                'total' => $lists->total(),
+                'data' => $lists->items(),
+            ];
+        }
     }
 
     /**
