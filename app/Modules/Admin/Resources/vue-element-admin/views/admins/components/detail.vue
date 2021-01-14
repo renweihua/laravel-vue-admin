@@ -171,17 +171,16 @@
                 this.show = !this.show
             },
             cropSuccess(imgDataUrl, field) {
-                console.log('-------- crop success --------', imgDataUrl, field)
+                // console.log('-------- crop success --------', imgDataUrl, field)
             },
             // 上传成功回调
             cropUploadSuccess(result, field) {
-                console.log(result);
                 this.image_url = result.path_url;
                 this.form.admin_head = result.data;
             },
             // 上传失败回调
             cropUploadFail(status, field) {
-                console.log('-------- upload fail --------');
+                // console.log('-------- upload fail --------');
                 console.log('上传失败状态' + status);
                 console.log('field: ' + field)
             },

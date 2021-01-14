@@ -153,8 +153,8 @@
         </el-table>
         <el-pagination
             background
-            :current-page="queryForm.page"
-            :page-size="queryForm.limit"
+            :current-page="listQuery.page"
+            :page-size="listQuery.limit"
             :layout="layout"
             :total="total"
             @size-change="handleSizeChange"
@@ -164,23 +164,23 @@
 </template>
 
 <script>
-    import {getList, setDel, changeFiledStatus, pushRefreshConfig} from '@/api/configs'
-    import waves from '@/directive/waves' // waves directive
-    import {parseTime} from '@/utils/index';
+    import {getList, setDel, changeFiledStatus, pushRefreshConfig} from '@/api/configs';
+    import waves from '@/directive/waves'; // waves directive
+    import {parseTime, getFormatDate} from '@/utils/index';
 
     const calendarCheckOptions = [
         {key: '-1', display_name: '全部'},
         {key: '1', display_name: '启用'},
         {key: '0', display_name: '禁用'}
-    ]
+    ];
 
     const calendarCheckKeyValue = calendarCheckOptions.reduce((acc, cur) => {
         acc[cur.key] = cur.display_name
         return acc
-    }, {})
+    }, {});
 
     export default {
-        name: 'UserManagement',
+        name: 'configManage',
         components: {},
         directives: {waves},
         filters: {
@@ -189,12 +189,12 @@
                 const statusMap = {
                     1: 'success',
                     0: 'danger'
-                }
-                return statusMap[status]
+                };
+                return statusMap[status];
             },
             checkFilter(type) {
-                return calendarCheckKeyValue[type] || ''
-            }
+                return calendarCheckKeyValue[type] || '';
+            },
         },
         data() {
             return {
@@ -202,11 +202,12 @@
                 layout: 'total, sizes, prev, pager, next, jumper',
                 selectRows: '',
                 elementLoadingText: '正在加载...',
-                queryForm: {
+                listQuery: {
                     page: 1,
                     limit: 10,
                     search: '',
-                    is_check: ''
+                    is_check: '',
+                    is_download: 0, // 是否下载：1.是；默认0
                 },
                 downloadLoading: false,
                 calendarCheckOptions,
@@ -214,11 +215,6 @@
                 list: [],
                 total: 0,
                 listLoading: true,
-                listQuery: {
-                    page: 1,
-                    limit: 20,
-                    is_check: ''
-                },
                 importanceOptions: [1, 2, 3],
                 statusOptions: ['published', 'draft', 'deleted'],
                 temp: {
@@ -240,54 +236,11 @@
             }
         },
         created() {
-            this.getList()
+            this.getList();
         },
         methods: {
-            handleDownload() {
-                this.downloadLoading = true
-                import('@/vendor/Export2Excel').then((excel) => {
-                    const tHeader = [
-                        'Id',
-                        '管理员',
-                        '邮箱',
-                        '登录次数',
-                        '创建时间',
-                        '启用状态'
-                    ]
-                    const filterVal = [
-                        'config_id',
-                        'admin_name',
-                        'admin_email',
-                        'admin_info.login_num',
-                        'admin_info.created_time',
-                        'is_check'
-                    ]
-                    const data = this.formatJson(filterVal)
-                    excel.export_json_to_excel({
-                        header: tHeader,
-                        data,
-                        filename: 'table-list'
-                    })
-                    this.downloadLoading = false
-                })
-            },
-            formatJson(filterVal) {
-                return this.list.map((v) =>
-                    filterVal.map((j) => {
-                        if (j === 'admin_info.created_time') {
-                            return parseTime(v.admin_info.created_time)
-                        } else if (j === 'is_check') {
-                            return this.checkFilter(v[j])
-                        } else if (j === 'admin_info.login_num') {
-                            return v.admin_info.login_num
-                        } else {
-                            return v[j]
-                        }
-                    })
-                )
-            },
             checkFilter(val) {
-                return calendarCheckKeyValue[val] || ''
+                return calendarCheckKeyValue[val] || '';
             },
             setSelectRows(val) {
                 this.selectRows = val;
@@ -302,6 +255,7 @@
                     'query': query,
                 });
             },
+            // 删除
             handleDelete(row) {
                 var ids = '';
                 if (row.config_id) {
@@ -311,7 +265,7 @@
                         ids = this.selectRows.map((item) => item.config_id).join();
                     } else {
                         this.$message('未选中任何行', 'error');
-                        return false
+                        return false;
                     }
                 }
 
@@ -329,7 +283,6 @@
 
                         switch (status) {
                             case 1:
-                                // this.list.splice($index, 1);
                                 this.getList();
 
                                 this.$message({
@@ -347,29 +300,39 @@
 
                     })
                     .catch(err => {
-                        console.error(err)
+                        console.error(err);
                     })
             },
             handleSizeChange(val) {
-                this.queryForm.limit = val
-                this.getList()
+                this.listQuery.limit = val;
+                this.listQuery.is_download = 0;
+                this.getList();
             },
             handleCurrentChange(val) {
-                this.queryForm.page = val
-                this.getList()
+                this.listQuery.page = val;
+                this.listQuery.is_download = 0;
+                this.getList();
             },
             handleFilter() {
-                this.queryForm.page = 1
-                this.getList()
+                this.listQuery.page = 1;
+                this.listQuery.is_download = 0;
+                this.getList();
             },
-            async getList() {
-                this.listLoading = true
-                const {data} = await getList(this.queryForm)
-                this.list = data.data
-                this.total = data.total
+            async getList(callback) {
+                this.listLoading = true;
+                const {data, status, msg} = await getList(this.listQuery);
+                if(this.listQuery.is_download == 1){
+                    if (callback){
+                        callback(data, status, msg);
+                    }
+                }else{
+                    this.list = data.data;
+                    this.total = data.total;
+                    this.listQuery.limit = data.per_page || 10;
+                }
                 setTimeout(() => {
-                    this.listLoading = false
-                }, 300)
+                    this.listLoading = false;
+                }, 300);
             },
             // 状态变更
             async changeStatus(row, value) {
@@ -399,6 +362,76 @@
                 setTimeout(() => {
                     this.listLoading = false;
                 }, 300);
+            },
+            // 导出
+            handleDownload() {
+                this.downloadLoading = true;
+                this.listQuery.page = 1;
+                this.listQuery.is_download = 1;
+                let _this = this;
+                this.getList(function (data, status, msg) {
+                    // 如果获取失败，那么无需进入下一步
+                    if (status != 1){
+                        _this.$message({
+                            message: msg,
+                            type: 'error',
+                        });
+                        return;
+                    }
+                    // 开始导出
+                    import('@/vendor/Export2Excel').then((excel) => {
+                        const tHeader = [
+                            'Id',
+                            '配置标题',
+                            '配置名称',
+                            '配置值',
+                            '配置分组',
+                            '配置类型',
+                            '配置项',
+                            '排序',
+                            '说明',
+                            '创建时间',
+                            '启用状态'
+                        ]
+                        const filterVal = [
+                            'config_id',
+                            'config_title',
+                            'config_name',
+                            'config_value',
+                            'config_group',
+                            'config_type',
+                            'config_extra',
+                            'config_sort',
+                            'config_remark',
+                            'created_time',
+                            'is_check'
+                        ]
+                        const download_list_data = _this.formatJson(data, filterVal)
+                        excel.export_json_to_excel({
+                            header: tHeader,
+                            data:download_list_data,
+                            filename: '配置列表-' + getFormatDate(),
+                        })
+                        _this.downloadLoading = false;
+                    });
+                })
+            },
+            formatJson(data, filterVal) {
+                return data.map((v) =>
+                    filterVal.map((j) => {
+                        switch (j) {
+                            case 'created_time':
+                                return parseTime(v[j]) || '';
+                                break;
+                            case 'is_check':
+                                return this.checkFilter(v[j]) || '';
+                                break;
+                            default:
+                                return v[j] || '';
+                                break;
+                        }
+                    })
+                ) || [];
             },
         }
     }

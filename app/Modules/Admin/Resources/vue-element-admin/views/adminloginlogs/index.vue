@@ -282,11 +282,11 @@
                 this.getList()
             },
             async getList() {
-                this.listLoading = true
-                const {data} = await getList(this.listQuery)
-                this.list = data.data
-                console.log(data)
-                this.total = data.total
+                this.listLoading = true;
+                const {data} = await getList(this.listQuery);
+                this.list = data.data;
+                this.total = data.total;
+                this.listQuery.limit = data.per_page || 10;
                 setTimeout(() => {
                     this.listLoading = false
                 }, 300)

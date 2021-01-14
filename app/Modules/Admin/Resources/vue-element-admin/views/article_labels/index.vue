@@ -189,6 +189,7 @@
                 const {data} = await getList(this.listQuery);
                 this.list = data.data;
                 this.total = data.total;
+                this.listQuery.limit = data.per_page || 10;
                 setTimeout(() => {
                     this.listLoading = false;
                 }, 300);

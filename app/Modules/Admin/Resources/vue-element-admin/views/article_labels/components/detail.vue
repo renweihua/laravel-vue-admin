@@ -68,7 +68,6 @@
             },
             save() {
                 this.$refs['form'].validate(async (valid) => {
-                    console.log(valid);
                     if (valid) {
                         const {msg, status} = this.form.label_id ? await update(this.form) : await create(this.form);
                         this.$message({

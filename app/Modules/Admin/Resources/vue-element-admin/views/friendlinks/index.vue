@@ -2,19 +2,19 @@
     <div class="app-container">
         <div class="filter-container">
             <el-input
-                    v-model="listQuery.search"
-                    placeholder="请输入站点名称"
-                    style="width: 200px;"
-                    class="filter-item"
-                    @keyup.enter.native="handleFilter"
+                v-model="listQuery.search"
+                placeholder="请输入站点名称"
+                style="width: 200px;"
+                class="filter-item"
+                @keyup.enter.native="handleFilter"
             />
             <el-select v-model="listQuery.is_check" placeholder="请选择启用状态" clearable class="filter-item">
                 <el-option
-                        v-for="item in calendarCheckOptions"
-                        :key="item.key"
-                        :checked="item.key == listQuery.is_check"
-                        :label="item.display_name+'('+item.key+')'"
-                        :value="item.key"
+                    v-for="item in calendarCheckOptions"
+                    :key="item.key"
+                    :checked="item.key == listQuery.is_check"
+                    :label="item.display_name+'('+item.key+')'"
+                    :value="item.key"
                 />
             </el-select>
             <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
@@ -24,46 +24,46 @@
                 {{ $t('table.batchDelete') }}
             </el-button>
             <el-button
-                    class="filter-item"
-                    style="margin-left: 10px;"
-                    type="primary"
-                    icon="el-icon-plus"
-                    @click="handleEdit"
+                class="filter-item"
+                style="margin-left: 10px;"
+                type="primary"
+                icon="el-icon-plus"
+                @click="handleEdit"
             >
                 {{ $t('table.add') }}
             </el-button>
             <el-button
-                    v-waves
-                    :loading="downloadLoading"
-                    class="filter-item"
-                    type="primary"
-                    icon="el-icon-download"
-                    @click="handleDownload"
+                v-waves
+                :loading="downloadLoading"
+                class="filter-item"
+                type="success"
+                icon="el-icon-download"
+                @click="handleDownload"
             >
                 {{ $t('table.export') }}
             </el-button>
         </div>
 
         <el-table
-                v-loading="listLoading"
-                :data="list"
-                :element-loading-text="elementLoadingText"
-                @selection-change="setSelectRows"
-                border
-                class="margin-buttom-10"
+            v-loading="listLoading"
+            :data="list"
+            :element-loading-text="elementLoadingText"
+            @selection-change="setSelectRows"
+            border
+            class="margin-buttom-10"
         >
             <el-table-column show-overflow-tooltip type="selection"/>
             <el-table-column
-                    show-overflow-tooltip
-                    prop="link_id"
-                    label="Id"
-                    align="center"
+                show-overflow-tooltip
+                prop="link_id"
+                label="Id"
+                align="center"
             />
             <el-table-column
-                    show-overflow-tooltip
-                    prop="link_name"
-                    label="站点名称"
-                    align="center"
+                show-overflow-tooltip
+                prop="link_name"
+                label="站点名称"
+                align="center"
             />
             <el-table-column align="center" prop="link_cover" label="站点图标">
                 <template slot-scope="{row}">
@@ -71,15 +71,15 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    show-overflow-tooltip
-                    prop="link_url"
-                    label="站点网址"
+                show-overflow-tooltip
+                prop="link_url"
+                label="站点网址"
             />
             <el-table-column
-                    show-overflow-tooltip
-                    prop="link_sort"
-                    label="排序"
-                    align="center"
+                show-overflow-tooltip
+                prop="link_sort"
+                label="排序"
+                align="center"
             />
             <el-table-column label="创建时间" show-overflow-tooltip align="center">
                 <template slot-scope="{ row }">
@@ -89,29 +89,29 @@
             <el-table-column align="center" prop="is_check" label="启用状态">
                 <template slot-scope="{row}">
                     <el-tag :type="row.is_check | statusFilter">
-                        <i :class="row.is_check == 1 ? 'el-icon-unlock' : 'el-icon-lock'" />
+                        <i :class="row.is_check == 1 ? 'el-icon-unlock' : 'el-icon-lock'"/>
                         {{ row.is_check | checkFilter }}
                     </el-tag>
                 </template>
             </el-table-column>
             <el-table-column
-                    fixed="right"
-                    label="操作"
-                    align="center"
+                fixed="right"
+                label="操作"
+                align="center"
             >
                 <template v-slot="{row}">
                     <!-- 状态变更 -->
                     <el-button v-if="row.is_check == 0" type="text"
                                @click="changeStatus(row, 1)">
                         <el-tag :type="1 | statusFilter">
-                            <i class="el-icon-unlock" />
+                            <i class="el-icon-unlock"/>
                             启用
                         </el-tag>
                     </el-button>
                     <el-button v-else-if="row.is_check == 1" type="text"
                                @click="changeStatus(row, 0)">
                         <el-tag :type="0 | statusFilter">
-                            <i class="el-icon-lock" />
+                            <i class="el-icon-lock"/>
                             禁用
                         </el-tag>
                     </el-button>
@@ -122,13 +122,13 @@
             </el-table-column>
         </el-table>
         <el-pagination
-                background
-                :current-page="listQuery.page"
-                :page-size="listQuery.limit"
-                :layout="layout"
-                :total="total"
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
+            background
+            :current-page="listQuery.page"
+            :page-size="listQuery.limit"
+            :layout="layout"
+            :total="total"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
         />
         <edit ref="edit" @fetchData="getList"/>
     </div>
@@ -144,15 +144,15 @@
         {key: '-1', display_name: '全部'},
         {key: '1', display_name: '启用'},
         {key: '0', display_name: '禁用'}
-    ]
+    ];
 
     const calendarCheckKeyValue = calendarCheckOptions.reduce((acc, cur) => {
         acc[cur.key] = cur.display_name
         return acc
-    }, {})
+    }, {});
 
     export default {
-        name: '',
+        name: 'friendlinkManage',
         components: {Edit},
         directives: {waves},
         filters: {
@@ -163,10 +163,10 @@
                     1: 'success',
                     0: 'danger'
                 }
-                return statusMap[status]
+                return statusMap[status];
             },
             checkFilter(type) {
-                return calendarCheckKeyValue[type] || ''
+                return calendarCheckKeyValue[type] || '';
             }
         },
         data() {
@@ -186,61 +186,14 @@
                     limit: 20,
                     is_check: '',
                     search: '',
+                    is_download: 0, // 是否下载：1.是；默认0
                 },
             }
         },
         created() {
-            this.getList()
+            this.getList();
         },
         methods: {
-            handleDownload() {
-                this.downloadLoading = true;
-                import('@/vendor/Export2Excel').then((excel) => {
-                    const tHeader = [
-                        'Id',
-                        '站点名称',
-                        '站点图标（URL）',
-                        '站点网址',
-                        '创建时间',
-                        '启用状态'
-                    ];
-                    const filterVal = [
-                        'link_id',
-                        'link_name',
-                        'link_cover',
-                        'link_url',
-                        'created_time',
-                        'is_check'
-                    ];
-                    const data = this.formatJson(filterVal);
-                    excel.export_json_to_excel({
-                        header: tHeader,
-                        data,
-                        filename: '友情链接列表-' + getFormatDate()
-                    });
-                    this.downloadLoading = false
-                })
-            },
-            formatJson(filterVal) {
-                return this.list.map((v) =>
-                    filterVal.map((j) => {
-                        switch (j) {
-                            case 'created_time':
-                                return parseTime(v[j]);
-                                break;
-                            case 'is_check':
-                                return this.checkFilter(v[j]);
-                                break;
-                            case 'link_cover':
-                                return v.cover.file_path;
-                                break;
-                            default:
-                                return v[j];
-                                break;
-                        }
-                    })
-                )
-            },
             checkFilter(val) {
                 return calendarCheckKeyValue[val] || '';
             },
@@ -255,6 +208,7 @@
                     this.$refs['edit'].showEdit()
                 }
             },
+            // 删除
             handleDelete(row) {
                 var ids = '';
                 if (row.link_id) {
@@ -278,7 +232,7 @@
                         type: 'warning'
                     })
                     .then(async () => {
-                        const {status, msg} = await setDel({link_id: ids, 'is_batch' : this.is_batch});
+                        const {status, msg} = await setDel({link_id: ids, 'is_batch': this.is_batch});
 
                         switch (status) {
                             case 1:
@@ -305,21 +259,31 @@
             },
             handleSizeChange(val) {
                 this.listQuery.limit = val;
+                this.listQuery.is_download = 0;
                 this.getList();
             },
             handleCurrentChange(val) {
                 this.listQuery.page = val;
+                this.listQuery.is_download = 0;
                 this.getList();
             },
             handleFilter() {
                 this.listQuery.page = 1;
+                this.listQuery.is_download = 0;
                 this.getList();
             },
-            async getList() {
+            async getList(callback) {
                 this.listLoading = true;
-                const {data} = await getList(this.listQuery);
-                this.list = data.data;
-                this.total = data.total;
+                const {data, status, msg} = await getList(this.listQuery);
+                if(this.listQuery.is_download == 1){
+                    if (callback){
+                        callback(data, status, msg);
+                    }
+                }else{
+                    this.list = data.data;
+                    this.total = data.total;
+                    this.listQuery.limit = data.per_page || 10;
+                }
                 setTimeout(() => {
                     this.listLoading = false;
                 }, 300);
@@ -338,6 +302,65 @@
                     message: msg,
                     type: status == 1 ? 'success' : 'error',
                 });
+            },
+            handleDownload() {
+                this.downloadLoading = true;
+                this.listQuery.page = 1;
+                this.listQuery.is_download = 1;
+                let _this = this;
+                this.getList(function (data, status, msg) {
+                    // 如果获取失败，那么无需进入下一步
+                    if (status != 1) {
+                        _this.$message({
+                            message: msg,
+                            type: 'error',
+                        });
+                        return;
+                    }
+                    // 开始导出
+                    import('@/vendor/Export2Excel').then((excel) => {
+                        const tHeader = [
+                            'Id',
+                            '站点名称',
+                            '站点图标（URL）',
+                            '站点网址',
+                            '创建时间',
+                            '启用状态'
+                        ];
+                        const filterVal = [
+                            'link_id',
+                            'link_name',
+                            'link_cover',
+                            'link_url',
+                            'created_time',
+                            'is_check'
+                        ];
+                        const download_list_data = _this.formatJson(data, filterVal);
+                        excel.export_json_to_excel({
+                            header: tHeader,
+                            data: download_list_data,
+                            filename: '友情链接列表-' + getFormatDate(),
+                        });
+                        _this.downloadLoading = false;
+                    });
+                })
+            },
+            formatJson(data, filterVal) {
+                return data.map((v) =>
+                    filterVal.map((j) => {
+                        switch (j) {
+                            case 'created_time':
+                                return parseTime(v[j]);
+                                break;
+                            case 'is_check':
+                                return this.checkFilter(v[j]);
+                                break;
+                            default:
+                                return v[j];
+                                break;
+                        }
+                    })
+                )
             },
         }
     }

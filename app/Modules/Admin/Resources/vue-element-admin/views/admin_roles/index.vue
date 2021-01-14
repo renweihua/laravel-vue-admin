@@ -36,7 +36,7 @@
                 v-waves
                 :loading="downloadLoading"
                 class="filter-item"
-                type="primary"
+                type="success"
                 icon="el-icon-download"
                 @click="handleDownload"
             >
@@ -207,7 +207,8 @@
                     page: 1,
                     limit: 10,
                     search: '',
-                    is_check: ''
+                    is_check: '',
+                    is_download: 0, // 是否下载：1.是；默认0
                 },
                 downloadLoading: false,
                 calendarCheckOptions,
@@ -242,56 +243,21 @@
                 this.menus = res.data;
             },
             // 获取角色列表
-            async getList() {
+            async getList(callback) {
                 this.listLoading = true;
-                const {data} = await getList(this.listQuery);
-                this.list = data.data;
-                this.total = data.total;
+                const {data, status, msg} = await getList(this.listQuery);
+                if(this.listQuery.is_download == 1){
+                    if (callback){
+                        callback(data, status, msg);
+                    }
+                }else{
+                    this.list = data.data;
+                    this.total = data.total;
+                    this.listQuery.limit = data.per_page || 10;
+                }
                 setTimeout(() => {
-                    this.listLoading = false
-                }, 300)
-            },
-            // 下载
-            handleDownload() {
-                this.downloadLoading = true
-                import('@/vendor/Export2Excel').then((excel) => {
-                    const tHeader = [
-                        'Id',
-                        '角色名称',
-                        '创建时间',
-                        '启用状态'
-                    ];
-                    const filterVal = [
-                        'role_id',
-                        'role_name',
-                        'created_time',
-                        'is_check'
-                    ];
-                    const data = this.formatJson(filterVal);
-                    excel.export_json_to_excel({
-                        header: tHeader,
-                        data,
-                        filename: '角色列表-' + getFormatDate()
-                    });
-                    this.downloadLoading = false;
-                })
-            },
-            formatJson(filterVal) {
-                return this.list.map((v) =>
-                    filterVal.map((j) => {
-                        switch (j) {
-                            case 'created_time':
-                                return parseTime(v[j]);
-                                break;
-                            case 'is_check':
-                                return this.checkFilter(v[j]);
-                                break;
-                            default:
-                                return v[j];
-                                break;
-                        }
-                    })
-                )
+                    this.listLoading = false;
+                }, 300);
             },
             checkFilter(val) {
                 return calendarCheckKeyValue[val] || '';
@@ -366,14 +332,17 @@
             },
             handleSizeChange(val) {
                 this.listQuery.limit = val;
+                this.listQuery.is_download = 0;
                 this.getList();
             },
             handleCurrentChange(val) {
                 this.listQuery.page = val;
+                this.listQuery.is_download = 0;
                 this.getList();
             },
             handleFilter() {
                 this.listQuery.page = 1;
+                this.listQuery.is_download = 0;
                 this.getList();
             },
             generateTree(menus, menu_id = 0, checkedKeys) {
@@ -456,6 +425,64 @@
                     message: msg,
                     type: status == 1 ? 'success' : 'error',
                 });
+            },
+            // 下载
+            handleDownload() {
+                this.downloadLoading = true;
+                this.listQuery.page = 1;
+                this.listQuery.is_download = 1;
+                let _this = this;
+                this.getList(function (data, status, msg) {
+                    // 如果获取失败，那么无需进入下一步
+                    if (status != 1) {
+                        _this.$message({
+                            message: msg,
+                            type: 'error',
+                        });
+                        return;
+                    }
+                    // 开始导出
+                    import('@/vendor/Export2Excel').then((excel) => {
+                        const tHeader = [
+                            'Id',
+                            '角色名称',
+                            '备注',
+                            '创建时间',
+                            '启用状态'
+                        ];
+                        const filterVal = [
+                            'role_id',
+                            'role_name',
+                            'role_remarks',
+                            'created_time',
+                            'is_check'
+                        ];
+                        const download_list_data = _this.formatJson(data, filterVal);
+                        excel.export_json_to_excel({
+                            header: tHeader,
+                            data:download_list_data,
+                            filename: '角色列表-' + getFormatDate()
+                        });
+                        _this.downloadLoading = false;
+                    })
+                });
+            },
+            formatJson(data, filterVal) {
+                return data.map((v) =>
+                    filterVal.map((j) => {
+                        switch (j) {
+                            case 'created_time':
+                                return parseTime(v[j]);
+                                break;
+                            case 'is_check':
+                                return this.checkFilter(v[j]);
+                                break;
+                            default:
+                                return v[j];
+                                break;
+                        }
+                    })
+                )
             },
         },
     }

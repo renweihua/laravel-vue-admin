@@ -56,7 +56,7 @@
                 v-waves
                 :loading="downloadLoading"
                 class="filter-item"
-                type="primary"
+                type="success"
                 icon="el-icon-download"
                 @click="handleDownload"
             >
@@ -79,7 +79,7 @@
                 </template>
             </el-table-column>
 
-            <el-table-column align="center" label="分类名称">
+            <el-table-column align="center" label="所属分类">
                 <template slot-scope="{row}">
                     {{ row.category? row.category.category_name : ('Id：' + row.category_id) }}
                 </template>
@@ -214,7 +214,7 @@
     }, {});
 
     export default {
-        name: 'ArticleList',
+        name: 'articleManage',
         components: {Pagination},
         directives: {waves},
         filters: {
@@ -240,7 +240,8 @@
                     is_check: -1,
                     category_id: -1,
                     page: 1,
-                    limit: 20,
+                    limit: 10,
+                    is_download: 0, // 是否下载：1.是；默认0
                 },
                 downloadLoading: false,
                 calendarCheckOptions,
@@ -265,13 +266,18 @@
                 this.getList();
             },
             // 文章列表
-            async getList() {
+            async getList(callback) {
                 this.listLoading = true;
-                const {data} = await getList(this.listQuery);
-                this.list = data.data;
-                this.total = data.total;
-                this.listQuery.page = parseInt(data.current_page) + 1;
-                this.listQuery.limit = data.per_page || 10;
+                const {data, status, msg} = await getList(this.listQuery);
+                if(this.listQuery.is_download == 1){
+                    if (callback){
+                        callback(data, status, msg);
+                    }
+                }else{
+                    this.list = data.data;
+                    this.total = data.total;
+                    this.listQuery.limit = data.per_page || 10;
+                }
                 setTimeout(() => {
                     this.listLoading = false;
                 }, 300);
@@ -296,6 +302,7 @@
                 this.select_category_name = '请选择文章分类';
                 this.listQuery.category_id = -1;
             },
+            // 删除
             handleDelete(row) {
                 var ids = '';
                 if (row.article_id) {
@@ -357,38 +364,83 @@
             },
             // 下载
             handleDownload() {
-                this.downloadLoading = true
-                import('@/vendor/Export2Excel').then((excel) => {
-                    const tHeader = [
-                        'Id',
-                        '文章标题',
-                        '创建时间',
-                        '启用状态'
-                    ];
-                    const filterVal = [
-                        'article_id',
-                        'role_name',
-                        'created_time',
-                        'is_check'
-                    ];
-                    const data = this.formatJson(filterVal);
-                    excel.export_json_to_excel({
-                        header: tHeader,
-                        data,
-                        filename: '文章列表-' + getFormatDate()
+                this.downloadLoading = true;
+                this.listQuery.page = 1;
+                this.listQuery.is_download = 1;
+                let _this = this;
+                this.getList(function (data, status, msg) {
+                    // 如果获取失败，那么无需进入下一步
+                    if (status != 1){
+                        _this.$message({
+                            message: msg,
+                            type: 'error',
+                        });
+                        return;
+                    }
+                    // 开始导出
+                    import('@/vendor/Export2Excel').then((excel) => {
+                        const tHeader = [
+                            'Id',
+                            '文章标题',
+                            '所属分类',
+                            '封面',
+                            '关键字',
+                            '描述',
+                            '文章内容',
+                            '详情外链',
+                            '文章来源',
+                            '文章作者',
+                            '排序',
+                            '创建时间',
+                            '是否置顶',
+                            '是否推荐',
+                            '是否公开',
+                        ];
+                        const filterVal = [
+                            'article_id',
+                            'article_title',
+                            'category_id',
+                            'article_cover',
+                            'article_keywords',
+                            'article_description',
+                            'article_content',
+                            'article_link',
+                            'article_origin',
+                            'article_author',
+                            'article_sort',
+                            'created_time',
+                            'set_top',
+                            'is_recommend',
+                            'is_public',
+                        ];
+                        const download_list_data = _this.formatJson(data, filterVal);
+                        excel.export_json_to_excel({
+                            header: tHeader,
+                            data:download_list_data,
+                            filename: '文章列表-' + getFormatDate(),
+                        });
+                        _this.downloadLoading = false;
                     });
-                    this.downloadLoading = false;
                 })
             },
-            formatJson(filterVal) {
-                return this.list.map((v) =>
+            formatJson(data, filterVal) {
+                return data.map((v) =>
                     filterVal.map((j) => {
                         switch (j) {
+                            case 'category_id':
+                                return v.category ? v.category.category_name : '';
+                                break;
                             case 'created_time':
                                 return parseTime(v[j]);
                                 break;
-                            case 'is_check':
-                                return this.checkFilter(v[j]);
+                            case 'set_top':
+                                return v[j] == 1 ? '是' : '否';
+                                break;
+                            case 'is_recommend':
+                                return v[j] == 1 ? '是' : '否';
+                                break;
+                            case 'is_public':
+                                return v[j] == 1 ? '是' : '否';
                                 break;
                             default:
                                 return v[j];

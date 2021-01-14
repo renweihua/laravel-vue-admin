@@ -36,7 +36,7 @@
                 v-waves
                 :loading="downloadLoading"
                 class="filter-item"
-                type="primary"
+                type="success"
                 icon="el-icon-download"
                 @click="handleDownload"
             >
@@ -135,8 +135,8 @@
 
 <script>
     import {getList, setDel, changeFiledStatus} from '@/api/admins';
-    import waves from '@/directive/waves' // waves directive
-    import Edit from './components/detail'
+    import waves from '@/directive/waves'; // waves directive
+    import Edit from './components/detail';
     import {parseTime, getFormatDate} from '@/utils/index';
 
     const calendarCheckOptions = [
@@ -151,7 +151,7 @@
     }, {});
 
     export default {
-        name: 'UserManagement',
+        name: 'adminManage',
         components: {Edit},
         directives: {waves},
         filters: {
@@ -181,66 +181,17 @@
                     page: 1,
                     limit: 10,
                     search: '',
-                    is_check: ''
+                    is_check: '',
+                    is_download: 0, // 是否下载：1.是；默认0
                 },
                 downloadLoading: false,
                 calendarCheckOptions,
             }
         },
         created() {
-            this.getList()
+            this.getList();
         },
         methods: {
-            handleDownload() {
-                this.downloadLoading = true
-                import('@/vendor/Export2Excel').then((excel) => {
-                    const tHeader = [
-                        'Id',
-                        '管理员账户',
-                        '邮箱',
-                        '头像',
-                        '拥有角色',
-                        '创建时间',
-                        '启用状态'
-                    ];
-                    const filterVal = [
-                        'admin_id',
-                        'admin_name',
-                        'admin_email',
-                        'admin_head',
-                        'roles',
-                        'created_time',
-                        'is_check'
-                    ];
-                    const data = this.formatJson(filterVal);
-                    excel.export_json_to_excel({
-                        header: tHeader,
-                        data,
-                        filename: '管理员列表-' + getFormatDate()
-                    });
-                    this.downloadLoading = false;
-                })
-            },
-            formatJson(filterVal) {
-                return this.list.map((v) =>
-                    filterVal.map((j) => {
-                        switch (j) {
-                            case 'created_time':
-                                return parseTime(v[j]);
-                                break;
-                            case 'is_check':
-                                return this.checkFilter(v[j]);
-                                break;
-                            case 'admin_head':
-                                return v.cover.file_path;
-                                break;
-                            default:
-                                return v[j];
-                                break;
-                        }
-                    })
-                )
-            },
             checkFilter(val) {
                 return calendarCheckKeyValue[val] || '';
             },
@@ -255,6 +206,7 @@
                     this.$refs['edit'].showEdit({});
                 }
             },
+            // 删除
             handleDelete(row) {
                 var ids = '';
                 if (row.admin_id) {
@@ -304,22 +256,32 @@
                     })
             },
             handleSizeChange(val) {
-                this.listQuery.limit = val
-                this.getList()
+                this.listQuery.limit = val;
+                this.listQuery.is_download = 0;
+                this.getList();
             },
             handleCurrentChange(val) {
-                this.listQuery.page = val
-                this.getList()
+                this.listQuery.page = val;
+                this.listQuery.is_download = 0;
+                this.getList();
             },
             handleFilter() {
-                this.listQuery.page = 1
-                this.getList()
+                this.listQuery.page = 1;
+                this.listQuery.is_download = 0;
+                this.getList();
             },
-            async getList() {
+            async getList(callback) {
                 this.listLoading = true;
-                const {data} = await getList(this.listQuery);
-                this.list = data.data;
-                this.total = data.total;
+                const {data, status, msg} = await getList(this.listQuery);
+                if(this.listQuery.is_download == 1){
+                    if (callback){
+                        callback(data, status, msg);
+                    }
+                }else{
+                    this.list = data.data;
+                    this.total = data.total;
+                    this.listQuery.limit = data.per_page || 10;
+                }
                 setTimeout(() => {
                     this.listLoading = false;
                 }, 300);
@@ -338,6 +300,66 @@
                     message: msg,
                     type: status == 1 ? 'success' : 'error',
                 });
+            },
+            // 导出
+            handleDownload() {
+                this.downloadLoading = true;
+                this.listQuery.page = 1;
+                this.listQuery.is_download = 1;
+                let _this = this;
+                this.getList(function (data, status, msg) {
+                    // 如果获取失败，那么无需进入下一步
+                    if (status != 1){
+                        _this.$message({
+                            message: msg,
+                            type: 'error',
+                        });
+                        return;
+                    }
+                    // 开始导出
+                    import('@/vendor/Export2Excel').then((excel) => {
+                        const tHeader = [
+                            'Id',
+                            '管理员',
+                            '邮箱',
+                            '头像',
+                            '创建时间',
+                            '启用状态'
+                        ];
+                        const filterVal = [
+                            'admin_id',
+                            'admin_name',
+                            'admin_email',
+                            'admin_head',
+                            'created_time',
+                            'is_check'
+                        ];
+                        const download_list_data = _this.formatJson(data, filterVal);
+                        excel.export_json_to_excel({
+                            header: tHeader,
+                            data:download_list_data,
+                            filename: '管理员列表-' + getFormatDate(),
+                        });
+                        _this.downloadLoading = false;
+                    })
+                });
+            },
+            formatJson(data, filterVal) {
+                return data.map((v) =>
+                    filterVal.map((j) => {
+                        switch (j) {
+                            case 'created_time':
+                                return parseTime(v['admin_info'][j]) || '';
+                                break;
+                            case 'is_check':
+                                return this.checkFilter(v[j]) || '';
+                                break;
+                            default:
+                                return v[j] || '';
+                                break;
+                        }
+                    })
+                ) || [];
             },
         }
     }

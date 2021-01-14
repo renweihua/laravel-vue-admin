@@ -26,7 +26,7 @@
                 <el-input v-model="form.category_name" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="排序" prop="category_sort">
-                <el-input v-model="form.category_sort" autocomplete="off" value="99"></el-input>
+                <el-input v-model="form.category_sort" autocomplete="off" type="number"></el-input>
             </el-form-item>
             <el-form-item label="是否启用" prop="is_check">
                 <el-radio-group v-model="form.is_check">
