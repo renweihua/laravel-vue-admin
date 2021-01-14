@@ -132,7 +132,7 @@
             },
             // 上传失败回调
             cropUploadFail(status, field) {
-                console.log('-------- upload fail --------');
+                // console.log('-------- upload fail --------');
                 console.log('上传失败状态' + status);
                 console.log('field: ' + field)
             },

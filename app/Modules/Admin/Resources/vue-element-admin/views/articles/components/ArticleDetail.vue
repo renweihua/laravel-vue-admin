@@ -309,7 +309,7 @@
                     // set page title
                     this.setPageTitle();
                 }).catch(err => {
-                    // console.log(err);
+                    console.log(err);
                 })
             },
             // 获取文章分类列表
