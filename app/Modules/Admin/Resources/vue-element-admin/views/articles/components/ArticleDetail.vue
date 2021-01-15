@@ -250,21 +250,26 @@
             // 因为下拉tree是需要先获取数据，进行数据对比，拿到当前选中的值，所以需要：获取文章详情之后，再去获取文章分类。
             if (this.isEdit) {
                 const article_id = this.$route.query && this.$route.query.article_id;
-                if (article_id > 0) this.getDetail(article_id, function () {
-                    // 文章分类列表
-                    _this.getCategorySelect(function () {
-                        try{
-                            _this.category.forEach(item => {
-                                if(item.category_id == _this.postForm.category_id){
-                                    _this.select_category_name = item.category_name;
-                                    throw new Error("end……对比成功");//报错，就跳出循环
-                                }
-                            });
-                        }catch (e) {
-                            // console.log(e);
-                        }
+                if (article_id > 0){
+                    this.getDetail(article_id, function () {
+                        // 文章分类列表
+                        _this.getCategorySelect(function () {
+                            try{
+                                _this.category.forEach(item => {
+                                    if(item.category_id == _this.postForm.category_id){
+                                        _this.select_category_name = item.category_name;
+                                        throw new Error("end……对比成功");//报错，就跳出循环
+                                    }
+                                });
+                            }catch (e) {
+                                // console.log(e);
+                            }
+                        });
                     });
-                });
+                }else{
+                    // 文章分类列表
+                    this.getCategorySelect();
+                }
             }else{
                 // 文章分类列表
                 this.getCategorySelect();
@@ -314,6 +319,7 @@
             },
             // 获取文章分类列表
             async getCategorySelect(callback) {
+                console.log('getCategorySelect')
                 const res = await getCategorySelect();
                 this.category = res.data;
                 if (callback) callback();
