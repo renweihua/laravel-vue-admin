@@ -22,7 +22,9 @@
 ###### 安装Vue
 * 安装 npm 包：`npm install`
 * 热更新vue项目：`npm run watch-poll`
-* 执行vue项目：`npm run dev`
+
+    - vue无法执行：可尝试：
+        - npm rebuild node-sass
     
 ###### PHP设置
 * 命令行：`composer install`
