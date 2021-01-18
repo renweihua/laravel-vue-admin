@@ -28,6 +28,12 @@ class Article extends Model
         return $this->hasOne(ArticleCategory::class, 'category_id', 'category_id');
     }
 
+    public function content()
+    {
+        $primaryKey = $this->getKeyName();
+        return $this->hasOne(ArticleContent::class, $primaryKey, $primaryKey);
+    }
+
     public function labels()
     {
         return $this->belongsToMany(ArticleLabel::class, ArticleWithLabel::class, 'article_id' , 'label_id' , 'article_id', 'label_id')->withPivot(['article_id', 'label_id']);

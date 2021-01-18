@@ -319,7 +319,6 @@
             },
             // 获取文章分类列表
             async getCategorySelect(callback) {
-                console.log('getCategorySelect')
                 const res = await getCategorySelect();
                 this.category = res.data;
                 if (callback) callback();
