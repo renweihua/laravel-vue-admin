@@ -14,4 +14,9 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 .idea
-dist
+
+# vue-webpack
+public/css
+public/fonts
+public/images
+public/js
