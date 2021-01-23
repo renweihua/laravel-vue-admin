@@ -24,7 +24,7 @@ class ConvertEmptyStringsToNull
         ){
             // 希望在POST、PUT时，新增与更新数据时，移除[空字符串自动转换为null的中间件]效果。
         }else{
-            (new \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull)->handle($request, $next);
+            return (new \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull)->handle($request, $next);
         }
 
         return $next($request);
