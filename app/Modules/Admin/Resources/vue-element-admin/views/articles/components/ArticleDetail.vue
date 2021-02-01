@@ -336,7 +336,7 @@
             handleClear() {
                 // 将选择器的值置空
                 this.select_category_name = this.default_select_category_name;
-                this.listQuery.category_id = -1;
+                this.postForm.category_id = -1;
             },
             setTagsViewTitle() {
                 const title = this.lang === 'zh' ? '编辑文章' : 'Edit Article';
