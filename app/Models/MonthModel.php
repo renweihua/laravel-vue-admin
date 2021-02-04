@@ -16,8 +16,8 @@ class MonthModel extends Model
     {
         parent::__construct($attributes);
 
-        // 自动设置当月表名
-        $this->setMonthTable();
+        // 如果月份为空，那么需要设置当月表名
+        if (empty($this->month)) $this->setMonthTable();
     }
 
     public function getMonth(): string
