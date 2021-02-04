@@ -14,7 +14,7 @@ class AdminLogService extends BaseService
     public function lists(array $params) : array
     {
         $model = $this->model->setMonthTable($this->getSearchMonth())
-            ->with([
+            ->load([
                 'admin' => function($query) {
                     $query->select('admin_id', 'admin_name');
                 },

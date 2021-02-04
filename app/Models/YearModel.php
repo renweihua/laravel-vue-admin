@@ -41,10 +41,9 @@ class YearModel extends MonthModel
         $month = str_replace('_', '-', $month);
 
         // 当表名大于最小表名时，设置表名。
-        if ( $month >= self::MIN_TABLE ) {
-            $this->month = $month;
-            $this->table = $this->getOldTableName() . '_' . $this->month;
-        }
+        // if ( $month >= self::MIN_TABLE ) {}
+        $this->month = $month;
+        $this->table = $this->getOldTableName() . '_' . $this->month;
 
         return $this;
     }

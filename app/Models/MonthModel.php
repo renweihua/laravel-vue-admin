@@ -40,11 +40,9 @@ class MonthModel extends Model
         $month = str_replace('_', '-', $month);
 
         // 当表名大于最小表名时，设置表名。
-        if ( $month >= str_replace('_', '-', self::MIN_TABLE) ) {
-            $this->month = date(self::MONTH_FORMAT, strtotime($month));
-            $this->table = $this->getOldTableName() . '_' . $this->month;
-        }
-
+        // if ( $month >= str_replace('_', '-', self::MIN_TABLE) ) {}
+        $this->month = date(self::MONTH_FORMAT, strtotime($month));
+        $this->table = $this->getOldTableName() . '_' . $this->month;
         return $this;
     }
 
