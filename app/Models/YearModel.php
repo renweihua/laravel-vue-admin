@@ -11,8 +11,8 @@ class YearModel extends MonthModel
     public function __construct($data = [])
     {
         parent::__construct($data);
-        // 自动设置按月分表表名【默认以当前时间为准】
-        $this->setMonthTable();
+        // 如果年份为空，那么需要设置按月分表表名【默认以当前时间为准】
+        if (empty($this->month)) $this->setMonthTable();
     }
 
     /**
