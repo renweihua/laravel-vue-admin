@@ -1,42 +1,65 @@
 <?php
 
-if ( !function_exists('get_redirect_url') ) {
+if ( !function_exists('get_distance') ) {
     /**
-     * 通过 301/302 重定向的URL，获取原始的URL
-     * @param  string  $url
+     * 根据经纬度算距离，返回结果单位是公里，先纬度，后经度
      *
-     * @return bool|string
+     * @param $lat1
+     * @param $lng1
+     * @param $lat2
+     * @param $lng2
+     * @return float|int
      */
-    function get_redirect_url(string $url)
+    function get_distance($lat1, $lng1, $lat2, $lng2)
     {
-        $redirect_url = null;
+        $EARTH_RADIUS = 6378.137;
 
-        $url_parts = parse_url($url);
-        var_dump($url_parts);
-        if ( !$url_parts ) return false;
-        if ( !isset($url_parts['host']) ) return false; //can't process relative URLs
-        if ( !isset($url_parts['path']) ) $url_parts['path'] = '/';
+        $radLat1 = rad($lat1);
+        $radLat2 = rad($lat2);
+        $a = $radLat1 - $radLat2;
+        $b = rad($lng1) - rad($lng2);
+        $s = 2 * asin(sqrt(pow(sin($a / 2), 2) + cos($radLat1) * cos($radLat2) * pow(sin($b / 2), 2)));
+        $s = $s * $EARTH_RADIUS;
+        $s = round($s * 10000) / 10000;
 
-        $sock = fsockopen($url_parts['host'], (isset($url_parts['port']) ? (int)$url_parts['port'] : 80), $errno, $errstr, 30);
-        if ( !$sock ) return false;
+        return $s;
+    }
 
-        $request = "HEAD " . $url_parts['path'] . (isset($url_parts['query']) ? '?' . $url_parts['query'] : '') . " HTTP/1.1\r\n";
-        $request .= 'Host: ' . $url_parts['host'] . "\r\n";
-        $request .= "Connection: Close\r\n\r\n";
+    function rad($d)
+    {
+        return $d * M_PI / 180.0;
+    }
+}
 
-        fwrite($sock, $request);
-        $response = '';
-        while ( !feof($sock) ) $response .= fread($sock, 8192);
-        fclose($sock);
+if ( !function_exists('get_encryption_idcard') ) {
+    /**
+     * 身份证号，文本内容部分加密
+     *
+     * @param  string  $identity_card
+     *
+     * @return string
+     */
+    function get_encryption_idcard(string $identity_card): string
+    {
+        return substr_replace($identity_card, '****', -9, 5);
+    }
+}
 
-        var_dump($response);
-
-        if ( preg_match('/^location: (.+?)$/m', $response, $matches) ) {
-            if ( substr($matches[1], 0, 1) == "/" ) return $url_parts['scheme'] . "://" . $url_parts['host'] . trim($matches[1]); else
-                return trim($matches[1]);
-        } else {
-            return false;
+if ( !function_exists('get_days_in_year') ) {
+    /**
+     * 获取指定年份有多少天
+     *
+     * @param  int  $year
+     *
+     * @return int
+     */
+    function get_days_in_year(int $year)
+    {
+        $days = 0;
+        for ($month = 1; $month <= 12; $month++) {
+            $days = $days + cal_days_in_month(CAL_GREGORIAN, $month, $year);
         }
+        return $days;
     }
 }
 
