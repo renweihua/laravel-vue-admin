@@ -6,6 +6,7 @@ use App\Exceptions\Admin\AuthException;
 use App\Exceptions\Admin\AuthTokenException;
 use App\Exceptions\InvalidRequestException;
 use App\Modules\Admin\Entities\Log\AdminLoginLog;
+use App\Modules\Admin\Entities\Rabc\Admin;
 use App\Services\Service;
 use Illuminate\Support\Facades\Auth;
 
@@ -54,6 +55,26 @@ class AuthService extends Service
         $admin->admin_head = asset($admin->admin_head);
         $admin['roles'] = ['admin'];
         return $admin;
+    }
+
+    /**
+     * 获取拥有的权限
+     * 
+     * @throws \App\Exceptions\Admin\AuthTokenException
+     */
+    public function getRabcList()
+    {
+        if (!$admin = Auth::guard($this->guard)->user()){
+            throw new AuthTokenException('认证失败！');
+        }
+        $admin = Admin::with(['roles.menus'])->find($admin->admin_id)->toArray();
+
+        $menus = [];
+        foreach (array_column($admin['roles'], 'menus') as $item){
+            $menus = array_merge($menus, $item);
+        }
+
+        return list_to_tree($menus);
     }
 
     /**

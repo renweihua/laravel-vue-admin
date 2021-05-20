@@ -16,7 +16,7 @@ use App\Modules\Admin\Http\Middleware\CheckAuth;
 use App\Modules\Admin\Http\Middleware\CheckRabc;
 use App\Modules\Admin\Http\Middleware\AdminLog;
 
-Route::prefix('admin')
+Route::prefix(cnpscy_config('admin_prefix'))
     ->group(function() {
 //    Route::get('/', 'AdminController@index');
     //后台管理路由
