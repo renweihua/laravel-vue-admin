@@ -85,7 +85,7 @@
                     banner_title: '',
                     banner_cover: '',
                     banner_link: '',
-                    banner_sort: 0,
+                    banner_sort: 100,
                     is_check: 0
                 },
                 rules: {
