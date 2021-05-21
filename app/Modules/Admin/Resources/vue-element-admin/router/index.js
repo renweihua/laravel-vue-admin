@@ -7,8 +7,8 @@ Vue.use(Router)
 import Layout from '@/layout'
 
 /* Router Modules */
-import componentsRouter from './modules/components'
-import chartsRouter from './modules/charts'
+// import componentsRouter from './modules/components'
+// import chartsRouter from './modules/charts'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -108,8 +108,8 @@ export const constantRoutes = [
         ]
     },
 
-    componentsRouter,
-    chartsRouter
+    // componentsRouter,
+    // chartsRouter
 ];
 
 

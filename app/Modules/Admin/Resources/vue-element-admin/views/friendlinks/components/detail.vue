@@ -47,7 +47,6 @@
     import {getUploadUrl} from '@/api/common'
     import {isUrl} from '@/utils/validate'
 
-    import myUpload from '@/components/Uploads/image/index'
     import PanThumb from '@/components/PanThumb'
     import FileSelect from '@/components/FilesSelect/index'
 
@@ -63,7 +62,6 @@
     export default {
         name: '',
         components: {
-            'my-upload': myUpload,
             PanThumb,
             FileSelect
         },

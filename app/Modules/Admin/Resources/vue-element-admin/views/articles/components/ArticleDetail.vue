@@ -48,31 +48,16 @@
                 </el-form-item>
 
                 <el-form-item prop="article_cover" label="文章封面">
-                    <pan-thumb :image="image_url" :borderRadius="borderRadius" @click="show=true"/>
+                    <pan-thumb :image="postForm.article_cover" :borderRadius="borderRadius" @click="openSelectFiles" />
 
                     <el-button
-                        id="img-btn"
                         type="primary"
                         icon="el-icon-upload"
-                        @click="show=true"
+                        style="position: absolute;bottom: 15px;margin-left: 40px;"
+                        @click="openSelectFiles"
                     >
-                        文章封面
+                        选择图标
                     </el-button>
-
-                    <my-upload
-                        v-model="show"
-                        img-format="png"
-                        :size="size"
-                        :width="50"
-                        :height="50"
-                        lang-type="zh"
-                        :no-rotate="false"
-                        field="file"
-                        :url="upload_url"
-                        @crop-success="cropSuccess"
-                        @crop-upload-success="cropUploadSuccess"
-                        @crop-upload-fail="cropUploadFail"
-                    />
                 </el-form-item>
 
                 <el-form-item label-width="70px" label="关键字:">
@@ -128,6 +113,7 @@
 
             </div>
         </el-form>
+        <file-select v-if="show_files" ref="file" :batch_select="false" @handleSubmit="selectImageSubmit" />
     </div>
 </template>
 
@@ -144,6 +130,7 @@
     import {detail, create, update} from '@/api/articles'
     import {getCategorySelect} from "@/api/article_categories";
     import {getArticleLabelSelect} from "@/api/article_labels";
+    import FileSelect from '@/components/FilesSelect/index'
 
     const defaultForm = {
         article_id: 0,
@@ -165,10 +152,13 @@
 
     export default {
         name: 'ArticleDetail',
-        components: {MDinput, Sticky, SourceUrlDropdown,
-            'my-upload': myUpload,
+        components: {
+            MDinput,
+            Sticky,
+            SourceUrlDropdown,
             PanThumb,
-            MarkdownEditor
+            MarkdownEditor,
+            FileSelect
         },
         props: {
             isEdit: {
@@ -216,13 +206,11 @@
                     article_link: [{validator: validateSourceUri, trigger: 'blur'}]
                 },
                 tempRoute: {},
-                // 图片上传
-                show: false,
-                size: 2.1,
 
                 // 图片上传
                 upload_url: '',
-                image_url: '',
+                show_files: false,
+
                 borderRadius:'initial',
 
                 labels: [], // 标签
@@ -286,6 +274,17 @@
             this.getArticleLabelSelect();
         },
         methods: {
+            // 打开文件选择器
+            openSelectFiles(){
+                this.show_files = true;
+                this.$nextTick(() => {
+                    this.$refs.file.init();
+                });
+            },
+            // 选择指定文件之后，点击’确认‘，获取到的文件信息
+            selectImageSubmit(e){
+                this.postForm.article_cover = e.file_url;
+            },
             // 获取文章标签列表
             async getArticleLabelSelect(){
                 const res = await getArticleLabelSelect();
@@ -297,9 +296,6 @@
                     this.postForm = Object.assign(this.postForm, response.data);
 
                     if (callback) callback();
-
-                    // 默认展示的封面图
-                    this.image_url = this.postForm.article_cover;
 
                     if (this.postForm.labels){
                         this.postForm.label_ids = [];
@@ -376,19 +372,6 @@
                         return false;
                     }
                 })
-            },
-            cropSuccess(imgDataUrl, field) {
-                // console.log('-------- crop success --------', imgDataUrl, field);
-            },
-            // 上传成功回调
-            cropUploadSuccess(result, field) {
-                this.image_url = result.path_url;
-                this.postForm.article_cover = result.data;
-            },
-            // 上传失败回调
-            cropUploadFail(status, field) {
-                // console.log('上传失败状态' + status);
-                // console.log('field: ' + field);
             },
         }
     }
