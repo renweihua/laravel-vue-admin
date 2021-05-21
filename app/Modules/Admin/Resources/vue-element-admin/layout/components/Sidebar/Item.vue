@@ -17,11 +17,13 @@ export default {
     const vnodes = []
 
     if (icon) {
-      if (icon.includes('el-icon')) {
-        vnodes.push(<i class={[icon, 'sub-el-icon']} />)
-      } else {
-        vnodes.push(<svg-icon icon-class={icon}/>)
-      }
+        if (icon.includes('el-icon')) {
+            vnodes.push(<i class={[icon, 'sub-el-icon']} />)
+        } else if (icon.includes('fa fa-')) { // 支持fontAwesome图标左侧栏目展示
+            vnodes.push(<i class={[icon, 'sub-el-icon']} />)
+        } else {
+            vnodes.push(<svg-icon icon-class={icon}/>)
+        }
     }
 
     if (title) {
