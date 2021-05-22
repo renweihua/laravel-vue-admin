@@ -87,7 +87,7 @@
 
             <el-table-column align="center" label="封面">
                 <template slot-scope="{row}">
-                    <img v-if="row.article_cover" :src="row.article_cover">
+                    <img v-if="row.article_images" :src="row.article_images[0]">
                 </template>
             </el-table-column>
 
@@ -454,6 +454,9 @@
 </script>
 
 <style scoped>
+    img{
+        width: 100%;
+    }
     .edit-input {
         padding-right: 100px;
     }

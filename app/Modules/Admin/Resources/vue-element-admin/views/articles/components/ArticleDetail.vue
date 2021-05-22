@@ -23,7 +23,8 @@
                         @clear="handleClear"
                         ref="selectUpCategoryId"
                     >
-                        <el-option hidden key="CategoryId" :value="postForm.category_id" :label="select_category_name"></el-option>
+                        <el-option hidden key="CategoryId" :value="postForm.category_id"
+                                   :label="select_category_name"></el-option>
                         <!-- show-checkbox -->
                         <el-tree
                             node-key="category_id"
@@ -47,32 +48,25 @@
                     </el-select>
                 </el-form-item>
 
-                <el-form-item prop="article_cover" label="文章封面">
-                    <pan-thumb :image="image_url" :borderRadius="borderRadius" @click="show=true"/>
+                <el-form-item label="文章多图">
+                    <el-upload
+                        class="upload-demo"
+                        action="false"
+                        :multiple="true"
+                        list-type="picture-card"
+                        :auto-upload="false"
+                        :file-list="filesList"
+                    >
+                    </el-upload>
 
                     <el-button
-                        id="img-btn"
+                        class="margin-top-20"
                         type="primary"
                         icon="el-icon-upload"
-                        @click="show=true"
+                        @click="openSelectFiles"
                     >
-                        文章封面
+                        选择图标
                     </el-button>
-
-                    <my-upload
-                        v-model="show"
-                        img-format="png"
-                        :size="size"
-                        :width="50"
-                        :height="50"
-                        lang-type="zh"
-                        :no-rotate="false"
-                        field="file"
-                        :url="upload_url"
-                        @crop-success="cropSuccess"
-                        @crop-upload-success="cropUploadSuccess"
-                        @crop-upload-fail="cropUploadFail"
-                    />
                 </el-form-item>
 
                 <el-form-item label-width="70px" label="关键字:">
@@ -90,7 +84,7 @@
                     <el-tag class="tag-title">
                         文章内容:
                     </el-tag>
-                    <markdown-editor v-model="postForm.article_content" height="400px" />
+                    <markdown-editor v-model="postForm.article_content" height="400px"/>
                 </el-form-item>
 
                 <el-form-item label="排序" prop="article_sort">
@@ -128,6 +122,7 @@
 
             </div>
         </el-form>
+        <file-select v-if="show_files" ref="file" :batch_select="true" :limit="image_limit" @handleSubmit="selectImageSubmit"/>
     </div>
 </template>
 
@@ -144,6 +139,7 @@
     import {detail, create, update} from '@/api/articles'
     import {getCategorySelect} from "@/api/article_categories";
     import {getArticleLabelSelect} from "@/api/article_labels";
+    import FileSelect from '@/components/FilesSelect/index'
 
     const defaultForm = {
         article_id: 0,
@@ -152,23 +148,27 @@
         article_content: '', // 文章内容
         article_keywords: '', // 关键字
         article_description: '', // 文章摘要
-        article_cover: '', // 封面图
+        // article_cover: '', // 封面图
+        article_images: [], // 多图
         article_link: '', // 文章外链
         article_sort: 99, // 排序
-        set_top:0, // 是否置顶
-        is_recommend:0, // 是否推荐
-        is_public:0, // 是否公开
-        article_origin:'', // 文章来源
-        article_author:'', // 文章作者
+        set_top: 0, // 是否置顶
+        is_recommend: 0, // 是否推荐
+        is_public: 0, // 是否公开
+        article_origin: '', // 文章来源
+        article_author: '', // 文章作者
         label_ids: [], // 文章标签
     };
 
     export default {
         name: 'ArticleDetail',
-        components: {MDinput, Sticky, SourceUrlDropdown,
-            'my-upload': myUpload,
+        components: {
+            MDinput,
+            Sticky,
+            SourceUrlDropdown,
             PanThumb,
-            MarkdownEditor
+            MarkdownEditor,
+            FileSelect
         },
         props: {
             isEdit: {
@@ -211,30 +211,40 @@
                 rules: {
                     article_title: [{validator: validateRequire}],
                     category_id: [{validator: validateRequire}],
-                    article_cover: [{validator: validateRequire}],
+                    // article_cover: [{validator: validateRequire}],
                     article_content: [{validator: validateRequire}],
                     article_link: [{validator: validateSourceUri, trigger: 'blur'}]
                 },
                 tempRoute: {},
-                // 图片上传
-                show: false,
-                size: 2.1,
 
                 // 图片上传
                 upload_url: '',
-                image_url: '',
-                borderRadius:'initial',
+                show_files: false,
+
+                borderRadius: 'initial',
 
                 labels: [], // 标签
 
-                checkCategories:[], // 默认选中的分类
-                default_select_category_name : '请选择文章分类',
+                checkCategories: [], // 默认选中的分类
+                default_select_category_name: '请选择文章分类',
                 select_category_name: '请选择文章分类',
-                category:[], // 分类
+                category: [], // 分类
                 defaultProps: {
                     children: '_child',
                     label: 'category_name'
                 },
+
+
+                // 多图的数量
+                image_limit:3,
+                // 测试
+                filesList: [],
+
+                dialogImageUrl: '',
+                dialogVisible: false,
+                dialogImageUrl: '',
+                dialogVisible: false,
+                disabled: false
             }
         },
         computed: {
@@ -250,27 +260,27 @@
             // 因为下拉tree是需要先获取数据，进行数据对比，拿到当前选中的值，所以需要：获取文章详情之后，再去获取文章分类。
             if (this.isEdit) {
                 const article_id = this.$route.query && this.$route.query.article_id;
-                if (article_id > 0){
+                if (article_id > 0) {
                     this.getDetail(article_id, function () {
                         // 文章分类列表
                         _this.getCategorySelect(function () {
-                            try{
+                            try {
                                 _this.category.forEach(item => {
-                                    if(item.category_id == _this.postForm.category_id){
+                                    if (item.category_id == _this.postForm.category_id) {
                                         _this.select_category_name = item.category_name;
                                         throw new Error("end……对比成功");//报错，就跳出循环
                                     }
                                 });
-                            }catch (e) {
+                            } catch (e) {
                                 // console.log(e);
                             }
                         });
                     });
-                }else{
+                } else {
                     // 文章分类列表
                     this.getCategorySelect();
                 }
-            }else{
+            } else {
                 // 文章分类列表
                 this.getCategorySelect();
             }
@@ -286,8 +296,55 @@
             this.getArticleLabelSelect();
         },
         methods: {
+            handleRemove(file) {
+                console.log(file);
+            },
+            handlePictureCardPreview(file) {
+                this.dialogImageUrl = file.url;
+                this.dialogVisible = true;
+            },
+            handleDownload(file) {
+                console.log(file);
+            },
+
+
+
+
+
+
+
+
+
+
+
+
+            // 打开文件选择器
+            openSelectFiles() {
+                this.show_files = true;
+                this.$nextTick(() => {
+                    this.$refs.file.init();
+                });
+            },
+            // 选择指定文件之后，点击’确认‘，获取到的文件信息
+            selectImageSubmit(e) {
+                let val;
+                for (var i = 0; i < e.length; i++) {
+                    val = e[i];
+                    this.postForm.article_images.push(val.file_url);
+                    this.filesList.push({
+                        'name': val.file_name,
+                        'url': val.file_url,
+                    });
+                }
+
+                // 验证文件数量
+                if (this.postForm.article_images.length > this.image_limit){
+                    this.postForm.article_images = this.postForm.article_images.slice(this.postForm.article_images.length - this.image_limit);
+                    this.filesList = this.filesList.slice(this.filesList.length - this.image_limit);
+                }
+            },
             // 获取文章标签列表
-            async getArticleLabelSelect(){
+            async getArticleLabelSelect() {
                 const res = await getArticleLabelSelect();
                 this.labels = res.data;
             },
@@ -298,15 +355,21 @@
 
                     if (callback) callback();
 
-                    // 默认展示的封面图
-                    this.image_url = this.postForm.article_cover;
-
-                    if (this.postForm.labels){
+                    if (this.postForm.labels) {
                         this.postForm.label_ids = [];
                         for (const key in this.postForm.labels) {
                             this.postForm.label_ids.push(this.postForm.labels[key].label_id);
                         }
                     }
+
+                    // 多图
+                    for (var i = 0; i < this.postForm.article_images.length; i++) {
+                        this.filesList.push({
+                            'name': this.postForm.article_images[i],
+                            'url': this.postForm.article_images[i],
+                        });
+                    }
+                    console.log(this.filesList);
 
                     // 选中的分类
                     this.checkCategories.push(this.postForm.category_id);
@@ -353,7 +416,7 @@
                         this.loading = true;
 
                         const {msg, status} = this.postForm.article_id > 0 ? await update(this.postForm) : await create(this.postForm);
-                        if (status == 1){
+                        if (status == 1) {
                             this.$notify({
                                 title: '成功',
                                 message: this.postForm.article_id > 0 ? '编辑文章成功' : '发布文章成功',
@@ -363,7 +426,7 @@
 
                             // 返回文章列表
                             this.$router.push(`/articles`);
-                        }else{
+                        } else {
                             this.$message({
                                 message: msg,
                                 type: 'error',
@@ -377,19 +440,6 @@
                     }
                 })
             },
-            cropSuccess(imgDataUrl, field) {
-                // console.log('-------- crop success --------', imgDataUrl, field);
-            },
-            // 上传成功回调
-            cropUploadSuccess(result, field) {
-                this.image_url = result.path_url;
-                this.postForm.article_cover = result.data;
-            },
-            // 上传失败回调
-            cropUploadFail(status, field) {
-                // console.log('上传失败状态' + status);
-                // console.log('field: ' + field);
-            },
         }
     }
 </script>
@@ -401,7 +451,7 @@
         position: relative;
 
         .el-form {
-            .el-form-item{
+            .el-form-item {
                 margin-bottom: 40px;
             }
         }

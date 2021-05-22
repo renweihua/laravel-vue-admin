@@ -28,9 +28,9 @@ class ArticleRequest extends BaseRequest
             'category_id'   => [
                 'required',
             ],
-            'article_cover' => [
-                'required',
-            ],
+            // 'article_image' => [
+            //     'required',
+            // ],
         ];
     }
 
