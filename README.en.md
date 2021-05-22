@@ -12,6 +12,8 @@
 
 ![Request log statistics](public/demo/请求日志统计.png)
 
+![Picture picker](public/demo/图片选择器.png)
+
 #### Software Architecture
 Software architecture description
 
