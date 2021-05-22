@@ -9,15 +9,6 @@ export function getFileList(params) {
     })
 }
 
-// 文件分组列表
-export function getFileGroup(params) {
-    return request({
-        url: '/getGroupList',
-        method: 'get',
-        params
-    })
-}
-
 export function delFile(data) {
     return request({
         url: `/files/delete`,
@@ -26,4 +17,10 @@ export function delFile(data) {
     })
 }
 
-
+export function removeFileGroup(data) {
+    return request({
+        url: '/files/removeFileGroup',
+        method: 'put',
+        data
+    });
+}

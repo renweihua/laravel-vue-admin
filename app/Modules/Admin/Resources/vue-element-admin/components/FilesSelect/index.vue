@@ -8,27 +8,28 @@
         append-to-body
         @close="closeHandle"
     >
+        <el-row class="group">
+            <el-button type="success" @click="changeGroup(0, '')">新建分组</el-button>
+            <el-button v-if="select_group_id > 0" type="warning" @click="changeGroup(select_group_id, select_group_name)">编辑分组</el-button>
+            <el-button v-if="select_group_id > 0" type="danger" @click="deleteGroup()">删除分组</el-button>
+        </el-row>
         <el-row>
             <el-col :span="4">
                 <div class="file-group">
                     <el-tree
                         ref="treeBox"
-                        node-key="id"
+                        node-key="group_id"
                         :highlight-current="true"
                         :data="groupData"
                         :props="defaultProps"
                         @node-click="onSelectGroup"
                     />
-                    <div class="add-group">
-                        <el-button type="text">新建分组</el-button>
-                    </div>
                 </div>
-
             </el-col>
             <el-col :span="20">
                 <el-form :inline="true" :model="listQuery" style="padding-right: 0px" @keyup.enter.native="initData()">
                     <el-form-item>
-                        <el-input v-model="listQuery.file_name" size="small" placeholder="输入文件名查询" clearable/>
+                        <el-input v-model="listQuery.search" size="small" placeholder="输入文件名查询" clearable/>
                     </el-form-item>
                     <el-form-item>
                         <el-button size="small" type="primary" icon="el-icon-search" @click="initData">搜索</el-button>
@@ -65,7 +66,24 @@
                     <span class="file-edit-desc">已选择{{ selectedIndexs.length }}项</span>
                     <el-button-group>
                         <el-button size="small" @click="deleteHandle">删除</el-button>
-                        <el-button size="small">移动</el-button>
+                        <el-button size="small">移动至：
+                            <el-select v-model="remove_group_id" size="small" filterable placeholder="指定分组" @change="removeToGroup">
+                                <el-option
+                                    :key="-1"
+                                    label="指定分组"
+                                    value="请指定移动至分组"
+                                    :disabled="true" >
+                                </el-option>
+                                <el-option
+                                    v-for="item in groupData"
+                                    v-if="item.group_id > 0"
+                                    :key="item.group_id"
+                                    :label="item.group_name"
+                                    :value="item.group_id"
+                                    :disabled="item.disabled" >
+                                </el-option>
+                            </el-select>
+                        </el-button>
                     </el-button-group>
                 </div>
                 <pagination
@@ -78,14 +96,15 @@
             </el-col>
         </el-row>
         <span slot="footer" class="dialog-footer">
-      <el-button type="danger" size="small" @click="visible = false">取消</el-button>
-      <el-button type="primary" size="small" @click="submit()">确定</el-button>
-    </span>
+            <el-button type="danger" size="small" @click="visible = false">取消</el-button>
+            <el-button type="primary" size="small" @click="submit()">确定</el-button>
+        </span>
     </el-dialog>
 </template>
 
 <script>
-    import {getFileList, getFileGroup, delFile} from '@/api/files';
+    import {getFileList, delFile, removeFileGroup} from '@/api/files';
+    import {getFileGroup, create as addFileGroup, update as updateFileGroup, delFileGroup} from '@/api/file_groups';
     import Pagination from '@/components/Pagination';
     import {getToken} from '@/utils/auth';
     import {getUploadUrl} from '@/api/common';
@@ -97,6 +116,11 @@
                 type: Boolean,
                 'default': false
             },
+            // 是否开启批量选择文件
+            limit: {
+                type: Number,
+                'default': 1
+            },
         },
         name: 'FileList',
         components: {
@@ -107,8 +131,8 @@
                 upload_url:'',
                 groupData: [],
                 listQuery: {
-                    file_name: '',
-                    groupId: -1,
+                    search: '',
+                    group_id: -1,
                     page: 1,
                     limit: 18,
                 },
@@ -197,10 +221,16 @@
                 },
                 defaultProps: {
                     children: 'children',
-                    label: 'name'
+                    label: 'group_name'
                 },
                 // // 是否开启批量选择文件
                 // batch_select:false,
+
+                // 当前选中的分组Id与名称：用于指定分组编辑时
+                select_group_id:-1,
+                select_group_name:'',
+                // 移动文件时，选择的分组
+                remove_group_id:0,
             }
         },
         computed: {
@@ -210,6 +240,36 @@
             this.upload_url = getUploadUrl();
         },
         methods: {
+            // 新增文件分组
+            changeGroup(group_id, group_name) {
+                this.$prompt('请输入分组名称', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    inputValue: group_name,
+                }).then(({ value }) => {
+                    // 新增/编辑 文件分组
+                    this.changeGroupName(group_id, value);
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '取消输入'
+                    });
+                });
+            },
+            async changeGroupName(group_id, group_name) {
+                this.loading = true;
+
+                const {status, msg} = group_id ? await updateFileGroup({group_id:group_id, group_name: group_name}) : await addFileGroup({group_name: group_name});
+
+                this.$message({
+                    message: msg,
+                    type: status == 1 ? 'success' : 'error',
+                });
+                if (status === 1) {
+                    this.getFileGroup();
+                }
+                this.loading = false;
+            },
             init() {
                 this.visible = true;
                 this.getFileGroup();
@@ -217,7 +277,6 @@
             },
             initData() {
                 this.loading = true;
-
                 getFileList(this.listQuery).then(res => {
                     this.tableData = res.data.data;
                     this.total = res.data.total;
@@ -227,14 +286,20 @@
             // 获取文件分组
             getFileGroup() {
                 getFileGroup().then(res => {
-                    this.groupData = [{id: -1, name: '全部'}, {id: 0, name: '未分组'}].concat(res.data)
+                    this.groupData = [{group_id: -1, group_name: '全部'}, {group_id: 0, group_name: '未分组'}].concat(res.data)
                     this.$nextTick(() => {
                         this.$refs.treeBox.setCurrentKey(-1)
                     })
                 })
             },
             onSelectGroup(val) {
-                this.listQuery.groupId = val.id
+                console.log(val);
+
+                this.select_group_id = this.listQuery.group_id = val.group_id;
+
+                console.log(this.select_group_id);
+
+                this.select_group_name = val.group_name;
                 this.selectedIndexs = [];
                 this.initData();
             },
@@ -253,7 +318,7 @@
                 //   this.msgError('只支持jpg、png、gif格式的图片！')
                 //   return false
                 // }
-                this.num++
+                this.num++;
             },
             // 上传成功
             successHandle(res, file, fileList) {
@@ -285,6 +350,14 @@
                             has = true;
                         }
                     });
+                    console.log(that.activeItem.length);
+                    console.log(this.limit);
+                    if (has == false && that.activeItem.length == this.limit){
+                        this.$message({
+                            message: '最多可选' + limit + '个文件！',
+                            type: 'error',
+                        });
+                    }
                     if (!has){
                         that.activeItem.push(item);
                     }
@@ -322,9 +395,49 @@
                 }).catch(() => {
                 })
             },
+            // 删除文件分组
+            deleteGroup() {
+                this.$confirm(`确定对 ${this.select_group_name} 进行 '删除' 操作吗?`).then(res => {
+                    delFileGroup({group_id: this.select_group_id}).then(res => {
+                        this.$message({
+                            message: res.msg,
+                            type: res.status == 1 ? 'success' : 'error',
+                        });
+
+                        this.loading = true;
+                        if (res.status === 1) {
+                            this.loading = false;
+                            this.getFileGroup();
+                        }
+                    });
+                }).catch(() => {
+                })
+            },
             // 弹窗关闭时
             closeHandle() {
                 this.fileList = [];
+            },
+            // 移动文件到指定分组
+            removeToGroup(e){
+                if (e < 0){
+                    return false;
+                }
+                this.$confirm(`确定对进行 '移动分组' 操作吗?`).then(res => {
+                    this.loading = true;
+                    removeFileGroup({file_ids:this.selectedIndexs, group_id: this.remove_group_id}).then(res => {
+                        this.$message({
+                            message: res.msg,
+                            type: res.status == 1 ? 'success' : 'error',
+                        });
+                        if (res.status === 1) {
+                            this.remove_group_id = -1;
+                            this.selectedIndexs = [];
+                            this.initData();
+                        }
+                        this.loading = false;
+                    });
+                }).catch(() => {
+                })
             }
         }
     }
@@ -398,10 +511,10 @@
         color: #ffffff;
     }
 
-    .add-group {
-        bottom: -5px;
-        position: absolute;
-        left: 30px;
+    .group{
+        top: -50px;
+        height: 0;
+        left: 130px;
     }
 
     .file-edit {
