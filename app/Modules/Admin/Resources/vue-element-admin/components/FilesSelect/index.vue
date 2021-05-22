@@ -2,6 +2,7 @@
     <el-dialog
         title="图片库"
         :close-on-click-modal="false"
+        :show-close="false"
         :visible.sync="visible"
         width="870px"
         class="file-dialog"
@@ -350,14 +351,15 @@
                             has = true;
                         }
                     });
-                    console.log(that.activeItem.length);
-                    console.log(this.limit);
-                    if (has == false && that.activeItem.length == this.limit){
-                        this.$message({
-                            message: '最多可选' + limit + '个文件！',
-                            type: 'error',
-                        });
-                    }
+                    // 如果移动时，选择就不应该限制数量……
+                    // console.log(that.activeItem.length);
+                    // console.log(this.limit);
+                    // if (has == false && that.activeItem.length == this.limit){
+                    //     this.$message({
+                    //         message: '最多可选' + limit + '个文件！',
+                    //         type: 'error',
+                    //     });
+                    // }
                     if (!has){
                         that.activeItem.push(item);
                     }
@@ -371,8 +373,16 @@
                 }
             },
             submit() {
+                // 如果设置了多图的数量，那么返回时，只返回指定数量的文件
+                if (this.activeItem.length > this.limit){
+                    this.activeItem = this.activeItem.slice(this.activeItem.length - this.limit - 1, this.limit);
+                }
                 this.$emit('handleSubmit', this.activeItem);
                 this.visible = false;
+
+                this.fileList = [];
+                this.activeItem = [];
+                this.selectedIndexs = [];
             },
             // 删除
             deleteHandle() {
@@ -415,7 +425,13 @@
             },
             // 弹窗关闭时
             closeHandle() {
+                console.log(12312132)
+                this.$emit('handleSubmit', []);
+                this.visible = false;
+
                 this.fileList = [];
+                this.activeItem = [];
+                this.selectedIndexs = [];
             },
             // 移动文件到指定分组
             removeToGroup(e){
@@ -525,5 +541,10 @@
     .file-edit-desc {
         margin-right: 10px;
         color: #909090;
+    }
+
+    /* 隐藏上传组件的选择框，这里只需要展示数据的格式即可 */
+    .el-upload--picture-card{
+        display: none;
     }
 </style>
