@@ -67,24 +67,23 @@
                     <span class="file-edit-desc">已选择{{ selectedIndexs.length }}项</span>
                     <el-button-group>
                         <el-button size="small" @click="deleteHandle">删除</el-button>
-                        <el-button size="small">移动至：
-                            <el-select v-model="remove_group_id" size="small" filterable placeholder="指定分组" @change="removeToGroup">
-                                <el-option
-                                    :key="-1"
-                                    label="指定分组"
-                                    value="请指定移动至分组"
-                                    :disabled="true" >
-                                </el-option>
-                                <el-option
-                                    v-for="item in groupData"
-                                    v-if="item.group_id > 0"
-                                    :key="item.group_id"
-                                    :label="item.group_name"
-                                    :value="item.group_id"
-                                    :disabled="item.disabled" >
-                                </el-option>
-                            </el-select>
-                        </el-button>
+                        <el-button size="small" @click="clickRemove">移动至：</el-button>
+                        <el-select v-if="show_remove_select" class="remove-select" v-model="remove_group_id" size="small" filterable placeholder="指定分组" @change="removeToGroup">
+                            <el-option
+                                :key="-1"
+                                label="指定分组"
+                                value="请指定移动至分组"
+                                :disabled="true" >
+                            </el-option>
+                            <el-option
+                                v-for="item in groupData"
+                                v-if="item.group_id > 0"
+                                :key="item.group_id"
+                                :label="item.group_name"
+                                :value="item.group_id"
+                                :disabled="item.disabled" >
+                            </el-option>
+                        </el-select>
                     </el-button-group>
                 </div>
                 <pagination
@@ -149,7 +148,6 @@
                 // 选中的文件
                 activeItem: [],
                 visible: false,
-                baseUrl: process.env.VUE_APP_BASE_API,
                 //  可以识别的文件类型
                 fileImgTypeList: [
                     'png',
@@ -236,6 +234,8 @@
                 select_group_name:'',
                 // 移动文件时，选择的分组
                 remove_group_id:0,
+                // 是否展示移动至的选择框
+                show_remove_select:false,
             }
         },
         computed: {
@@ -409,6 +409,9 @@
                 }).catch(() => {
                 })
             },
+            clickRemove(){
+                this.show_remove_select = true;
+            },
             // 删除文件分组
             deleteGroup() {
                 this.$confirm(`确定对 ${this.select_group_name} 进行 '删除' 操作吗?`).then(res => {
@@ -450,14 +453,15 @@
                             type: res.status == 1 ? 'success' : 'error',
                         });
                         if (res.status === 1) {
-                            this.remove_group_id = -1;
+                            this.remove_group_id = 0;
                             this.selectedIndexs = [];
                             this.initData();
                         }
                         this.loading = false;
                     });
                 }).catch(() => {
-                })
+                });
+                this.show_remove_select = false;
             }
         }
     }
@@ -550,5 +554,10 @@
     /* 隐藏上传组件的选择框，这里只需要展示数据的格式即可 */
     .el-upload--picture-card{
         display: none;
+    }
+
+    .remove-select{
+        top: 0px;
+        left: 5px;
     }
 </style>
