@@ -395,7 +395,7 @@
                                     }
                                 }
 
-                                if (!this.role.role_id) this.getList();
+                                if (this.role.role_id) this.getList();
                                 break;
                             default:
                                 this.$notify({
