@@ -67,6 +67,10 @@ class AuthService extends Service
         if (!$admin = Auth::guard($this->guard)->user()){
             throw new AuthTokenException('认证失败！');
         }
+        // 如果是admin_id = 1，那么默认返回全部权限
+        if($admin->admin_id == 1){
+            return list_to_tree(AdminMenu::getInstance()->getAllMenus()->toArray());
+        }
         $admin = Admin::with(['roles.menus'])->find($admin->admin_id)->toArray();
 
         $menus = [];
