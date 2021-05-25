@@ -7,6 +7,7 @@ use App\Exceptions\Admin\AuthTokenException;
 use App\Exceptions\InvalidRequestException;
 use App\Modules\Admin\Entities\Log\AdminLoginLog;
 use App\Modules\Admin\Entities\Rabc\Admin;
+use App\Modules\Admin\Entities\Rabc\AdminMenu;
 use App\Services\Service;
 use Illuminate\Support\Facades\Auth;
 
