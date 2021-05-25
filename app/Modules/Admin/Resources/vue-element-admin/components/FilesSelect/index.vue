@@ -298,12 +298,7 @@
                 })
             },
             onSelectGroup(val) {
-                console.log(val);
-
                 this.select_group_id = this.listQuery.group_id = val.group_id;
-
-                console.log(this.select_group_id);
-
                 this.select_group_name = val.group_name;
                 this.selectedIndexs = [];
                 this.initData();
@@ -432,8 +427,7 @@
             },
             // 弹窗关闭时
             closeHandle() {
-                console.log(12312132)
-                this.$emit('handleSubmit', []);
+                // this.$emit('handleSubmit', []);
                 this.visible = false;
 
                 this.fileList = [];
