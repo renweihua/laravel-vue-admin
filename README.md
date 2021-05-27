@@ -38,6 +38,10 @@
     - 自动按月分表：`php artisan command:autotablebuild`
     - 或者使用任务调度：`php artisan schedule:run`
 
+###### 访问路径
+
+`你的域名/admin`
+
 #### 使用说明
 
 1.  按月、按年分表的模型，皆不可使用 `with`，可使用 `load` 代替,`static::query` 会重新 实例化当前模型，之前设置的分表名称将被替换。
