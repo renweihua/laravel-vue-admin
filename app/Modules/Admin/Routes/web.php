@@ -65,6 +65,12 @@ Route::prefix(cnpscy_config('admin_prefix'))
             Route::delete('/delete', 'FileGroupController@delete');
         });
 
+        // 数据库管理
+        Route::prefix('database')->group(function() {
+            // 数据库备份
+            Route::post('/backups', 'DatabaseController@backupsTables');
+        });
+
         // 权限中间件
         Route::middleware([CheckRabc::class])->group(function () {
             Route::prefix('banners')->group(function() {
