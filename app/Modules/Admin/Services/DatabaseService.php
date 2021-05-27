@@ -21,16 +21,21 @@ class DatabaseService extends BaseService
      *
      * @return array
      */
-    public function lists(array $params): array
+    public function lists(array $params) : array
     {
         $search = $params['search'] ?? '';
-        if (!empty($search)){
-            $tables_list = collect(DB::select("SHOW TABLE STATUS LIKE '" . $search . "%'"));
-        }else{
-            $tables_list = collect(DB::select('SHOW TABLE STATUS'));
+        if ( !empty($search) ) {
+            $tables_list = DB::select("SHOW TABLE STATUS LIKE '" . $search . "%'");
+        } else {
+            $tables_list = DB::select('SHOW TABLE STATUS');
         }
+
         $total = 0;
-        $tables_list->each(function ($item, $key) use (&$total) {
+        foreach ($tables_list as $key => $item){
+            if ($this->checkTableNameRepeat($item->Name)){
+                unset($tables_list[$key]);
+                continue;
+            }
             $data_length = (int)$item->Data_length;
             $index_length = (int)$item->Index_length;
             $item->Data_length = format_bytes($data_length);
@@ -38,14 +43,30 @@ class DatabaseService extends BaseService
             $plus = $data_length + $index_length;
             $item->Total_length = format_bytes($plus);
             $total += $plus;
-        });
+        }
 
+        $tables_list = array_values($tables_list);
         return [
-            'data' => $tables_list,
-            'all_tables_num' => count($tables_list),
+            'data'              => $tables_list,
+            'table_total'    => count($tables_list),
             'all_tables_length' => format_bytes($total),
-            'bak_data_rows' => TableBackup::count()
+            'bak_data_rows'     => TableBackup::count(),
         ];
+    }
+
+    private function duplicateRemoval(&$tables_list) : void
+    {
+        sort($tables_list);
+        foreach ($tables_list as $key => $table) {
+            if ($this->checkTableNameRepeat($table)) {
+                unset($tables_list[$key]);
+            }
+        }
+    }
+
+    private function checkTableNameRepeat(string $table)
+    {
+        return preg_match("/^\d{4}[\_]([0-9][0-9])?$/", substr($table, -7));
     }
 
     /**
@@ -57,21 +78,18 @@ class DatabaseService extends BaseService
      */
     public function backupsTables($tables_name = '')
     {
-        if (empty($tables_name)) {
+        if ( empty($tables_name) ) {
             $tables_list = array_column(DB::select('SHOW TABLE STATUS'), 'Name');
         }
-        sort($tables_list);
-        foreach ($tables_list as $key => $table){
-            if (preg_match("/^\d{4}[\_]([0-9][0-9])?$/", substr($table, -7))){
-                unset($tables_list[$key]);
-            }
-        }
+
+        $this->duplicateRemoval($tables_list);
+
         $databaseHandler = new DatabaseHandler;
         $res = $databaseHandler->dataTableBak($tables_list, $result);
         $this->error = $databaseHandler->getError();
-        if ($res){
+        if ( $res ) {
             return $result;
-        }else{
+        } else {
             return false;
         }
     }
