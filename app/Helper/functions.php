@@ -1,66 +1,36 @@
 <?php
 
-if ( !function_exists('get_distance') ) {
-    /**
-     * 根据经纬度算距离，返回结果单位是公里，先纬度，后经度
-     *
-     * @param $lat1
-     * @param $lng1
-     * @param $lat2
-     * @param $lng2
-     * @return float|int
-     */
-    function get_distance($lat1, $lng1, $lat2, $lng2)
-    {
-        $EARTH_RADIUS = 6378.137;
-
-        $radLat1 = rad($lat1);
-        $radLat2 = rad($lat2);
-        $a = $radLat1 - $radLat2;
-        $b = rad($lng1) - rad($lng2);
-        $s = 2 * asin(sqrt(pow(sin($a / 2), 2) + cos($radLat1) * cos($radLat2) * pow(sin($b / 2), 2)));
-        $s = $s * $EARTH_RADIUS;
-        $s = round($s * 10000) / 10000;
-
-        return $s;
+/**
+ * 获取客户端 ip
+ * @return array|false|null|string
+ */
+function get_client_ip()
+{
+    static $realip = NULL;
+    if ($realip !== NULL) {
+        return $realip;
     }
-
-    function rad($d)
-    {
-        return $d * M_PI / 180.0;
-    }
-}
-
-if ( !function_exists('get_encryption_idcard') ) {
-    /**
-     * 身份证号，文本内容部分加密
-     *
-     * @param  string  $identity_card
-     *
-     * @return string
-     */
-    function get_encryption_idcard(string $identity_card): string
-    {
-        return substr_replace($identity_card, '****', -9, 5);
-    }
-}
-
-if ( !function_exists('get_days_in_year') ) {
-    /**
-     * 获取指定年份有多少天
-     *
-     * @param  int  $year
-     *
-     * @return int
-     */
-    function get_days_in_year(int $year)
-    {
-        $days = 0;
-        for ($month = 1; $month <= 12; $month++) {
-            $days = $days + cal_days_in_month(CAL_GREGORIAN, $month, $year);
+    //判断服务器是否允许$_SERVER
+    if (isset($_SERVER)) {
+        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $realip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } elseif (isset($_SERVER['HTTP_CLIENT_IP'])) {
+            $realip = $_SERVER['HTTP_CLIENT_IP'];
+        } else {
+            $realip = $_SERVER['REMOTE_ADDR'];
         }
-        return $days;
+    } else {
+        //不允许就使用getenv获取
+        if (getenv("HTTP_X_FORWARDED_FOR")) {
+            $realip = getenv("HTTP_X_FORWARDED_FOR");
+        } elseif (getenv("HTTP_CLIENT_IP")) {
+            $realip = getenv("HTTP_CLIENT_IP");
+        } else {
+            $realip = getenv("REMOTE_ADDR");
+        }
     }
+
+    return $realip;
 }
 
 if ( !function_exists('get_cover_by_video') ) {
@@ -3656,7 +3626,7 @@ function format_bytes($size, $delimiter = '')
     for ($i = 0; $size >= 1024 && $i < 5; $i++) {
         $size /= 1024;
     }
-    return $size . $delimiter . $units[$i];
+    return round($size, 2) . $delimiter . $units[$i];
 }
 
 /**

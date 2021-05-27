@@ -24,9 +24,12 @@ class ArticleService extends BaseService
             // 按照名称进行搜索
             if (!empty($search = $request->input('search', ''))){
                 $search = trim($search);
-                $query->where('article_title', 'LIKE', '%' . $search . '%')
-                    ->whereOr('article_keywords', 'LIKE', $search . '%')
-                    ->whereOr('article_description', 'LIKE', $search . '%');
+                $query->where(function($query)use ($search){
+                    $query->where('article_title', 'LIKE', '%' . $search . '%')
+                          ->orWhere('article_keywords', 'LIKE', $search . '%')
+                          ->orWhere('article_description', 'LIKE', $search . '%');
+                });
+
             }
             // 文章分类：包含所有子集的分类筛选
             $category_id = $request->input('category_id', -1);

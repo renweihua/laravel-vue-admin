@@ -6,6 +6,7 @@ export default {
     friendlinks: 'Friendly link',
     number: 'Number',
     route: {
+        databaseManage:'数据库管理',
         articleLabels: '文章标签',
         articleLabelDetail: '标签详情',
         systemSettings: 'System settings',
