@@ -2,10 +2,8 @@
 
 namespace App\Modules\Admin\Http\Controllers;
 
-use App\Handlers\DatabaseHandler;
 use App\Modules\Admin\Services\DatabaseService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class DatabaseController extends BaseController
 {
@@ -23,27 +21,16 @@ class DatabaseController extends BaseController
      * 批量备份指定的数据表
      *
      * @param  \Illuminate\Http\Request       $request
-     * @param  \App\Handlers\DatabaseHandler  $databaseHandler
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function backupsTables(Request $request, DatabaseHandler $databaseHandler)
+    public function backupsTables(Request $request)
     {
         set_time_limit(0);//防止超时
-        $tables_list = $request->tables_list;
-        if (empty($tables)) {
-            $tables_list = array_column(DB::select('SHOW TABLE STATUS'), 'Name');
-        }
-        sort($tables_list);
-        foreach ($tables_list as $key => $table){
-            if (preg_match("/^\d{4}[\_]([0-9][0-9])?$/", substr($table, -7))){
-                unset($tables_list[$key]);
-            }
-        }
-        if ($databaseHandler->dataTableBak($tables_list, $result)){
-            return $this->successJson($result, $databaseHandler->getError());
+        if ($result = $this->service->backupsTables($request->tables_list)){
+            return $this->successJson($result, $this->service->getError());
         }else{
-            return $this->errorJson($databaseHandler->getError());
+            return $this->errorJson($this->service->getError());
         }
     }
 }

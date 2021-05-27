@@ -67,6 +67,8 @@ Route::prefix(cnpscy_config('admin_prefix'))
 
         // 数据库管理
         Route::prefix('database')->group(function() {
+            // 数据表列表
+            Route::get('/tables', 'DatabaseController@index');
             // 数据库备份
             Route::post('/backups', 'DatabaseController@backupsTables');
         });

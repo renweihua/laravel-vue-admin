@@ -3666,7 +3666,7 @@ function format_bytes($size, $delimiter = '')
     for ($i = 0; $size >= 1024 && $i < 5; $i++) {
         $size /= 1024;
     }
-    return $size . $delimiter . $units[$i];
+    return round($size, 2) . $delimiter . $units[$i];
 }
 
 /**
