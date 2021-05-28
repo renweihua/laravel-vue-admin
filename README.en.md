@@ -14,6 +14,10 @@
 
 ![Picture picker](public/demo/图片选择器.png)
 
+![数据库管理](public/demo/数据库管理.png)
+
+![备份管理](public/demo/备份管理.png)
+
 #### Software Architecture
 Software architecture description
 
@@ -36,9 +40,10 @@ Software architecture description
     - 自动按月分表：`php artisan command:autotablebuild`
     - 或者使用任务调度：`php artisan schedule:run`
 
-###### 访问路径
+###### 站点配置
 
-`你的域名/admin`
+- 站点解析目录：`public`
+- 访问网址：`你的域名/admin`
 
 #### Instructions
 
@@ -57,6 +62,18 @@ Software architecture description
         return static::query()->with(
             is_string($relations) ? func_get_args() : $relations
         );
+    }
+
+    ······
+
+    /**
+     * Begin querying the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function query()
+    {
+        return (new static)->newQuery();
     }
 ```
 

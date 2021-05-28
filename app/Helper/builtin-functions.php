@@ -14,6 +14,9 @@ function get_request_post()
 
 function cnpscy_config(string $config_name = '', string $default = '')
 {
+    if (empty($config_name)){
+        return config('cnpscy');
+    }
     return config('cnpscy.' . $config_name, $default);
 }
 

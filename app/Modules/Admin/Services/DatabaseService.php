@@ -25,14 +25,14 @@ class DatabaseService extends BaseService
     {
         $search = $params['search'] ?? '';
         if ( !empty($search) ) {
-            $tables_list = DB::select("SHOW TABLE STATUS LIKE '" . $search . "%'");
+            $tables_list = DB::select("SHOW TABLE STATUS LIKE '%" . $search . "%'");
         } else {
             $tables_list = DB::select('SHOW TABLE STATUS');
         }
 
         $total = 0;
-        foreach ($tables_list as $key => $item){
-            if ($this->checkTableNameRepeat($item->Name)){
+        foreach ($tables_list as $key => $item) {
+            if ( $this->checkTableNameRepeat($item->Name) ) {
                 unset($tables_list[$key]);
                 continue;
             }
@@ -47,10 +47,10 @@ class DatabaseService extends BaseService
 
         $tables_list = array_values($tables_list);
         return [
-            'data'              => $tables_list,
-            'table_total'    => count($tables_list),
-            'all_tables_length' => format_bytes($total),
-            'bak_data_rows'     => TableBackup::count(),
+            'data'          => $tables_list,
+            'table_total'   => count($tables_list),
+            'tables_size'   => format_bytes($total),
+            'backups_total' => TableBackup::count(),
         ];
     }
 
@@ -58,7 +58,7 @@ class DatabaseService extends BaseService
     {
         sort($tables_list);
         foreach ($tables_list as $key => $table) {
-            if ($this->checkTableNameRepeat($table)) {
+            if ( $this->checkTableNameRepeat($table) ) {
                 unset($tables_list[$key]);
             }
         }
@@ -80,6 +80,8 @@ class DatabaseService extends BaseService
     {
         if ( empty($tables_name) ) {
             $tables_list = array_column(DB::select('SHOW TABLE STATUS'), 'Name');
+        }else{
+            $tables_list = explode(',', $tables_name);
         }
 
         $this->duplicateRemoval($tables_list);
@@ -90,6 +92,59 @@ class DatabaseService extends BaseService
         if ( $res ) {
             return $result;
         } else {
+            return false;
+        }
+    }
+
+    /**
+     * 获取备份的数据表记录
+     *
+     * @return array
+     */
+    public function getBackupRecords():array
+    {
+        $lists = TableBackup::OrderBy('backup_id', 'DESC')->paginate($this->getLimit($params['limit'] ?? 10));
+        foreach ($lists as $item){
+            $tables = explode(',', $item->tables_name);
+            // 第一个表名
+            // $item->first_table = current($item->tables_name);
+            // 表的总量
+            $item->tables_total = count($tables);
+        }
+        return [
+            'current_page' => $lists->currentPage(),
+            'per_page' => $lists->perPage(),
+            'count_page' => $lists->lastPage(),
+            'total' => $lists->total(),
+            'data' => $lists->items(),
+        ];
+    }
+
+    /**
+     * 删除指定的备份记录，并删除对应的备份文件
+     *
+     * @param  int  $backup_id
+     *
+     * @return bool
+     */
+    public function deleteBackup(int $backup_id)
+    {
+        $backup = TableBackup::find($backup_id);
+        if (empty($backup)){
+            $this->error = '备份记录已删除成功！';
+            return true;
+        }
+        if ($backup->delete()){
+            // 删除对应的备份文件
+            if ($backup->backup_files){
+                foreach (explode(',', $backup->backup_files) as $backup_file){
+                    @unlink($backup_file);
+                }
+            }
+            $this->error = '备份记录删除成功！';
+            return true;
+        }else{
+            $this->error = '备份记录删除失败，请重试！';
             return false;
         }
     }

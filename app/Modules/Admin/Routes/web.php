@@ -70,7 +70,11 @@ Route::prefix(cnpscy_config('admin_prefix'))
             // 数据表列表
             Route::get('/tables', 'DatabaseController@index');
             // 数据库备份
-            Route::post('/backups', 'DatabaseController@backupsTables');
+            Route::post('/backupsTables', 'DatabaseController@backupsTables');
+            // 备份记录
+            Route::get('/backups', 'DatabaseController@backups');
+            // 删除指定备份记录
+            Route::delete('/deleteBackup', 'DatabaseController@deleteBackup');
         });
 
         // 权限中间件

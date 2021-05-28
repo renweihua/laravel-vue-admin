@@ -6,6 +6,7 @@ export default {
     friendlinks: 'Friendly link',
     number: 'Number',
     route: {
+        backupsManage: '备份管理',
         databaseManage:'数据库管理',
         articleLabels: '文章标签',
         articleLabelDetail: '标签详情',
@@ -144,6 +145,7 @@ export default {
         search: 'Search',
         add: 'Add',
         export: 'Export',
+        backups: 'Backups',
         reviewer: 'reviewer',
         id: 'ID',
         date: 'Date',
