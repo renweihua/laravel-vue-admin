@@ -38,9 +38,10 @@
     - 自动按月分表：`php artisan command:autotablebuild`
     - 或者使用任务调度：`php artisan schedule:run`
 
-###### 访问路径
+###### 站点配置
 
-`你的域名/admin`
+- 站点解析目录：`public`
+- 访问网址：`你的域名/admin`
 
 #### 使用说明
 
@@ -59,6 +60,18 @@
         return static::query()->with(
             is_string($relations) ? func_get_args() : $relations
         );
+    }
+
+    ······
+
+    /**
+     * Begin querying the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function query()
+    {
+        return (new static)->newQuery();
     }
 ```
 
