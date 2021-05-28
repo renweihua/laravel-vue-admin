@@ -7,6 +7,7 @@
                 class="filter-item"
                 style="margin-left: 10px;"
                 icon="el-icon-eye"
+                @click="goBackups"
             >
                 <svg-icon icon-class="eye-open" />
                 立即查看
@@ -30,7 +31,7 @@
                 :loading="backupsLoading"
                 class="filter-item"
                 type="success"
-                icon="el-icon-download"
+                icon="el-icon-folder"
                 @click="handleBackups"
             >
                 {{ $t('table.backups') }}
@@ -147,6 +148,12 @@
             this.getList();
         },
         methods: {
+            // 进入备份页面
+            goBackups() {
+                this.$router.push({
+                    'path':`/backups`,
+                });
+            },
             setSelectRows(val) {
                 this.selectRows = val;
             },

@@ -6,6 +6,7 @@ export default {
     friendlinks: '友情链接',
     number: 'Cantidad',
     route: {
+        backupsManage: '备份管理',
         databaseManage:'数据库管理',
         articleLabels: '文章标签',
         articleLabelDetail: '标签详情',
