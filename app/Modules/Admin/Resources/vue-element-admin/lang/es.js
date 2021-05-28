@@ -144,6 +144,7 @@ export default {
         search: 'Buscar',
         add: 'Añadir',
         export: 'Exportar',
+        backups: '备份',
         reviewer: 'reviewer',
         id: 'ID',
         date: 'Fecha',

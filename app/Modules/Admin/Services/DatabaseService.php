@@ -25,14 +25,14 @@ class DatabaseService extends BaseService
     {
         $search = $params['search'] ?? '';
         if ( !empty($search) ) {
-            $tables_list = DB::select("SHOW TABLE STATUS LIKE '" . $search . "%'");
+            $tables_list = DB::select("SHOW TABLE STATUS LIKE '%" . $search . "%'");
         } else {
             $tables_list = DB::select('SHOW TABLE STATUS');
         }
 
         $total = 0;
-        foreach ($tables_list as $key => $item){
-            if ($this->checkTableNameRepeat($item->Name)){
+        foreach ($tables_list as $key => $item) {
+            if ( $this->checkTableNameRepeat($item->Name) ) {
                 unset($tables_list[$key]);
                 continue;
             }
@@ -47,10 +47,10 @@ class DatabaseService extends BaseService
 
         $tables_list = array_values($tables_list);
         return [
-            'data'              => $tables_list,
-            'table_total'    => count($tables_list),
-            'all_tables_length' => format_bytes($total),
-            'bak_data_rows'     => TableBackup::count(),
+            'data'          => $tables_list,
+            'table_total'   => count($tables_list),
+            'tables_size'   => format_bytes($total),
+            'backups_total' => TableBackup::count(),
         ];
     }
 
@@ -58,7 +58,7 @@ class DatabaseService extends BaseService
     {
         sort($tables_list);
         foreach ($tables_list as $key => $table) {
-            if ($this->checkTableNameRepeat($table)) {
+            if ( $this->checkTableNameRepeat($table) ) {
                 unset($tables_list[$key]);
             }
         }
@@ -80,6 +80,8 @@ class DatabaseService extends BaseService
     {
         if ( empty($tables_name) ) {
             $tables_list = array_column(DB::select('SHOW TABLE STATUS'), 'Name');
+        }else{
+            $tables_list = explode(',', $tables_name);
         }
 
         $this->duplicateRemoval($tables_list);

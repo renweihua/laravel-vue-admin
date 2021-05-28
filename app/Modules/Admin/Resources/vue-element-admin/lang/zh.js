@@ -143,6 +143,7 @@ export default {
         search: '搜索',
         add: '添加',
         export: '导出',
+        backups: '备份',
         reviewer: '审核人',
         id: '序号',
         date: '时间',

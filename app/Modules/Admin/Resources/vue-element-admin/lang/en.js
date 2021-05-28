@@ -144,6 +144,7 @@ export default {
         search: 'Search',
         add: 'Add',
         export: 'Export',
+        backups: 'Backups',
         reviewer: 'reviewer',
         id: 'ID',
         date: 'Date',

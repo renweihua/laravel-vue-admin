@@ -144,6 +144,7 @@ export default {
         search: '検索',
         add: '追加',
         export: 'エクスポート',
+        backups: '备份',
         reviewer: 'レビュアー',
         id: '番号',
         date: '日時',

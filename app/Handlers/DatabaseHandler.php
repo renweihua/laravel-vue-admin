@@ -39,7 +39,7 @@ class DatabaseHandler
             $this->error = '备份目录：' . $this->data_table_bak_dir . '不存在';
             return false;
         }
-        $start_time = time();//开始时间
+        $start_time = microtime(true);//开始时间
 
         $full_filename = $this->data_table_bak_dir . '/' . env('DB_DATABASE', '') . '=' . date('Y-m-d=His=', $start_time) . rand_str(3);
         $pre = "/* -----------------------------------------------------------*/\n";
@@ -125,12 +125,12 @@ class DatabaseHandler
             }
             $file_n++;
         }
-        $usetime = time() - $start_time;
+        $usetime = round(microtime(true) - $start_time, 3);
 
         $insert = [
-            'admin_id'        => $admin_id,
+            'admin_id'    => $admin_id,
             'tables_name' => implode(',', $tables),
-            'file_num'        => $file_n - 1,
+            'file_num'    => $file_n - 1,
         ];
 
         $filesize = 0;
@@ -142,8 +142,8 @@ class DatabaseHandler
         $insert['backup_files'] = implode(',', $insert['backup_files']);
         $insert['file_size'] = $filesize;
         $insert['created_ip'] = get_client_ip();
+
         // 录入备份记录
-        // TableBackup::getInstance()->fill($insert)->save();
         TableBackup::create($insert);
 
         $this->error = "备份操作成功，本次备份共生成了" . ($file_n - 1) . "个SQL文件。耗时：{$usetime} 秒";
