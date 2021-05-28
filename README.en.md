@@ -14,6 +14,10 @@
 
 ![Picture picker](public/demo/图片选择器.png)
 
+![数据库管理](public/demo/数据库管理.png)
+
+![备份管理](public/demo/备份管理.png)
+
 #### Software Architecture
 Software architecture description
 

@@ -14,6 +14,10 @@
 
 ![图片选择器功能](public/demo/图片选择器.png)
 
+![数据库管理](public/demo/数据库管理.png)
+
+![备份管理](public/demo/备份管理.png)
+
 #### 软件架构
 软件架构说明
 
