@@ -56,8 +56,14 @@
                         list-type="picture-card"
                         :auto-upload="false"
                         :file-list="filesList"
+                        drag
+                        :on-preview="handlePictureCardPreview"
+                        :on-remove="handleRemove"
                     >
                     </el-upload>
+                    <el-dialog :visible.sync="dialogVisible">
+                        <img width="100%" :src="dialogImageUrl" alt="">
+                    </el-dialog>
 
                     <el-button
                         class="margin-top-20"
@@ -231,14 +237,11 @@
                     label: 'category_name'
                 },
 
-
                 // 多图的数量
                 image_limit:3,
                 // 测试
                 filesList: [],
-
-                dialogImageUrl: '',
-                dialogVisible: false,
+                // 预览图片
                 dialogImageUrl: '',
                 dialogVisible: false,
                 disabled: false
@@ -294,27 +297,23 @@
         },
         methods: {
             handleRemove(file) {
-                console.log(file);
+                let that = this;
+                that.postForm.article_images = [];
+                that.filesList.forEach(function (val, index) {
+                    if (val.url == file.url){
+                        // 再次点击则移除选中
+                        that.filesList.splice(index, 1);
+                        throw new Error('移除完毕');
+                    }
+                });
+                that.filesList.forEach(function (val, index) {
+                    that.postForm.article_images.push(val.url);
+                });
             },
             handlePictureCardPreview(file) {
                 this.dialogImageUrl = file.url;
                 this.dialogVisible = true;
             },
-            handleDownload(file) {
-                console.log(file);
-            },
-
-
-
-
-
-
-
-
-
-
-
-
             // 打开文件选择器
             openSelectFiles() {
                 this.show_files = true;

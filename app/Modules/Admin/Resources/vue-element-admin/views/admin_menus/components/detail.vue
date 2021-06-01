@@ -47,7 +47,7 @@
                 <el-input v-model="form.api_url" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="排序" prop="menu_sort">
-                <el-input v-model="form.menu_sort" type="number" autocomplete="off" value="0"></el-input>
+                <el-input v-model="form.menu_sort" type="number" autocomplete="off" value="99"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
