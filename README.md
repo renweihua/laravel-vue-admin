@@ -1,5 +1,7 @@
 # laravel-vue-admin
 
+## [原始仓库，码云，小丑路人](https://gitee.com/clown-passerby-community/laravel-vue-admin)
+
 ## 作者
 [小丑路人](https://www.cnpscy.com)
 
